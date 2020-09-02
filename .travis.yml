@@ -1,4 +1,2 @@
 language: java
-script:
-  - mvn formatter:format
-  - mvn verify -B
+script: mvn verify -B
