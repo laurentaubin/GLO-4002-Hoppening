@@ -7,30 +7,30 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class ReservationServer implements Runnable {
-    private static final int PORT = 8181;
+  private static final int PORT = 8181;
 
-    public static void main(String[] args) {
-        new ReservationServer().run();
+  public static void main(String[] args) {
+    new ReservationServer().run();
+  }
+
+  public void run() {
+    Server server = new Server(PORT);
+    ServletContextHandler contextHandler = new ServletContextHandler(server, "/");
+    ResourceConfig packageConfig = new ResourceConfig().packages("ca.ulaval.glo4002.reservation");
+    ServletContainer container = new ServletContainer(packageConfig);
+    ServletHolder servletHolder = new ServletHolder(container);
+
+    contextHandler.addServlet(servletHolder, "/*");
+
+    try {
+      server.start();
+      server.join();
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      if (server.isRunning()) {
+        server.destroy();
+      }
     }
-
-    public void run() {
-        Server server = new Server(PORT);
-        ServletContextHandler contextHandler = new ServletContextHandler(server, "/");
-        ResourceConfig packageConfig = new ResourceConfig().packages("ca.ulaval.glo4002.reservation");
-        ServletContainer container = new ServletContainer(packageConfig);
-        ServletHolder servletHolder = new ServletHolder(container);
-
-        contextHandler.addServlet(servletHolder, "/*");
-
-        try {
-            server.start();
-            server.join();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-        	if (server.isRunning()) {
-		        server.destroy();
-	        }
-        }
-    }
+  }
 }

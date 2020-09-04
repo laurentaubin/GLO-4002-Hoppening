@@ -36,30 +36,33 @@ For example:
 For example:
 `git commit -m "Update contributing.md"`
 
-### Code style
+### Google Java style
 
-All code is written using a code style based on our preference. Config file: ``QA-eclipse-formatter``
+All code is written using [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
+The project is configured to be verified after each push [Cosium/maven-git-code-format](https://github.com/Cosium/maven-git-code-format).
 
+Add this [Google Java Style XML file](https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml) to your ``Coding Style`` configuration. 
+If you are using Intellij, install ``google-java-format`` plugin.
 
-The project is configured to be formatted after each push with [formatter-maven-plugin](https://code.revelc.net/formatter-maven-plugin/).
-
-If you are using Intellij, install ``Eclipse-Code-Formatter`` plugin and set the ``QA-eclipe-formatter.xml`` file
-as the `Eclipse Java Formatter config file`. You can find the ``QA-eclipe-formatter.xml`` file at project's root.
-
-It is recommended to install the `Save Actions` plugin, to format your file on save. If you use the plugin, enable: 
-- Activate save actions on save
-- Optimize imports
-- Reformat file
+It is recommended to install the `Save Actions` plugin, to format your file on save.
 
 Take note that your pipeline will fail if your code is not formatted correctly.
 
 Manual code formatting
 
-    mvn formatter:format
+    // On MacOS or Linux
+    mvn git-code-format:format-code -"DglobPattern=**/*"
 
-Manual code format validation
+    //On Windows
+    mvn git-code-format:format-code -DglobPattern=**/*
 
-    mvn formatter:validate
+Manuel code format validation
+
+    // On MacOS or Linux
+    mvn git-code-format:format-code -"DglobPattern=**/*"
+    
+    //On Windows
+    mvn git-code-format:validate-code-format -DglobPattern=**/*
     
 ### Documentation Styleguide
 - Use [Markdown](https://www.markdownguide.org/basic-syntax/)

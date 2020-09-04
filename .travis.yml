@@ -1,2 +1,4 @@
 language: java
-script: mvn verify -B
+script:
+  - mvn git-code-format:validate-code-format
+  - mvn verify -B
