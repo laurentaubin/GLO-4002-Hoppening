@@ -10,14 +10,18 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class Ingredient {
-  @Id @GeneratedValue private Integer id;
+  @Id
+  @GeneratedValue
+  private Integer id;
 
-  @Column private String name;
+  @Column
+  private String name;
 
   @Column(name = "price_per_kg")
   private Float pricePerKg;
 
-  @Column private String origin;
+  @Column
+  private String origin;
 
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "ingredient")
   private List<Shipment> shipments;

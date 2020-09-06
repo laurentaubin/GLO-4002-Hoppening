@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ca.ulaval.glo4002</groupId>
@@ -76,23 +76,17 @@
           <version>${surefire.version}</version>
         </plugin>
         <plugin>
-          <groupId>com.cosium.code</groupId>
-          <artifactId>git-code-format-maven-plugin</artifactId>
-          <version>${git-code-format-maven-plugin.version}</version>
+          <groupId>net.revelc.code.formatter</groupId>
+          <artifactId>formatter-maven-plugin</artifactId>
+          <version>2.7.3</version>
+          <configuration>
+            <configFile>${user.dir}/QA-eclipse-formatter.xml
+            </configFile>
+          </configuration>
           <executions>
-            <!-- On commit, format the modified java files -->
             <execution>
-              <id>install-formatter-hook</id>
               <goals>
-                <goal>install-hooks</goal>
-              </goals>
-            </execution>
-            <!-- On Maven verify phase, fail if any file
-            (including unmodified) is badly formatted -->
-            <execution>
-              <id>validate-code-format</id>
-              <goals>
-                <goal>validate-code-format</goal>
+                <goal>format</goal>
               </goals>
             </execution>
           </executions>

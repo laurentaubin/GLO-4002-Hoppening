@@ -20,9 +20,7 @@ public class IngredientController {
     this.repository = repository;
   }
 
-  @GetMapping(
-      value = "",
-      produces = {"application/json"})
+  @GetMapping(value = "", produces = { "application/json" })
   public @ResponseBody List<Ingredient> getIngredients() {
     return repository.findAll();
   }

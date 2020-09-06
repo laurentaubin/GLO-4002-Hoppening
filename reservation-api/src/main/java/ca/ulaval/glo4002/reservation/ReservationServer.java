@@ -15,6 +15,7 @@ public class ReservationServer implements Runnable {
 
   public void run() {
     Server server = new Server(PORT);
+
     ServletContextHandler contextHandler = new ServletContextHandler(server, "/");
     ResourceConfig packageConfig = new ResourceConfig().packages("ca.ulaval.glo4002.reservation");
     ServletContainer container = new ServletContainer(packageConfig);

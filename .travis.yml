@@ -1,4 +1,4 @@
 language: java
 script:
-  - mvn git-code-format:validate-code-format
+  - mvn formatter:format
   - mvn verify -B
