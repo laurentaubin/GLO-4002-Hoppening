@@ -1,116 +1,36 @@
 package ca.ulaval.glo4002.reservation.infra.inmemory;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.domain.exception.ReservationNotFoundException;
+import ca.ulaval.glo4002.reservation.domain.Reservation;
 
 @ExtendWith(MockitoExtension.class)
 public class InMemoryReservationRepositoryTest {
-  private static final LocalDateTime A_DATE = LocalDateTime.of(2020, 7, 20, 23, 23);
-  private static final LocalDateTime ANOTHER_DATE = LocalDateTime.of(2050, 1, 14, 1, 4);
+
+  private static final long AN_ID = 543;
 
   @Mock
-  private Reservation aReservation;
+  private InMemoryReservationDao reservationDao;
 
   @Mock
-  private Reservation anotherReservation;
-
-  @Mock
-  private ReservationId reservationId;
-
-  private InMemoryReservationRepository reservationRepository;
-
-  @BeforeEach
-  public void setUp() {
-    reservationRepository = new InMemoryReservationRepository();
-  }
+  private Reservation reservation;
 
   @Test
-  public void givenAReservation_whenSaveReservation_thenReturnReservationId() {
+  public void whenCreatingReservation_thenReturnNewReservationId() {
     // given
-    given(aReservation.getReservationId()).willReturn(reservationId);
+    InMemoryReservationRepository reservationRepository = new InMemoryReservationRepository(reservationDao);
+    given(reservationDao.createReservation(reservation)).willReturn(AN_ID);
 
     // when
-    ReservationId expectedReservationId = reservationRepository.saveReservation(aReservation);
+    long expectedReservationId = reservationRepository.createReservation(reservation);
 
     // then
-    assertThat(expectedReservationId).isEqualTo(reservationId);
-  }
-
-  @Test
-  public void givenAReservation_whenGetReservationById_thenReturnProperReservation() {
-    // given
-    given(aReservation.getReservationId()).willReturn(reservationId);
-    reservationRepository.saveReservation(aReservation);
-
-    // when
-    Reservation actualReservation = reservationRepository.getReservationById(reservationId);
-
-    // then
-    assertThat(actualReservation).isEqualTo(aReservation);
-  }
-
-  @Test
-  public void givenNoReservationForDate_whenGetReservationByDate_thenNoReservationsAreReturned() {
-    // when
-    List<Reservation> reservations = reservationRepository.getReservationsByDate(ANOTHER_DATE);
-
-    // then
-    assertThat(reservations).isEmpty();
-  }
-
-  @Test
-  public void givenReservationAtDifferentDates_whenGetReservationByDate_thenReturnTheReservationsAtTheSpecifiedDate() {
-    // given
-    given(aReservation.getDinnerDate()).willReturn(A_DATE);
-    given(anotherReservation.getDinnerDate()).willReturn(ANOTHER_DATE);
-    reservationRepository.saveReservation(aReservation);
-    reservationRepository.saveReservation(anotherReservation);
-
-    // when
-    List<Reservation> reservations = reservationRepository.getReservationsByDate(A_DATE);
-
-    // then
-    assertThat(reservations).contains(aReservation);
-    assertThat(reservations).doesNotContain(anotherReservation);
-  }
-
-  @Test
-  public void givenReservationAtTheSameDate_whenGetReservationByDate_thenReturnTheReservationsAtTheSpecifiedDate() {
-    // given
-    given(aReservation.getDinnerDate()).willReturn(A_DATE);
-    given(anotherReservation.getDinnerDate()).willReturn(A_DATE);
-    reservationRepository.saveReservation(aReservation);
-    reservationRepository.saveReservation(anotherReservation);
-
-    // when
-    List<Reservation> reservations = reservationRepository.getReservationsByDate(A_DATE);
-
-    // then
-    assertThat(reservations).contains(aReservation);
-    assertThat(reservations).contains(anotherReservation);
-  }
-
-  @Test
-  public void givenNotExistingReservation_whenGetReservationById_thenThrowNonExistingReservationException() {
-    // when
-    Executable gettingReservationById = () -> reservationRepository.getReservationById(reservationId);
-
-    // then
-    assertThrows(ReservationNotFoundException.class, gettingReservationById);
+    assertThat(expectedReservationId).isEqualTo(AN_ID);
   }
 }

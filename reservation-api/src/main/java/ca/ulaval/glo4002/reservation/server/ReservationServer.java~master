@@ -4,7 +4,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
+
+import ca.ulaval.glo4002.reservation.api.mappers.*;
 
 public class ReservationServer {
   private Server server;
@@ -30,6 +33,14 @@ public class ReservationServer {
     for (Object resource : resources) {
       packageConfig.register(resource);
     }
+    packageConfig.register(new CatchInvalidRequestFormatMapper());
+    packageConfig.register(new CatchInvalidReservationRequestMapper());
+    packageConfig.register(new CatchJsonMappingExceptionMapper());
+    packageConfig.register(new CatchNotFoundExceptionMapper());
+    packageConfig.register(new CatchInvalidConfigurationRequestMapper());
+    packageConfig.register(new CatchInvalidFormatExceptionMapper());
+    packageConfig.register(new CatchInvalidRestrictionTypeExceptionMapper());
+    packageConfig.property(ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED, true);
     return packageConfig;
   }
 
