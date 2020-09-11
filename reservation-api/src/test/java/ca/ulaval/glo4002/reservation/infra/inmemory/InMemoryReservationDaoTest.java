@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 
 public class InMemoryReservationDaoTest {
 
@@ -53,6 +54,6 @@ public class InMemoryReservationDaoTest {
   }
 
   private Reservation givenAReservation(long id) {
-    return new Reservation(id);
+    return new ReservationBuilder().withId(id).withAnyTable().build();
   }
 }

@@ -1,26 +1,35 @@
 package ca.ulaval.glo4002.reservation.service;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+
+import javax.ws.rs.WebApplicationException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.api.reservation.assembler.ReservationAssembler;
+import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
+import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRequestDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationErrorResponseDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
+import ca.ulaval.glo4002.reservation.domain.exception.InvalidReservationQuantityException;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
+import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
 
   private static final long AN_ID = 4321;
-  private static final long ANOTHER_ID = 8817;
 
   @Mock
   private IdGenerator idGenerator;
@@ -34,19 +43,23 @@ public class ReservationServiceTest {
   @Mock
   private ReservationAssembler reservationAssembler;
 
+  @Mock
+  private ReservationValidator reservationValidator;
+
   private ReservationService reservationService;
 
   @BeforeEach
   public void setUp() {
     reservationService = new ReservationService(idGenerator,
                                                 reservationRepository,
-                                                reservationAssembler);
+                                                reservationAssembler,
+                                                reservationValidator);
   }
 
   @Test
   public void givenReservationServiceInInitialState_whenCreatingReservation_thenReturnReservationId() {
     // given
-    Reservation reservation = givenAReservation(AN_ID);
+    Reservation reservation = new ReservationBuilder().withId(AN_ID).withAnyTable().build();
     setUpReservationServiceMocks(reservation, AN_ID);
     when(idGenerator.getLongUuid()).thenReturn(AN_ID);
 
@@ -58,29 +71,29 @@ public class ReservationServiceTest {
   }
 
   @Test
-  public void givenReservationServiceInInitialState_whenCreatingTwoReservations_thenTheTwoReturnedIdsAreDifferent() {
+  public void givenEmptyTables_whenCreatingReservation_thenThrowWebApplicationExceptionWithCode400AndRightMessage() {
     // given
-    Reservation firstReservation = givenAReservation(AN_ID);
-    Reservation secondReservation = givenAReservation(ANOTHER_ID);
-    setUpReservationServiceMocks(firstReservation, AN_ID);
-    setUpReservationServiceMocks(secondReservation, ANOTHER_ID);
-    when(idGenerator.getLongUuid()).thenReturn(AN_ID).thenReturn(ANOTHER_ID);
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
+    doThrow(new InvalidReservationQuantityException()).when(reservationValidator)
+                                                      .validate(createReservationRequestDto);
 
     // when
-    long firstId = reservationService.createReservation(createReservationRequestDto);
-    long secondId = reservationService.createReservation(createReservationRequestDto);
+    Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
 
     // then
-    assertThat(firstId).isNotEqualTo(secondId);
+    WebApplicationException actualThrow = assertThrows(WebApplicationException.class,
+                                                       creatingReservation);
+    CreateReservationErrorResponseDto createReservationErrorResponseDto = (CreateReservationErrorResponseDto) actualThrow.getResponse()
+                                                                                                                         .getEntity();
+    assertThat(createReservationErrorResponseDto.getDescription()).isEqualTo(ReservationErrorCode.INVALID_RESERVATION_QUANTITY.getMessage());
+    assertThat(createReservationErrorResponseDto.getError()).isEqualTo(ReservationErrorCode.INVALID_RESERVATION_QUANTITY.toString());
+    assertThat(actualThrow.getResponse()
+                          .getStatus()).isEqualTo(ReservationErrorCode.INVALID_RESERVATION_QUANTITY.getCode());
   }
 
   private void setUpReservationServiceMocks(Reservation reservation, long id) {
     given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
                                                                        id)).willReturn(reservation);
     given(reservationRepository.createReservation(reservation)).willReturn(id);
-  }
-
-  private Reservation givenAReservation(long id) {
-    return new Reservation(id);
   }
 }

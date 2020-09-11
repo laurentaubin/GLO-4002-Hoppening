@@ -3,8 +3,8 @@ package ca.ulaval.glo4002.reservation.domain.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
-import ca.ulaval.glo4002.reservation.domain.reservation.Table;
+import ca.ulaval.glo4002.reservation.domain.Customer;
+import ca.ulaval.glo4002.reservation.domain.Table;
 
 public class TableBuilder {
   private final List<Customer> customers;
@@ -15,11 +15,6 @@ public class TableBuilder {
 
   public TableBuilder withCustomer(Customer customer) {
     customers.add(customer);
-    return this;
-  }
-
-  public TableBuilder withCustomers(List<Customer> customers) {
-    this.customers.addAll(customers);
     return this;
   }
 

@@ -5,12 +5,15 @@ import java.util.Collection;
 
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResourceImpl;
-import ca.ulaval.glo4002.reservation.api.reservation.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 import ca.ulaval.glo4002.reservation.infra.inmemory.InMemoryReservationDao;
 import ca.ulaval.glo4002.reservation.infra.inmemory.InMemoryReservationRepository;
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
 import ca.ulaval.glo4002.reservation.service.ReservationService;
+import ca.ulaval.glo4002.reservation.service.ReservationValidator;
+import ca.ulaval.glo4002.reservation.service.assembler.CustomerAssembler;
+import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
+import ca.ulaval.glo4002.reservation.service.assembler.TableAssembler;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGeneratorFactory;
 
@@ -36,7 +39,10 @@ public class ReservationContext {
     ReservationRepository reservationRepository = new InMemoryReservationRepository(new InMemoryReservationDao());
     IdGenerator idGenerator = new IdGeneratorFactory().create(USE_UNIVERSALLY_UNIQUE_ID_GENERATOR);
 
-    return new ReservationService(idGenerator, reservationRepository, new ReservationAssembler());
+    return new ReservationService(idGenerator,
+                                  reservationRepository,
+                                  new ReservationAssembler(new TableAssembler(new CustomerAssembler())),
+                                  new ReservationValidator());
   }
 
   private Object[] createResources(ReservationService reservationService) {

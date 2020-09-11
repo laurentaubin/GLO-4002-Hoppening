@@ -1,34 +1,23 @@
 package ca.ulaval.glo4002.reservation.domain.builder;
 
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIdFactory;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.domain.date.DinnerDate;
-import ca.ulaval.glo4002.reservation.domain.date.ReservationDate;
-import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.domain.reservation.Table;
+import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.Table;
 
 public class ReservationBuilder {
-  private static final LocalDateTime A_DINNER_DATE = LocalDateTime.now();
-  private static final LocalDateTime A_RESERVATION_DATE = LocalDateTime.now();
-
-  private final ReservationId id;
-  private DinnerDate dinnerDate;
+  private static final int A_ID = 12345;
+  private long id;
   private final List<Table> tables;
-  private final ReservationDate reservationDate;
 
   public ReservationBuilder() {
-    id = new ReservationIdFactory().createFromVendorCode("ddsa");
-    dinnerDate = new DinnerDate(A_DINNER_DATE);
+    id = A_ID;
     tables = new ArrayList<>();
-    reservationDate = new ReservationDate(A_RESERVATION_DATE);
   }
 
-  public ReservationBuilder withDinnerDate(LocalDateTime dinnerDate) {
-    this.dinnerDate = new DinnerDate(dinnerDate);
+  public ReservationBuilder withId(long id) {
+    this.id = id;
     return this;
   }
 
@@ -44,6 +33,6 @@ public class ReservationBuilder {
   }
 
   public Reservation build() {
-    return new Reservation(id, dinnerDate, tables, reservationDate);
+    return new Reservation(id, tables);
   }
 }

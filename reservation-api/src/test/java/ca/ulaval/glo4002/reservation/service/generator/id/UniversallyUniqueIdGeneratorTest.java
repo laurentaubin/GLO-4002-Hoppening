@@ -23,5 +23,4 @@ class UniversallyUniqueIdGeneratorTest {
     // then
     assertThat(firstId).isNotEqualTo(secondId);
   }
-
 }

@@ -4,7 +4,7 @@ import ca.ulaval.glo4002.reservation.domain.Reservation;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 
 public class InMemoryReservationRepository implements ReservationRepository {
-  private InMemoryReservationDao inMemoryReservationDao;
+  private final InMemoryReservationDao inMemoryReservationDao;
 
   public InMemoryReservationRepository(InMemoryReservationDao inMemoryReservationDao) {
     this.inMemoryReservationDao = inMemoryReservationDao;

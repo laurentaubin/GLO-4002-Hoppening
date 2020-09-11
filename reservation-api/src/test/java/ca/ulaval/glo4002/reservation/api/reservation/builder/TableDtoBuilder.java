@@ -3,17 +3,17 @@ package ca.ulaval.glo4002.reservation.api.reservation.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerApiDto;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.TableApiDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
 
 public class TableDtoBuilder {
-  private final List<CustomerApiDto> customers;
+  private final List<CustomerDto> customers;
 
   public TableDtoBuilder() {
     customers = new ArrayList<>();
   }
 
-  public TableDtoBuilder withCustomer(CustomerApiDto customer) {
+  public TableDtoBuilder withCustomer(CustomerDto customer) {
     customers.add(customer);
     return this;
   }
@@ -23,9 +23,9 @@ public class TableDtoBuilder {
     return this;
   }
 
-  public TableApiDto build() {
-    TableApiDto tableApiDto = new TableApiDto();
-    tableApiDto.setCustomers(customers);
-    return tableApiDto;
+  public TableDto build() {
+    TableDto tableDto = new TableDto();
+    tableDto.setCustomers(customers);
+    return tableDto;
   }
 }

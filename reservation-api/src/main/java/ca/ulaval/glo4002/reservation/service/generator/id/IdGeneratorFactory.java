@@ -8,5 +8,4 @@ public class IdGeneratorFactory {
     }
     return new IncrementalIdGenerator();
   }
-
 }

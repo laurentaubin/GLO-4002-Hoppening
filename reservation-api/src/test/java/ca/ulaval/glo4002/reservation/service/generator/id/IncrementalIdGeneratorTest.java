@@ -15,16 +15,6 @@ class IncrementalIdGeneratorTest {
   }
 
   @Test
-  public void whenGeneratingTwoIds_thenIdsAreDifferent() {
-    // when
-    long firstId = incrementalIdGenerator.getLongUuid();
-    long secondId = incrementalIdGenerator.getLongUuid();
-
-    // then
-    assertThat(firstId).isNotEqualTo(secondId);
-  }
-
-  @Test
   public void whenGeneratingTwoIds_thenTheIdsIncrement() {
 
     long firstId = incrementalIdGenerator.getLongUuid();

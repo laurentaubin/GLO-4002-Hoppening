@@ -6,5 +6,4 @@ public class IncrementalIdGenerator implements IdGenerator {
   public long getLongUuid() {
     return counter++;
   }
-
 }
