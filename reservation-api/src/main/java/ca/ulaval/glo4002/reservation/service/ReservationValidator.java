@@ -4,7 +4,7 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.domain.exception.InvalidReservationQuantityException;
+import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationQuantityException;
 
 public class ReservationValidator {
 

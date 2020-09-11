@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.api.reservation;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,5 +16,5 @@ public interface ReservationResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  Response createReservation(CreateReservationRequestDto createReservationRequestDto);
+  Response createReservation(@Valid CreateReservationRequestDto createReservationRequestDto);
 }

@@ -6,20 +6,19 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
+import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
 
 @Provider
 public class CatchInvalidRequestFormatMapper
   implements
     ExceptionMapper<ConstraintViolationException>
 {
-  private static final int STATUS_CODE = Response.Status.BAD_REQUEST.getStatusCode();
-  private static final String ERROR_CODE = "INVALID_FORMAT";
-  private static final String ERROR_MESSAGE = "Invalid Format";
+  private static final ReservationErrorCode ERROR_CODE = ReservationErrorCode.INVALID_FORMAT;
 
   @Override
   public Response toResponse(ConstraintViolationException exception) {
-    return Response.status(STATUS_CODE)
-                   .entity(new ExceptionResponse(ERROR_CODE, ERROR_MESSAGE))
+    return Response.status(ERROR_CODE.getCode())
+                   .entity(new ExceptionResponse(ERROR_CODE.toString(), ERROR_CODE.getMessage()))
                    .build();
   }
 }

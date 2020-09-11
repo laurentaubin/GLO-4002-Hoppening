@@ -15,6 +15,8 @@
     <jersey.version>2.31</jersey.version>
     <google-truth.version>1.0</google-truth.version>
     <mockito.version>3.5.10</mockito.version>
+    <bean-validation.version>2.31</bean-validation.version>
+
   </properties>
 
   <dependencyManagement>
@@ -52,6 +54,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.ext</groupId>
+      <artifactId>jersey-bean-validation</artifactId>
+      <version>${bean-validation.version}</version>
     </dependency>
 
     <dependency>

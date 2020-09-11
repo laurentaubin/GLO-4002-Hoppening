@@ -11,7 +11,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRe
 import ca.ulaval.glo4002.reservation.api.reservation.builder.TableDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.domain.exception.InvalidReservationQuantityException;
+import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationQuantityException;
 
 class ReservationValidatorTest {
 

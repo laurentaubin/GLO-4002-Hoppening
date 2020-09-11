@@ -1,18 +1,23 @@
 package ca.ulaval.glo4002.reservation.api.reservation.validator;
 
-import java.util.regex.Pattern;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatException;
 
 public class DateFormatValidator {
-  private final Pattern datePattern;
 
-  public DateFormatValidator(String dateRegex) {
-    this.datePattern = Pattern.compile(dateRegex);
+  private DateTimeFormatter dateTimeFormatter;
+
+  public DateFormatValidator(String dateFormat) {
+    dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);
   }
 
   public void validateFormat(String date) {
-    if (!datePattern.matcher(date).find()) {
+    try {
+      LocalDateTime.parse(date, dateTimeFormatter);
+    } catch (DateTimeParseException e) {
       throw new InvalidFormatException();
     }
   }

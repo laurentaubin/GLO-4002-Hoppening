@@ -2,8 +2,13 @@ package ca.ulaval.glo4002.reservation.api.reservation.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 public class CustomerDto {
+  @NotNull
   private String name;
+
+  @NotNull
   private List<String> restrictions;
 
   public String getName() {

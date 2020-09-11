@@ -8,18 +8,17 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
+import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
 
 @Priority(1)
 @Provider
 public class CatchJsonMappingExceptionMapper implements ExceptionMapper<JsonMappingException> {
-  private static final int STATUS_CODE = Response.Status.BAD_REQUEST.getStatusCode();
-  private static final String ERROR_CODE = "INVALID_FORMAT";
-  private static final String ERROR_MESSAGE = "Invalid Format";
+  private static final ReservationErrorCode ERROR_CODE = ReservationErrorCode.INVALID_FORMAT;
 
   @Override
   public Response toResponse(JsonMappingException exception) {
-    return Response.status(STATUS_CODE)
-                   .entity(new ExceptionResponse(ERROR_CODE, ERROR_MESSAGE))
+    return Response.status(ERROR_CODE.getCode())
+                   .entity(new ExceptionResponse(ERROR_CODE.toString(), ERROR_CODE.getMessage()))
                    .build();
   }
 }

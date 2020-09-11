@@ -7,10 +7,27 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationReques
 import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
 
 public class CreateReservationRequestDtoBuilder {
+  private static final String A_VENDOR_CODE = "vendor code";
+  private static final String A_DINNER_DATE = "2150-07-21T15:23:20.142Z";
+
+  private String vendorCode;
+  private String dinnerDate;
   private final List<TableDto> tables;
 
   public CreateReservationRequestDtoBuilder() {
+    vendorCode = A_VENDOR_CODE;
+    dinnerDate = A_DINNER_DATE;
     tables = new ArrayList<>();
+  }
+
+  public CreateReservationRequestDtoBuilder withVendorCode(String vendorCode) {
+    this.vendorCode = vendorCode;
+    return this;
+  }
+
+  public CreateReservationRequestDtoBuilder withDinnerDate(String dinnerDate) {
+    this.dinnerDate = dinnerDate;
+    return this;
   }
 
   public CreateReservationRequestDtoBuilder withTable(TableDto table) {
@@ -25,6 +42,8 @@ public class CreateReservationRequestDtoBuilder {
 
   public CreateReservationRequestDto build() {
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDto();
+    createReservationRequestDto.setVendorCode(vendorCode);
+    createReservationRequestDto.setDinnerDate(dinnerDate);
     createReservationRequestDto.setTables(tables);
     return createReservationRequestDto;
   }

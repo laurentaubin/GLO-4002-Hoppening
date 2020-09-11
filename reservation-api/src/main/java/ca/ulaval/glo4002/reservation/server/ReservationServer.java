@@ -6,6 +6,10 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import ca.ulaval.glo4002.reservation.api.mappers.CatchInvalidRequestFormatMapper;
+import ca.ulaval.glo4002.reservation.api.mappers.CatchInvalidReservationRequestMapper;
+import ca.ulaval.glo4002.reservation.api.mappers.CatchJsonMappingExceptionMapper;
+
 public class ReservationServer {
   private Server server;
 
@@ -30,6 +34,9 @@ public class ReservationServer {
     for (Object resource : resources) {
       packageConfig.register(resource);
     }
+    packageConfig.register(new CatchInvalidRequestFormatMapper());
+    packageConfig.register(new CatchInvalidReservationRequestMapper());
+    packageConfig.register(new CatchJsonMappingExceptionMapper());
     return packageConfig;
   }
 

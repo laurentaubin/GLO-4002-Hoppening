@@ -9,7 +9,6 @@ import ca.ulaval.glo4002.reservation.domain.Reservation;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 
 public class InMemoryReservationDaoTest {
-
   private static final long AN_ID = 123;
 
   private InMemoryReservationDao inMemoryReservationDao;

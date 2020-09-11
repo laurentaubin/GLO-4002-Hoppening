@@ -21,7 +21,6 @@ class CustomerAssemblerTest {
   @BeforeEach
   public void setUp() {
     customerAssembler = new CustomerAssembler();
-
   }
 
   @Test
