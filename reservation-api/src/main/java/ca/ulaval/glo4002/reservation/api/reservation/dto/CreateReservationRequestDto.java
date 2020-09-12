@@ -3,7 +3,6 @@ package ca.ulaval.glo4002.reservation.api.reservation.dto;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class CreateReservationRequestDto {
@@ -14,7 +13,7 @@ public class CreateReservationRequestDto {
   private String dinnerDate;
 
   @Valid
-  @NotEmpty
+  @NotNull
   private List<TableDto> tables;
 
   public CreateReservationRequestDto() {

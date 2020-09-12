@@ -4,6 +4,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import ca.ulaval.glo4002.reservation.api.mappers.CatchInvalidRequestFormatMapper;
@@ -37,6 +38,7 @@ public class ReservationServer {
     packageConfig.register(new CatchInvalidRequestFormatMapper());
     packageConfig.register(new CatchInvalidReservationRequestMapper());
     packageConfig.register(new CatchJsonMappingExceptionMapper());
+    packageConfig.property(ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED, true);
     return packageConfig;
   }
 
