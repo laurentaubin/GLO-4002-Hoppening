@@ -3,14 +3,10 @@ package ca.ulaval.glo4002.reservation.service.assembler;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
-import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
-import ca.ulaval.glo4002.reservation.domain.Customer;
-import ca.ulaval.glo4002.reservation.domain.Restriction;
-import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
-import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,36 +14,41 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRequestDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDetailsDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.TableDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.domain.Reservation;
-import ca.ulaval.glo4002.reservation.domain.Table;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.*;
+import ca.ulaval.glo4002.reservation.domain.*;
+import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
+import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
+import ca.ulaval.glo4002.reservation.domain.builder.ReservationDetailsBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationAssemblerTest {
   private static final long AN_ID = 123;
   private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
   private static final String VENDOR_CODE = "VENDOR CODE";
-  private static final LocalDateTime DATE = LocalDateTime.of(2001, 9, 11, 16, 00);
+  private static final LocalDateTime DATE = LocalDateTime.of(2001, 9, 11, 16, 0, 0, 0);
   private static final String DATE_STRING = "2001-09-11T16:00:00.000Z";
 
   @Mock
   private TableAssembler tableAssembler;
+
   @Mock
   private CustomerAssembler customerAssembler;
+
+  @Mock
+  private ReservationDetailsAssembler reservationDetailsAssembler;
 
   private ReservationAssembler reservationAssembler;
 
   @BeforeEach
   public void setUp() {
-    reservationAssembler = new ReservationAssembler(DATE_FORMAT, tableAssembler, customerAssembler);
+    reservationAssembler = new ReservationAssembler(DATE_FORMAT,
+                                                    tableAssembler,
+                                                    customerAssembler,
+                                                    reservationDetailsAssembler);
   }
 
   @Test
@@ -109,12 +110,29 @@ class ReservationAssemblerTest {
   }
 
   @Test
+  public void givenACreateReservationRequestDtoWithReservationDetailsDto_whenAssembleFromCreateReservationRequestDto_thenReturnReservationWithReservationDetails() {
+    // given
+    ReservationDetails reservationDetails = new ReservationDetailsBuilder().build();
+    ReservationDetailsDto reservationDetailsDto = new ReservationDetailsDtoBuilder().build();
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withReservationDetails(reservationDetailsDto)
+                                                                                                      .build();
+    given(reservationDetailsAssembler.assembleFromReservationDetailsDto(reservationDetailsDto)).willReturn(reservationDetails);
+
+    // when
+    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
+                                                                                                   AN_ID);
+    // then
+    System.out.println(expectedReservation.getReservationDetails());
+    assertThat(expectedReservation.getReservationDetails()).isNotNull();
+  }
+
+  @Test
   public void whenCreateDtoFromReservation_thenReturnedDtoHasProperDate() {
     // given
     Reservation reservation = new ReservationBuilder().withDinnerDate(DATE).build();
 
     // when
-    ReservationDto  reservationDto = reservationAssembler.assembleDtoFromReservation(reservation);
+    ReservationDto reservationDto = reservationAssembler.assembleDtoFromReservation(reservation);
 
     // then
     assertThat(DATE_STRING).isEqualTo(reservationDto.getDinnerDate());
@@ -131,7 +149,7 @@ class ReservationAssemblerTest {
     given(customerAssembler.assembleDtoFromCustomer(customer)).willReturn(customerDto);
 
     // when
-    ReservationDto  reservationDto = reservationAssembler.assembleDtoFromReservation(reservation);
+    ReservationDto reservationDto = reservationAssembler.assembleDtoFromReservation(reservation);
 
     // then
     assertThat(reservationDto.getCustomers()).contains(customerDto);

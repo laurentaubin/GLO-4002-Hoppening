@@ -2,15 +2,10 @@ package ca.ulaval.glo4002.reservation.service;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
-import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
-import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,16 +14,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRequestDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
-import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatException;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.Reservation;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
+import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.service.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationDateException;
 import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationQuantityException;
+import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
-import ca.ulaval.glo4002.reservation.service.validator.DinnerDateValidator;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
@@ -50,9 +48,6 @@ public class ReservationServiceTest {
   private ReservationAssembler reservationAssembler;
 
   @Mock
-  private DinnerDateValidator dinnerDateValidator;
-
-  @Mock
   private ReservationValidator reservationValidator;
 
   private ReservationService reservationService;
@@ -62,7 +57,6 @@ public class ReservationServiceTest {
     reservationService = new ReservationService(idGenerator,
                                                 reservationRepository,
                                                 reservationAssembler,
-                                                dinnerDateValidator,
                                                 reservationValidator);
   }
 
@@ -95,47 +89,29 @@ public class ReservationServiceTest {
   }
 
   @Test
-  public void givenARequestWithoutDinnerDate_whenCreatingReservation_thenThrowInvalidFormatException() {
-    // given
-    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withDinnerDate(null)
-                                                                                                      .build();
-    doThrow(InvalidFormatException.class).when(dinnerDateValidator).validateDate(any());
-
-    // when
-    Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
-
-    // then
-    assertThrows(InvalidFormatException.class, creatingReservation);
-  }
-
-  @Test
-  public void givenARequestWithInvalidFormatDinnerDate_whenCreatingReservation_thenThrowInvalidFormatException() {
-    // given
-    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withDinnerDate(INVALID_FORMAT_DINNER_DATE)
-                                                                                                      .build();
-    doThrow(InvalidFormatException.class).when(dinnerDateValidator)
-                                         .validateDate(INVALID_FORMAT_DINNER_DATE);
-
-    // when
-    Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
-
-    // then
-    assertThrows(InvalidFormatException.class, creatingReservation);
-  }
-
-  @Test
   public void givenARequestWithAnOutOfBoundDinnerDate_whenCreatingReservation_thenThrowInvalidDinnerDateException() {
     // given
-    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withDinnerDate(OUT_OF_BOUND_DINNER_DATE)
-                                                                                                      .build();
-    doThrow(InvalidDinnerDateException.class).when(dinnerDateValidator)
-                                             .validateDate(OUT_OF_BOUND_DINNER_DATE);
+    doThrow(InvalidDinnerDateException.class).when(reservationValidator)
+                                             .validate(createReservationRequestDto);
 
     // when
     Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
 
     // then
     assertThrows(InvalidDinnerDateException.class, creatingReservation);
+  }
+
+  @Test
+  public void givenARequestWithAnOutOfBoundReservationDate_whenCreatingReservation_thenThrowInvalidReservationDateException() {
+    // given
+    doThrow(InvalidReservationDateException.class).when(reservationValidator)
+                                                  .validate(createReservationRequestDto);
+
+    // when
+    Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
+
+    // then
+    assertThrows(InvalidReservationDateException.class, creatingReservation);
   }
 
   @Test
@@ -177,7 +153,8 @@ public class ReservationServiceTest {
     Executable gettingReservation = () -> reservationService.getReservationById(AN_ID);
 
     // then
-    ReservationNotFoundException exception = assertThrows(ReservationNotFoundException.class, gettingReservation);
+    ReservationNotFoundException exception = assertThrows(ReservationNotFoundException.class,
+                                                          gettingReservation);
     assertThat(exception.getDescription()).isEqualTo(RESERVATION_NOT_FOUND_EXCEPTION);
   }
 

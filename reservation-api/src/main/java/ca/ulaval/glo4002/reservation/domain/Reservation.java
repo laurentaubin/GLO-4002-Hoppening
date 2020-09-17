@@ -9,12 +9,19 @@ public class Reservation {
   private final String vendorCode;
   private final LocalDateTime dinnerDate;
   private final List<Table> tables;
+  private final ReservationDetails reservationDetails;
 
-  public Reservation(long id, String vendorCode, LocalDateTime dinnerDate, List<Table> tables) {
+  public Reservation(long id,
+                     String vendorCode,
+                     LocalDateTime dinnerDate,
+                     List<Table> tables,
+                     ReservationDetails reservationDetails)
+  {
     this.id = id;
     this.vendorCode = vendorCode;
     this.dinnerDate = dinnerDate;
     this.tables = tables;
+    this.reservationDetails = reservationDetails;
   }
 
   public long getId() {
@@ -31,5 +38,9 @@ public class Reservation {
 
   public List<Table> getTables() {
     return tables;
+  }
+
+  public ReservationDetails getReservationDetails() {
+    return reservationDetails;
   }
 }

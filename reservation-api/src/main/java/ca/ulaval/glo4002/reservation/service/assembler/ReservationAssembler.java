@@ -11,18 +11,24 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.Customer;
 import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.ReservationDetails;
 import ca.ulaval.glo4002.reservation.domain.Table;
 
 public class ReservationAssembler {
-
   private final DateTimeFormatter dateFormatter;
   private final TableAssembler tableAssembler;
   private final CustomerAssembler customerAssembler;
+  private final ReservationDetailsAssembler reservationDetailsAssembler;
 
-  public ReservationAssembler(String dateFormat, TableAssembler tableAssembler, CustomerAssembler customerAssembler) {
+  public ReservationAssembler(String dateFormat,
+                              TableAssembler tableAssembler,
+                              CustomerAssembler customerAssembler,
+                              ReservationDetailsAssembler reservationDetailsAssembler)
+  {
     this.dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
     this.tableAssembler = tableAssembler;
     this.customerAssembler = customerAssembler;
+    this.reservationDetailsAssembler = reservationDetailsAssembler;
   }
 
   public Reservation assembleFromCreateReservationRequestDto(CreateReservationRequestDto createReservationRequestDto,
@@ -33,7 +39,12 @@ public class ReservationAssembler {
                                                     .stream()
                                                     .map(tableAssembler::assembleFromTableDto)
                                                     .collect(Collectors.toList());
-    return new Reservation(id, createReservationRequestDto.getVendorCode(), dinnerDate, tables);
+    ReservationDetails reservationDetails = reservationDetailsAssembler.assembleFromReservationDetailsDto(createReservationRequestDto.getReservationDetails());
+    return new Reservation(id,
+                           createReservationRequestDto.getVendorCode(),
+                           dinnerDate,
+                           tables,
+                           reservationDetails);
   }
 
   public ReservationDto assembleDtoFromReservation(Reservation reservation) {
@@ -41,8 +52,8 @@ public class ReservationAssembler {
     reservationDto.setDinnerDate(reservation.getDinnerDate().format(dateFormatter));
 
     List<CustomerDto> customers = getAllCustomersFromReservation(reservation).stream()
-                                                                          .map(customerAssembler::assembleDtoFromCustomer)
-                                                                          .collect(Collectors.toList());
+                                                                             .map(customerAssembler::assembleDtoFromCustomer)
+                                                                             .collect(Collectors.toList());
 
     reservationDto.setCustomers(customers);
 
@@ -56,7 +67,7 @@ public class ReservationAssembler {
   private List<Customer> getAllCustomersFromReservation(Reservation reservation) {
     List<Customer> customerList = new ArrayList<>();
 
-    for(Table table : reservation.getTables()) {
+    for (Table table : reservation.getTables()) {
       customerList.addAll(table.getCustomers());
     }
 

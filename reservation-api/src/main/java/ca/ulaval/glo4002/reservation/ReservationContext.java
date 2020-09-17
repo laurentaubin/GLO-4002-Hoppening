@@ -12,19 +12,20 @@ import ca.ulaval.glo4002.reservation.infra.inmemory.InMemoryReservationRepositor
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
 import ca.ulaval.glo4002.reservation.service.ReservationService;
 import ca.ulaval.glo4002.reservation.service.ReservationValidator;
-import ca.ulaval.glo4002.reservation.service.assembler.CustomerAssembler;
-import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
-import ca.ulaval.glo4002.reservation.service.assembler.TableAssembler;
+import ca.ulaval.glo4002.reservation.service.assembler.*;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGeneratorFactory;
 import ca.ulaval.glo4002.reservation.service.validator.DinnerDateValidator;
+import ca.ulaval.glo4002.reservation.service.validator.ReservationDateValidator;
 
 public class ReservationContext {
   private static final int PORT = 8181;
   private static final boolean USE_UNIVERSALLY_UNIQUE_ID_GENERATOR = true;
   private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-  private static final String OPENING_DATE = "2150-07-20T00:00:00.000Z";
-  private static final String CLOSING_DATE = "2150-07-30T23:59:59.999Z";
+  private static final String OPENING_DINNER_DATE = "2150-07-20T00:00:00.000Z";
+  private static final String CLOSING_DINNER_DATE = "2150-07-30T23:59:59.999Z";
+  private static final String OPENING_RESERVATION_DATE = "2150-01-01T00:00:00.000Z";
+  private static final String CLOSING_RESERVATION_DATE = "2150-07-16T23:59:59.999Z";
 
   private ReservationServer server;
 
@@ -40,6 +41,12 @@ public class ReservationContext {
   private ReservationService createReservationService() {
     ReservationRepository reservationRepository = new InMemoryReservationRepository(new InMemoryReservationDao());
     IdGenerator idGenerator = new IdGeneratorFactory().create(USE_UNIVERSALLY_UNIQUE_ID_GENERATOR);
+    DinnerDateValidator dinnerDateValidator = new DinnerDateValidator(DATE_FORMAT,
+                                                                      OPENING_DINNER_DATE,
+                                                                      CLOSING_DINNER_DATE);
+    ReservationDateValidator reservationDateValidator = new ReservationDateValidator(DATE_FORMAT,
+                                                                                     OPENING_RESERVATION_DATE,
+                                                                                     CLOSING_RESERVATION_DATE);
 
     CustomerAssembler customerAssembler = new CustomerAssembler();
 
@@ -47,9 +54,11 @@ public class ReservationContext {
                                   reservationRepository,
                                   new ReservationAssembler(DATE_FORMAT,
                                                            new TableAssembler(customerAssembler),
-                                                            customerAssembler),
-                                  new DinnerDateValidator(DATE_FORMAT, OPENING_DATE, CLOSING_DATE),
-                                  new ReservationValidator());
+                                                           customerAssembler,
+                                                           new ReservationDetailsAssembler(DATE_FORMAT,
+                                                                                           new CountryAssembler())),
+                                  new ReservationValidator(dinnerDateValidator,
+                                                           reservationDateValidator));
   }
 
   private Object[] createResources(ReservationService reservationService) {

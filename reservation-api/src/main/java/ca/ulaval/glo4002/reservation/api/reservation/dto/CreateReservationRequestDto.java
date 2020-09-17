@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CreateReservationRequestDto {
   @NotNull
   private String vendorCode;
@@ -15,6 +17,11 @@ public class CreateReservationRequestDto {
   @Valid
   @NotNull
   private List<TableDto> tables;
+
+  @Valid
+  @NotNull
+  @JsonProperty("from")
+  private ReservationDetailsDto reservationDetails;
 
   public CreateReservationRequestDto() {
   }
@@ -41,5 +48,13 @@ public class CreateReservationRequestDto {
 
   public List<TableDto> getTables() {
     return tables;
+  }
+
+  public ReservationDetailsDto getReservationDetails() {
+    return reservationDetails;
+  }
+
+  public void setReservationDetails(ReservationDetailsDto reservationDetailsDto) {
+    this.reservationDetails = reservationDetailsDto;
   }
 }

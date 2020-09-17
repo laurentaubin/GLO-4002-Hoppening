@@ -5,13 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+
 import javax.ws.rs.core.Response;
 
-import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
-import ca.ulaval.glo4002.reservation.domain.Reservation;
-import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
-import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,11 +16,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRequestDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDetailsDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDetailsDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatException;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.service.ReservationService;
 import ca.ulaval.glo4002.reservation.service.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationDateException;
+import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationResourceImplTest {
@@ -34,6 +36,7 @@ public class ReservationResourceImplTest {
   private static final String RESERVATIONS_BASE_PATH = "/reservations";
   private static final String INVALID_FORMAT_DATE = "30-21-08";
   private static final String A_OUT_OF_BOUND_DINNER_DATE = "2190-07-30T23:59:59.999Z";
+  private static final String A_OUT_OF_BOUND_RESERVATION_DATE = "2149-09-08T23:59:59.999Z";
 
   @Mock
   private ReservationService reservationService;
@@ -120,6 +123,57 @@ public class ReservationResourceImplTest {
 
     // then
     assertThrows(InvalidDinnerDateException.class, creatingReservation);
+  }
+
+  @Test
+  public void givenCreateReservationRequestDtoWithMissingReservationDate_whenCreateNewReservation_thenThrowInvalidFormatException() {
+    // given
+    ReservationDetailsDto reservationDetailsDto = new ReservationDetailsDtoBuilder().withReservationDate(null)
+                                                                                    .build();
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withReservationDetails(reservationDetailsDto)
+                                                                                                      .build();
+    InvalidFormatException invalidReservationDateFormatException = new InvalidFormatException();
+    given(reservationService.createReservation(createReservationRequestDto)).willThrow(invalidReservationDateFormatException);
+
+    // when
+    Executable creatingReservation = () -> reservationResource.createReservation(createReservationRequestDto);
+
+    // then
+    assertThrows(InvalidFormatException.class, creatingReservation);
+  }
+
+  @Test
+  public void givenCreateReservationRequestDtoWithInvalidFormatReservationDate_whenCreateNewReservation_thenThrowInvalidFormatException() {
+    // given
+    ReservationDetailsDto reservationDetailsDto = new ReservationDetailsDtoBuilder().withReservationDate(INVALID_FORMAT_DATE)
+                                                                                    .build();
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withReservationDetails(reservationDetailsDto)
+                                                                                                      .build();
+    InvalidFormatException invalidReservationDateFormatException = new InvalidFormatException();
+    given(reservationService.createReservation(createReservationRequestDto)).willThrow(invalidReservationDateFormatException);
+
+    // when
+    Executable creatingReservation = () -> reservationResource.createReservation(createReservationRequestDto);
+
+    // then
+    assertThrows(InvalidFormatException.class, creatingReservation);
+  }
+
+  @Test
+  public void givenCreateReservationRequestDtoWithOutOfBoundReservationDate_whenCreateNewReservation_thenThrowInvalidReservationDateException() {
+    // given
+    ReservationDetailsDto reservationDetailsDto = new ReservationDetailsDtoBuilder().withReservationDate(A_OUT_OF_BOUND_RESERVATION_DATE)
+                                                                                    .build();
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withReservationDetails(reservationDetailsDto)
+                                                                                                      .build();
+    InvalidReservationDateException invalidReservationDateException = new InvalidReservationDateException();
+    given(reservationService.createReservation(createReservationRequestDto)).willThrow(invalidReservationDateException);
+
+    // when
+    Executable creatingReservation = () -> reservationResource.createReservation(createReservationRequestDto);
+
+    // then
+    assertThrows(InvalidReservationDateException.class, creatingReservation);
   }
 
   @Test

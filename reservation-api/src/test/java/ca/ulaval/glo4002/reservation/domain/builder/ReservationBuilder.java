@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.ReservationDetails;
 import ca.ulaval.glo4002.reservation.domain.Table;
 
 public class ReservationBuilder {
@@ -16,12 +17,14 @@ public class ReservationBuilder {
   private String vendorCode;
   private LocalDateTime dinnerDate;
   private final List<Table> tables;
+  private ReservationDetails reservationDetails;
 
   public ReservationBuilder() {
     id = A_ID;
     vendorCode = A_VENDOR_CODE;
     dinnerDate = A_DINNER_DATE;
     tables = new ArrayList<>();
+    reservationDetails = new ReservationDetailsBuilder().build();
   }
 
   public ReservationBuilder withId(long id) {
@@ -44,6 +47,11 @@ public class ReservationBuilder {
     return this;
   }
 
+  public ReservationBuilder withReservationDetails(ReservationDetails reservationDetails) {
+    this.reservationDetails = reservationDetails;
+    return this;
+  }
+
   public ReservationBuilder withAnyTable() {
     Table table = new TableBuilder().withAnyCustomer().build();
     tables.add(table);
@@ -51,6 +59,6 @@ public class ReservationBuilder {
   }
 
   public Reservation build() {
-    return new Reservation(id, vendorCode, dinnerDate, tables);
+    return new Reservation(id, vendorCode, dinnerDate, tables, reservationDetails);
   }
 }

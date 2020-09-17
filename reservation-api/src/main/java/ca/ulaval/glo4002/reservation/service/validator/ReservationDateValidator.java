@@ -2,18 +2,17 @@ package ca.ulaval.glo4002.reservation.service.validator;
 
 import java.time.LocalDateTime;
 
-import ca.ulaval.glo4002.reservation.service.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationDateException;
 
-public class DinnerDateValidator extends DateValidator {
-
-  public DinnerDateValidator(String dateFormat, String openingDate, String closingDate) {
+public class ReservationDateValidator extends DateValidator {
+  public ReservationDateValidator(String dateFormat, String openingDate, String closingDate) {
     super(dateFormat, openingDate, closingDate);
   }
 
   public void validate(String date) {
     LocalDateTime parsedDate = LocalDateTime.parse(date, this.getDateTimeFormatter());
     if (parsedDate.isBefore(this.getOpeningDate()) || parsedDate.isAfter(this.getClosingDate())) {
-      throw new InvalidDinnerDateException();
+      throw new InvalidReservationDateException();
     }
   }
 }

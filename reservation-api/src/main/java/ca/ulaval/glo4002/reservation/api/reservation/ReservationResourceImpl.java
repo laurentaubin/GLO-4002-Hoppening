@@ -22,6 +22,8 @@ public class ReservationResourceImpl implements ReservationResource {
 
   public Response createReservation(CreateReservationRequestDto createReservationRequestDto) {
     dateFormatValidator.validateFormat(createReservationRequestDto.getDinnerDate());
+    dateFormatValidator.validateFormat(createReservationRequestDto.getReservationDetails()
+                                                                  .getReservationDate());
 
     long reservationId = reservationService.createReservation(createReservationRequestDto);
     URI reservationLocation = URI.create(String.format("/reservations/%s", reservationId));
