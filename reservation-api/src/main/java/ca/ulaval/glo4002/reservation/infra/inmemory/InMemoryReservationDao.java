@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 
 public class InMemoryReservationDao {
 
@@ -16,5 +17,14 @@ public class InMemoryReservationDao {
   public long createReservation(Reservation reservation) {
     reservations.add(reservation);
     return reservation.getId();
+  }
+
+  public Reservation getReservationById(long reservationId) {
+     for(Reservation reservation : reservations){
+       if(reservation.getId() == reservationId){
+         return reservation;
+       }
+     }
+     throw new NonExistingReservationException();
   }
 }

@@ -7,6 +7,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
+import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
+import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +35,7 @@ public class ReservationServiceTest {
   private static final long AN_ID = 4321;
   private static final String INVALID_FORMAT_DINNER_DATE = "21-05-30";
   private static final String OUT_OF_BOUND_DINNER_DATE = "2020-07-30T23:59:59.999Z";
+  private static final String RESERVATION_NOT_FOUND_EXCEPTION = "Reservation with number 4321 not found";
 
   @Mock
   private IdGenerator idGenerator;
@@ -131,6 +136,49 @@ public class ReservationServiceTest {
 
     // then
     assertThrows(InvalidDinnerDateException.class, creatingReservation);
+  }
+
+  @Test
+  public void whenGettingReservationById_thenReservationIsReturned() {
+    // given
+    Reservation expectedReservation = new ReservationBuilder().withId(AN_ID).withAnyTable().build();
+    given(reservationRepository.getReservationById(AN_ID)).willReturn(expectedReservation);
+
+    // when
+    Reservation actualReservation = reservationService.getReservationById(AN_ID);
+
+    // then
+    assertThat(actualReservation).isEqualTo(expectedReservation);
+  }
+
+  @Test
+  public void whenGettingReservationDtoById_thenReservationDtoIsReturned() {
+    // given
+    Reservation expectedReservation = new ReservationBuilder().withId(AN_ID).withAnyTable().build();
+    ReservationDto expectedReservationDto = new ReservationDtoBuilder().withAnyCustomers().build();
+    given(reservationRepository.getReservationById(AN_ID)).willReturn(expectedReservation);
+    given(reservationAssembler.assembleDtoFromReservation(expectedReservation)).willReturn(expectedReservationDto);
+
+    // when
+    ReservationDto actualReservationDto = reservationService.getReservationDtoById(AN_ID);
+
+    // then
+    assertThat(actualReservationDto).isEqualTo(expectedReservationDto);
+
+  }
+
+  @Test
+  public void givenMissingReservation_whenGettingReservationById_thenThrowReservationNotFoundException() {
+    // given
+    doThrow(NonExistingReservationException.class).when(reservationRepository)
+                                                  .getReservationById(AN_ID);
+
+    // when
+    Executable gettingReservation = () -> reservationService.getReservationById(AN_ID);
+
+    // then
+    ReservationNotFoundException exception = assertThrows(ReservationNotFoundException.class, gettingReservation);
+    assertThat(exception.getDescription()).isEqualTo(RESERVATION_NOT_FOUND_EXCEPTION);
   }
 
   private void setUpReservationServiceMocksForIdTests(Reservation reservation, long id) {

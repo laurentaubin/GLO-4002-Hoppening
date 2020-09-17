@@ -10,8 +10,11 @@ public class InMemoryReservationRepository implements ReservationRepository {
     this.inMemoryReservationDao = inMemoryReservationDao;
   }
 
-  @Override
   public long createReservation(Reservation reservation) {
     return inMemoryReservationDao.createReservation(reservation);
+  }
+
+  public Reservation getReservationById(long reservationId) {
+    return inMemoryReservationDao.getReservationById(reservationId);
   }
 }

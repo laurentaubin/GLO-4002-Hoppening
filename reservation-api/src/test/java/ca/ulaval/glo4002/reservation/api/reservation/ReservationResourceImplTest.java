@@ -6,6 +6,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import javax.ws.rs.core.Response;
+
+import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
+import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
+import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -114,5 +120,31 @@ public class ReservationResourceImplTest {
 
     // then
     assertThrows(InvalidDinnerDateException.class, creatingReservation);
+  }
+
+  @Test
+  public void whenGetReservation_thenReturnReservationResponse() {
+    // given
+    ReservationDto expectedReservationDto = new ReservationDtoBuilder().withAnyCustomers().build();
+    given(reservationService.getReservationDtoById(AN_ID)).willReturn(expectedReservationDto);
+
+    // when
+    Response response = reservationResource.getReservation(AN_ID);
+
+    // then
+    assertThat(response.getEntity()).isEqualTo(expectedReservationDto);
+  }
+
+  @Test
+  public void givenGetInvalidReservationRequest_whenGetReservation_thenReturnReservationException() {
+    // given
+    ReservationNotFoundException notFoundException = new ReservationNotFoundException(AN_ID);
+    given(reservationService.getReservationDtoById(AN_ID)).willThrow(notFoundException);
+
+    // when
+    Executable gettingReservation = () -> reservationResource.getReservation(AN_ID);
+
+    // then
+    assertThrows(ReservationNotFoundException.class, gettingReservation);
   }
 }

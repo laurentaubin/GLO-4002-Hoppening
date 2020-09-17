@@ -2,6 +2,7 @@ package ca.ulaval.glo4002.reservation.service.assembler;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +16,8 @@ class CustomerAssemblerTest {
   private static final String VEGAN_RESTRICTION = "vegan";
   private static final String ALLERGIES_RESTRICTION = "allergies";
   private static final String ILLNESS_RESTRICTION = "illness";
+  private static final Restriction VEGETARIAN_ACTUAL_RESTRICTION = Restriction.VEGETARIAN;
+  private static final Restriction VEGAN_ACTUAL_RESTRICTION = Restriction.VEGAN;
 
   private CustomerAssembler customerAssembler;
 
@@ -87,5 +90,35 @@ class CustomerAssemblerTest {
     assertThat(actualCustomer.getRestrictions()).hasSize(2);
     assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName(ALLERGIES_RESTRICTION));
     assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName(ILLNESS_RESTRICTION));
+  }
+
+  @Test
+  public void whenAssembleDtoFromCustomer_thenReturnValidCustomerDto() {
+
+    // given
+    Customer customer = new CustomerBuilder().withRestriction(VEGETARIAN_ACTUAL_RESTRICTION)
+                                              .withRestriction(VEGAN_ACTUAL_RESTRICTION)
+                                              .build();
+
+    // when
+    CustomerDto actualCustomerDto = customerAssembler.assembleDtoFromCustomer(customer);
+
+    // then
+    assertThat(actualCustomerDto.getName()).isEqualTo(customer.getName());
+    assertThat(actualCustomerDto.getRestrictions()).contains(VEGETARIAN_ACTUAL_RESTRICTION.toString());
+    assertThat(actualCustomerDto.getRestrictions()).contains(VEGAN_ACTUAL_RESTRICTION.toString());
+  }
+
+  @Test
+  public void givenACustomerWithNoRestrictions_whenAssembleDtoFromCustomer_thenReturnValidCustomer() {
+    // given
+    Customer customer = new CustomerBuilder().build();
+
+    // when
+    CustomerDto actualCustomerDto = customerAssembler.assembleDtoFromCustomer(customer);
+
+    // then
+    assertThat(actualCustomerDto.getName()).isEqualTo(customer.getName());
+    assertThat(actualCustomerDto.getRestrictions()).hasSize(0);
   }
 }

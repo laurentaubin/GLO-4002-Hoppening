@@ -7,7 +7,9 @@ public enum ReservationErrorCode {
   INVALID_DINNER_DATE("Dinner date should be between July 20 2150 and July 30 2150",
                       Response.Status.BAD_REQUEST.getStatusCode()),
   INVALID_RESERVATION_QUANTITY("Reservations must include tables and customers",
-                               Response.Status.BAD_REQUEST.getStatusCode());
+                               Response.Status.BAD_REQUEST.getStatusCode()),
+  RESERVATION_NOT_FOUND("Reservation with number RESERVATION_NUMBER not found",
+                        Response.Status.NOT_FOUND.getStatusCode());
 
   private final String message;
   private final int code;

@@ -2,21 +2,27 @@ package ca.ulaval.glo4002.reservation.service.assembler;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
+import ca.ulaval.glo4002.reservation.domain.Customer;
 import ca.ulaval.glo4002.reservation.domain.Reservation;
 import ca.ulaval.glo4002.reservation.domain.Table;
 
 public class ReservationAssembler {
 
-  private final String dateFormat;
+  private final DateTimeFormatter dateFormatter;
   private final TableAssembler tableAssembler;
+  private final CustomerAssembler customerAssembler;
 
-  public ReservationAssembler(String dateFormat, TableAssembler tableAssembler) {
-    this.dateFormat = dateFormat;
+  public ReservationAssembler(String dateFormat, TableAssembler tableAssembler, CustomerAssembler customerAssembler) {
+    this.dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
     this.tableAssembler = tableAssembler;
+    this.customerAssembler = customerAssembler;
   }
 
   public Reservation assembleFromCreateReservationRequestDto(CreateReservationRequestDto createReservationRequestDto,
@@ -30,7 +36,30 @@ public class ReservationAssembler {
     return new Reservation(id, createReservationRequestDto.getVendorCode(), dinnerDate, tables);
   }
 
+  public ReservationDto assembleDtoFromReservation(Reservation reservation) {
+    ReservationDto reservationDto = new ReservationDto();
+    reservationDto.setDinnerDate(reservation.getDinnerDate().format(dateFormatter));
+
+    List<CustomerDto> customers = getAllCustomersFromReservation(reservation).stream()
+                                                                          .map(customerAssembler::assembleDtoFromCustomer)
+                                                                          .collect(Collectors.toList());
+
+    reservationDto.setCustomers(customers);
+
+    return reservationDto;
+  }
+
   private LocalDateTime assembleDinnerDateFromString(String dinnerDate) {
-    return LocalDateTime.parse(dinnerDate, DateTimeFormatter.ofPattern(dateFormat));
+    return LocalDateTime.parse(dinnerDate, dateFormatter);
+  }
+
+  private List<Customer> getAllCustomersFromReservation(Reservation reservation) {
+    List<Customer> customerList = new ArrayList<>();
+
+    for(Table table : reservation.getTables()) {
+      customerList.addAll(table.getCustomers());
+    }
+
+    return customerList;
   }
 }

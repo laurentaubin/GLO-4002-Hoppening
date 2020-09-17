@@ -1,9 +1,12 @@
 package ca.ulaval.glo4002.reservation.service;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.Reservation;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
+import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
+import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
 import ca.ulaval.glo4002.reservation.service.validator.DinnerDateValidator;
 
@@ -35,5 +38,17 @@ public class ReservationService {
     Reservation reservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
                                                                                            reservationId);
     return reservationRepository.createReservation(reservation);
+  }
+
+  public Reservation getReservationById(long reservationId) {
+    try {
+      return reservationRepository.getReservationById(reservationId);
+    } catch (NonExistingReservationException exception) {
+      throw new ReservationNotFoundException(reservationId);
+    }
+  }
+
+  public ReservationDto getReservationDtoById(long reservationId) {
+    return reservationAssembler.assembleDtoFromReservation(getReservationById(reservationId));
   }
 }

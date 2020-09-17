@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.server;
 
+import ca.ulaval.glo4002.reservation.api.mappers.CatchNotFoundExceptionMapper;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -38,6 +39,7 @@ public class ReservationServer {
     packageConfig.register(new CatchInvalidRequestFormatMapper());
     packageConfig.register(new CatchInvalidReservationRequestMapper());
     packageConfig.register(new CatchJsonMappingExceptionMapper());
+    packageConfig.register(new CatchNotFoundExceptionMapper());
     packageConfig.property(ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED, true);
     return packageConfig;
   }

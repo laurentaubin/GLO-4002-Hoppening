@@ -41,10 +41,13 @@ public class ReservationContext {
     ReservationRepository reservationRepository = new InMemoryReservationRepository(new InMemoryReservationDao());
     IdGenerator idGenerator = new IdGeneratorFactory().create(USE_UNIVERSALLY_UNIQUE_ID_GENERATOR);
 
+    CustomerAssembler customerAssembler = new CustomerAssembler();
+
     return new ReservationService(idGenerator,
                                   reservationRepository,
                                   new ReservationAssembler(DATE_FORMAT,
-                                                           new TableAssembler(new CustomerAssembler())),
+                                                           new TableAssembler(customerAssembler),
+                                                            customerAssembler),
                                   new DinnerDateValidator(DATE_FORMAT, OPENING_DATE, CLOSING_DATE),
                                   new ReservationValidator());
   }
