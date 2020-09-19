@@ -50,6 +50,7 @@ public class ReservationAssembler {
   public ReservationDto assembleDtoFromReservation(Reservation reservation) {
     ReservationDto reservationDto = new ReservationDto();
     reservationDto.setDinnerDate(reservation.getDinnerDate().format(dateFormatter));
+    reservationDto.setReservationPrice(formatReservationPrice(reservation.getReservationFees()));
 
     List<CustomerDto> customers = getAllCustomersFromReservation(reservation).stream()
                                                                              .map(customerAssembler::assembleDtoFromCustomer)
@@ -58,6 +59,10 @@ public class ReservationAssembler {
     reservationDto.setCustomers(customers);
 
     return reservationDto;
+  }
+
+  private double formatReservationPrice(double reservationFees) {
+    return (double) Math.round(reservationFees * 100) / 100;
   }
 
   private LocalDateTime assembleDinnerDateFromString(String dinnerDate) {

@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class CustomerRestriction {
 
-  private Set<RestrictionType> restrictions;
+  private final Set<RestrictionType> restrictions;
 
   public CustomerRestriction(Set<RestrictionType> restrictions) {
     this.restrictions = restrictions;

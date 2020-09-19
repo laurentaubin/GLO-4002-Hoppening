@@ -1,15 +1,13 @@
 package ca.ulaval.glo4002.reservation.infra.inmemory;
 
 import static com.google.common.truth.Truth.assertThat;
-
-import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
-import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.domain.Reservation;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
+import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 

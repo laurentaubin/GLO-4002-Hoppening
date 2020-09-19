@@ -25,8 +25,6 @@ public class ReservationContext {
   private static final int PORT = 8181;
   private static final boolean USE_UNIVERSALLY_UNIQUE_ID_GENERATOR = true;
   private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-  private static final String OPENING_DATE = "2150-07-20T00:00:00.000Z";
-  private static final String CLOSING_DATE = "2150-07-30T23:59:59.999Z";
   private static final int MAX_NUMBER_OF_CUSTOMERS_BY_TABLE = 4;
   private static final String OPENING_DINNER_DATE = "2150-07-20T00:00:00.000Z";
   private static final String CLOSING_DINNER_DATE = "2150-07-30T23:59:59.999Z";

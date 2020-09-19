@@ -114,19 +114,6 @@ public class ReservationServiceTest {
   }
 
   @Test
-  public void whenGettingReservationById_thenReservationIsReturned() {
-    // given
-    Reservation expectedReservation = new ReservationBuilder().withId(AN_ID).withAnyTable().build();
-    given(reservationRepository.getReservationById(AN_ID)).willReturn(expectedReservation);
-
-    // when
-    Reservation actualReservation = reservationService.getReservationById(AN_ID);
-
-    // then
-    assertThat(actualReservation).isEqualTo(expectedReservation);
-  }
-
-  @Test
   public void whenGettingReservationDtoById_thenReservationDtoIsReturned() {
     // given
     Reservation expectedReservation = new ReservationBuilder().withId(AN_ID).withAnyTable().build();
@@ -149,7 +136,7 @@ public class ReservationServiceTest {
                                                   .getReservationById(AN_ID);
 
     // when
-    Executable gettingReservation = () -> reservationService.getReservationById(AN_ID);
+    Executable gettingReservation = () -> reservationService.getReservationDtoById(AN_ID);
 
     // then
     ReservationNotFoundException exception = assertThrows(ReservationNotFoundException.class,

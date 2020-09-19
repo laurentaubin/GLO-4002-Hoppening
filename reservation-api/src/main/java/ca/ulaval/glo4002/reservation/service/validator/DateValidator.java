@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public abstract class DateValidator {
-  private DateTimeFormatter dateTimeFormatter;
-  private LocalDateTime openingDate;
-  private LocalDateTime closingDate;
+  private final DateTimeFormatter dateTimeFormatter;
+  private final LocalDateTime openingDate;
+  private final LocalDateTime closingDate;
 
   public DateValidator(String dateFormat, String openingDate, String closingDate) {
     dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ public class CovidValidatorDecoratorTest {
   public void givenValidTables_whenValidateTables_thenDoesNotThrow() {
     // given
     TableDto tableDto = new TableDtoBuilder().withAnyCustomer().build();
-    List<TableDto> tableDtos = Arrays.asList(tableDto);
+    List<TableDto> tableDtos = Collections.singletonList(tableDto);
 
     // when
     Executable validatingTable = () -> covidValidatorDecorator.validateTables(tableDtos);
@@ -50,7 +51,7 @@ public class CovidValidatorDecoratorTest {
     // given
     TableDto tableDto = new TableDtoBuilder().withSpecifiedNumberOfCustomer(EXCEEDING_NUMBER_OF_CUSTOMERS)
                                              .build();
-    List<TableDto> tableDtos = Arrays.asList(tableDto);
+    List<TableDto> tableDtos = Collections.singletonList(tableDto);
 
     // when
     Executable validatingTable = () -> covidValidatorDecorator.validateTables(tableDtos);

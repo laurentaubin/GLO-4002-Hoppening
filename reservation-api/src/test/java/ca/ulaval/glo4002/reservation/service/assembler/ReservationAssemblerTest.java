@@ -4,8 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +15,16 @@ import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRe
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDetailsDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.TableDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.*;
-import ca.ulaval.glo4002.reservation.domain.*;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDetailsDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
+import ca.ulaval.glo4002.reservation.domain.Customer;
+import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.ReservationDetails;
+import ca.ulaval.glo4002.reservation.domain.RestrictionType;
+import ca.ulaval.glo4002.reservation.domain.Table;
 import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationDetailsBuilder;
@@ -29,8 +35,11 @@ class ReservationAssemblerTest {
   private static final long AN_ID = 123;
   private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
   private static final String VENDOR_CODE = "VENDOR CODE";
-  private static final LocalDateTime DATE = LocalDateTime.of(2001, 9, 11, 16, 0, 0, 0);
-  private static final String DATE_STRING = "2001-09-11T16:00:00.000Z";
+  private static final LocalDateTime DATE = LocalDateTime.of(2001, 9, 11, 16, 12, 12, 142000000);
+  private static final String DATE_STRING = "2001-09-11T16:12:12.142Z";
+  private static final String VEGAN_RESTRICTION = "vegan";
+  private static final double A_ROUNDED_RESERVATION_PRICE = 1234.57;
+  private static final double A_RESERVATION_PRICE = 1234.5678;
 
   @Mock
   private TableAssembler tableAssembler;
@@ -40,6 +49,9 @@ class ReservationAssemblerTest {
 
   @Mock
   private ReservationDetailsAssembler reservationDetailsAssembler;
+
+  @Mock
+  private Table aTable;
 
   private ReservationAssembler reservationAssembler;
 
@@ -69,20 +81,6 @@ class ReservationAssemblerTest {
   }
 
   @Test
-  public void givenEmptyCreateReservationRequestDto_whenAssembleFromCreateReservationRequestDto_thenReturnValidReservation() {
-    // given
-    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withVendorCode(VENDOR_CODE)
-                                                                                                      .build();
-
-    // when
-    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
-                                                                                                   AN_ID);
-
-    // then
-    assertThat(expectedReservation.getId()).isEqualTo(AN_ID);
-  }
-
-  @Test
   public void givenACreateReservationRequestDtoWithVendorCode_whenAssembleFromCreateReservationRequestDto_thenReturnReservationWithVendorCode() {
     // given
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withVendorCode(VENDOR_CODE)
@@ -99,14 +97,15 @@ class ReservationAssemblerTest {
   @Test
   public void givenACreateReservationRequestDtoWithDinnerDate_whenAssembleFromCreateReservationRequestDto_thenReturnReservationWithDinnerDate() {
     // given
-    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withDinnerDate(DATE_STRING)
+                                                                                                      .build();
 
     // when
     Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
                                                                                                    AN_ID);
 
     // then
-    assertThat(expectedReservation.getDinnerDate()).isNotNull();
+    assertThat(expectedReservation.getDinnerDate()).isEqualTo(DATE);
   }
 
   @Test
@@ -122,8 +121,7 @@ class ReservationAssemblerTest {
     Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
                                                                                                    AN_ID);
     // then
-    System.out.println(expectedReservation.getReservationDetails());
-    assertThat(expectedReservation.getReservationDetails()).isNotNull();
+    assertThat(expectedReservation.getReservationDetails()).isEqualTo(reservationDetails);
   }
 
   @Test
@@ -135,17 +133,29 @@ class ReservationAssemblerTest {
     ReservationDto reservationDto = reservationAssembler.assembleDtoFromReservation(reservation);
 
     // then
-    assertThat(DATE_STRING).isEqualTo(reservationDto.getDinnerDate());
+    assertThat(reservationDto.getDinnerDate()).isEqualTo((DATE_STRING));
+  }
+
+  @Test
+  public void whenAssembleDtoFromReservation_thenReturnedDtoHasProperRoundedReservationPrice() {
+    // given
+    given(aTable.getTableReservationFees()).willReturn(A_RESERVATION_PRICE);
+    Reservation reservation = new ReservationBuilder().withTable(aTable).build();
+
+    // when
+    ReservationDto reservationDto = reservationAssembler.assembleDtoFromReservation(reservation);
+
+    // then
+    assertThat(reservationDto.getReservationPrice()).isEqualTo(A_ROUNDED_RESERVATION_PRICE);
   }
 
   @Test
   public void givenReservationWithMultipleTables_whenCreateDtoFromReservation_thenDtoHasAllCustomers() {
     // given
     Customer customer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN).build();
-    List<Customer> customerList = new ArrayList<Customer>();
-    customerList.add(customer);
-    CustomerDto customerDto = new CustomerDtoBuilder().withRestriction("vegan").build();
-    Reservation reservation = new ReservationBuilder().withTable(new Table(customerList)).build();
+    Table table = new TableBuilder().withCustomer(customer).build();
+    CustomerDto customerDto = new CustomerDtoBuilder().withRestriction(VEGAN_RESTRICTION).build();
+    Reservation reservation = new ReservationBuilder().withTable(table).build();
     given(customerAssembler.assembleDtoFromCustomer(customer)).willReturn(customerDto);
 
     // when

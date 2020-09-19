@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ReservationDto {
     private String dinnerDate;
-    private float reservationPrice;
+    private double reservationPrice;
     private List<CustomerDto> customers;
 
     public String getDinnerDate() {
@@ -15,11 +15,11 @@ public class ReservationDto {
         this.dinnerDate = dinnerDate;
     }
 
-    public float getReservationPrice() {
+    public double getReservationPrice() {
         return reservationPrice;
     }
 
-    public void setReservationPrice(float reservationPrice) {
+    public void setReservationPrice(double reservationPrice) {
         this.reservationPrice = reservationPrice;
     }
 

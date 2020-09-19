@@ -6,18 +6,18 @@ public enum RestrictionType {
   ALLERGIES("allergies", 0),
   ILLNESS("illness", 0);
 
-  private final String hoppeningName;
+  private final String name;
 
   private final double fees;
 
-  RestrictionType(String hoppeningName, double fees) {
-    this.hoppeningName = hoppeningName;
+  RestrictionType(String name, double fees) {
+    this.name = name;
     this.fees = fees;
   }
 
   @Override
   public String toString() {
-    return hoppeningName;
+    return name;
   }
 
   public double getFees() {

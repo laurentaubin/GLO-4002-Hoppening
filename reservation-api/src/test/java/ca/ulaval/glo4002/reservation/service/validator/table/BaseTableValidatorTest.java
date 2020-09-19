@@ -53,7 +53,7 @@ public class BaseTableValidatorTest {
   public void givenTableWithEmptyCustomers_whenValidateTables_thenThrowInvalidReservationQuantityException() {
     // given
     TableDto tableDtoWithEmptyCustomerList = new TableDtoBuilder().build();
-    List<TableDto> tableDtos = Arrays.asList(tableDtoWithEmptyCustomerList);
+    List<TableDto> tableDtos = Collections.singletonList(tableDtoWithEmptyCustomerList);
 
     // when
     Executable validatingTable = () -> baseTableValidator.validateTables(tableDtos);

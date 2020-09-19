@@ -31,20 +31,23 @@ public class ReservationService {
     reservationValidator.validate(createReservationRequestDto);
 
     long reservationId = idGenerator.getLongUuid();
-    Reservation reservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
-                                                                                           reservationId);
+    Reservation
+      reservation =
+      reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
+                                                                   reservationId);
     return reservationRepository.createReservation(reservation);
   }
 
-  public Reservation getReservationById(long reservationId) {
+  public ReservationDto getReservationDtoById(long reservationId) {
+    Reservation reservation = getReservationById(reservationId);
+    return reservationAssembler.assembleDtoFromReservation(reservation);
+  }
+
+  private Reservation getReservationById(long reservationId) {
     try {
       return reservationRepository.getReservationById(reservationId);
     } catch (NonExistingReservationException exception) {
       throw new ReservationNotFoundException(reservationId);
     }
-  }
-
-  public ReservationDto getReservationDtoById(long reservationId) {
-    return reservationAssembler.assembleDtoFromReservation(getReservationById(reservationId));
   }
 }

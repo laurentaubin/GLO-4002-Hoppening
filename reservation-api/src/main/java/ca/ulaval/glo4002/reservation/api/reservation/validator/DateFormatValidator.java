@@ -8,7 +8,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatExce
 
 public class DateFormatValidator {
 
-  private DateTimeFormatter dateTimeFormatter;
+  private final DateTimeFormatter dateTimeFormatter;
 
   public DateFormatValidator(String dateFormat) {
     dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);

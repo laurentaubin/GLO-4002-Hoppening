@@ -1,9 +1,9 @@
 package ca.ulaval.glo4002.reservation.exception;
 
 public abstract class ReservationException extends RuntimeException {
-  private String error;
-  private String description;
-  private int statusCode;
+  private final String error;
+  private final String description;
+  private final int statusCode;
 
   public ReservationException(String error, String description, int statusCode) {
     this.error = error;
