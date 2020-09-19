@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import ca.ulaval.glo4002.reservation.domain.Customer;
-import ca.ulaval.glo4002.reservation.domain.Restriction;
+import ca.ulaval.glo4002.reservation.domain.RestrictionType;
 
 public class CustomerBuilder {
   private static final String A_NAME = "Johnny";
 
   private String name;
-  private final Set<Restriction> restrictions;
+  private final Set<RestrictionType> restrictions;
 
   public CustomerBuilder() {
     name = A_NAME;
@@ -22,13 +22,13 @@ public class CustomerBuilder {
     return this;
   }
 
-  public CustomerBuilder withRestriction(Restriction restriction) {
+  public CustomerBuilder withRestriction(RestrictionType restriction) {
     restrictions.add(restriction);
     return this;
   }
 
   public CustomerBuilder withAnyRestriction() {
-    restrictions.add(Restriction.VEGAN);
+    restrictions.add(RestrictionType.VEGAN);
     return this;
   }
 

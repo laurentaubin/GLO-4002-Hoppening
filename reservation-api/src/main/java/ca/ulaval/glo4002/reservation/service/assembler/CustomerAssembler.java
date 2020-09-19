@@ -6,21 +6,21 @@ import java.util.stream.Collectors;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.domain.Customer;
-import ca.ulaval.glo4002.reservation.domain.Restriction;
+import ca.ulaval.glo4002.reservation.domain.RestrictionType;
 
 public class CustomerAssembler {
   public Customer assembleFromCustomerDto(CustomerDto customerDto) {
-    Set<Restriction> restrictions = customerDto.getRestrictions()
-                                               .stream()
-                                               .map(Restriction::valueOfHoppeningName)
-                                               .collect(Collectors.toSet());
+    Set<RestrictionType> restrictions = customerDto.getRestrictions()
+                                                   .stream()
+                                                   .map(RestrictionType::valueOfName)
+                                                   .collect(Collectors.toSet());
     return new Customer(customerDto.getName(), restrictions);
   }
 
   public CustomerDto assembleDtoFromCustomer(Customer customer) {
     List<String> restrictions = customer.getRestrictions()
                                         .stream()
-                                        .map(Restriction::toString)
+                                        .map(RestrictionType::toString)
                                         .collect(Collectors.toList());
     CustomerDto customerDto = new CustomerDto();
     customerDto.setName(customer.getName());

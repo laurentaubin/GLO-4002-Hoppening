@@ -3,19 +3,25 @@ package ca.ulaval.glo4002.reservation.domain;
 import java.util.Set;
 
 public class Customer {
-  private final String name;
-  private final Set<Restriction> restrictions;
 
-  public Customer(String name, Set<Restriction> restrictions) {
+  public static final double BASIC_CUSTOMER_FEES = 1000;
+  private final String name;
+  private final CustomerRestriction restriction;
+
+  public Customer(String name, Set<RestrictionType> restrictions) {
     this.name = name;
-    this.restrictions = restrictions;
+    restriction = new CustomerRestriction(restrictions);
   }
 
   public String getName() {
     return name;
   }
 
-  public Set<Restriction> getRestrictions() {
-    return restrictions;
+  public Set<RestrictionType> getRestrictions() {
+    return restriction.getRestrictions();
+  }
+
+  public double getCustomerFees() {
+    return BASIC_CUSTOMER_FEES + restriction.getAdditionalFees();
   }
 }

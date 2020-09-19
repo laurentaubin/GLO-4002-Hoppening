@@ -40,6 +40,10 @@ public class Reservation {
     return tables;
   }
 
+  public double getReservationFees() {
+    return tables.stream().mapToDouble(Table::getTableReservationFees).sum();
+  }
+
   public ReservationDetails getReservationDetails() {
     return reservationDetails;
   }

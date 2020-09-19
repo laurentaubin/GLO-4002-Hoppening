@@ -141,7 +141,7 @@ class ReservationAssemblerTest {
   @Test
   public void givenReservationWithMultipleTables_whenCreateDtoFromReservation_thenDtoHasAllCustomers() {
     // given
-    Customer customer = new CustomerBuilder().withRestriction(Restriction.VEGAN).build();
+    Customer customer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN).build();
     List<Customer> customerList = new ArrayList<Customer>();
     customerList.add(customer);
     CustomerDto customerDto = new CustomerDtoBuilder().withRestriction("vegan").build();

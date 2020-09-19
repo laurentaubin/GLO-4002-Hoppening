@@ -9,15 +9,15 @@ import org.junit.jupiter.api.Test;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.domain.Customer;
-import ca.ulaval.glo4002.reservation.domain.Restriction;
+import ca.ulaval.glo4002.reservation.domain.RestrictionType;
 
 class CustomerAssemblerTest {
   private static final String VEGETARIAN_RESTRICTION = "vegetarian";
   private static final String VEGAN_RESTRICTION = "vegan";
   private static final String ALLERGIES_RESTRICTION = "allergies";
   private static final String ILLNESS_RESTRICTION = "illness";
-  private static final Restriction VEGETARIAN_ACTUAL_RESTRICTION = Restriction.VEGETARIAN;
-  private static final Restriction VEGAN_ACTUAL_RESTRICTION = Restriction.VEGAN;
+  private static final RestrictionType VEGETARIAN_ACTUAL_RESTRICTION = RestrictionType.VEGETARIAN;
+  private static final RestrictionType VEGAN_ACTUAL_RESTRICTION = RestrictionType.VEGAN;
 
   private CustomerAssembler customerAssembler;
 
@@ -38,8 +38,8 @@ class CustomerAssemblerTest {
 
     // then
     assertThat(actualCustomer.getName()).isEqualTo(customerDto.getName());
-    assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName((VEGETARIAN_RESTRICTION)));
-    assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName((VEGAN_RESTRICTION)));
+    assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((VEGETARIAN_RESTRICTION)));
+    assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((VEGAN_RESTRICTION)));
   }
 
   @Test
@@ -56,10 +56,10 @@ class CustomerAssemblerTest {
 
     // then
     assertThat(actualCustomer.getName()).isEqualTo(customerDto.getName());
-    assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName((VEGETARIAN_RESTRICTION)));
-    assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName((VEGAN_RESTRICTION)));
-    assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName((ALLERGIES_RESTRICTION)));
-    assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName((ILLNESS_RESTRICTION)));
+    assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((VEGETARIAN_RESTRICTION)));
+    assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((VEGAN_RESTRICTION)));
+    assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((ALLERGIES_RESTRICTION)));
+    assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((ILLNESS_RESTRICTION)));
   }
 
   @Test
@@ -88,8 +88,8 @@ class CustomerAssemblerTest {
 
     // then
     assertThat(actualCustomer.getRestrictions()).hasSize(2);
-    assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName(ALLERGIES_RESTRICTION));
-    assertThat(actualCustomer.getRestrictions()).contains(Restriction.valueOfHoppeningName(ILLNESS_RESTRICTION));
+    assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName(ALLERGIES_RESTRICTION));
+    assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName(ILLNESS_RESTRICTION));
   }
 
   @Test

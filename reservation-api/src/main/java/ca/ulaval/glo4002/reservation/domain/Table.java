@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.domain;
 import java.util.List;
 
 public class Table {
+
   private final List<Customer> customers;
 
   public Table(List<Customer> customers) {
@@ -11,5 +12,9 @@ public class Table {
 
   public List<Customer> getCustomers() {
     return customers;
+  }
+
+  public double getTableReservationFees() {
+    return customers.stream().mapToDouble(Customer::getCustomerFees).sum();
   }
 }
