@@ -27,12 +27,11 @@ import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationDateExc
 import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationQuantityException;
 import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
+import ca.ulaval.glo4002.reservation.service.validator.ReservationValidator;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
   private static final long AN_ID = 4321;
-  private static final String INVALID_FORMAT_DINNER_DATE = "21-05-30";
-  private static final String OUT_OF_BOUND_DINNER_DATE = "2020-07-30T23:59:59.999Z";
   private static final String RESERVATION_NOT_FOUND_EXCEPTION = "Reservation with number 4321 not found";
 
   @Mock

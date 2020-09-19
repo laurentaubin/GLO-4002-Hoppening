@@ -8,6 +8,7 @@ import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationExcep
 import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
+import ca.ulaval.glo4002.reservation.service.validator.ReservationValidator;
 
 public class ReservationService {
   private final IdGenerator idGenerator;

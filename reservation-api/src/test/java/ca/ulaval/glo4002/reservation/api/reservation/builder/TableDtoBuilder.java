@@ -23,6 +23,13 @@ public class TableDtoBuilder {
     return this;
   }
 
+  public TableDtoBuilder withSpecifiedNumberOfCustomer(int numberOfCustomer) {
+    for (int i = 0; i < numberOfCustomer; i++) {
+      customers.add(new CustomerDtoBuilder().build());
+    }
+    return this;
+  }
+
   public TableDto build() {
     TableDto tableDto = new TableDto();
     tableDto.setCustomers(customers);
