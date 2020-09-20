@@ -20,8 +20,9 @@ import ca.ulaval.glo4002.reservation.service.exception.TooManyPeopleException;
 
 @ExtendWith(MockitoExtension.class)
 public class CovidValidatorDecoratorTest {
-  private static final int MAX_NUMBER_OF_CUSTOMERS = 4;
-  private static final int EXCEEDING_NUMBER_OF_CUSTOMERS = 5;
+  private static final int MAXIMUM_CUSTOMER_CAPACITY_PER_TABLE = 4;
+  private static final int EXCEEDING_NUMBER_OF_CUSTOMERS_PER_TABLE = 5;
+  private static final int MAXIMUM_CUSTOMER_CAPACITY_PER_RESERVATION = 6;
 
   @Mock
   private TableValidator tableValidator;
@@ -30,7 +31,9 @@ public class CovidValidatorDecoratorTest {
 
   @BeforeEach
   public void setUp() {
-    covidValidatorDecorator = new CovidValidatorDecorator(tableValidator, MAX_NUMBER_OF_CUSTOMERS);
+    covidValidatorDecorator = new CovidValidatorDecorator(tableValidator,
+                                                          MAXIMUM_CUSTOMER_CAPACITY_PER_TABLE,
+                                                          MAXIMUM_CUSTOMER_CAPACITY_PER_RESERVATION);
   }
 
   @Test
@@ -47,11 +50,27 @@ public class CovidValidatorDecoratorTest {
   }
 
   @Test
-  public void givenTablesWithExceedingNumberOfCustomers_whenValidateTables_thenThrowTooManyPeopleException() {
+  public void givenTablesWithExceedingNumberOfCustomersPerTable_whenValidateTables_thenThrowTooManyPeopleException() {
     // given
-    TableDto tableDto = new TableDtoBuilder().withSpecifiedNumberOfCustomer(EXCEEDING_NUMBER_OF_CUSTOMERS)
+    TableDto tableDto = new TableDtoBuilder().withSpecifiedNumberOfCustomer(
+      EXCEEDING_NUMBER_OF_CUSTOMERS_PER_TABLE)
                                              .build();
     List<TableDto> tableDtos = Collections.singletonList(tableDto);
+
+    // when
+    Executable validatingTable = () -> covidValidatorDecorator.validateTables(tableDtos);
+
+    // then
+    assertThrows(TooManyPeopleException.class, validatingTable);
+  }
+
+  @Test
+  public void givenTablesWithTotalNumberOfCustomersExceedingCustomerCapacityPerReservation_whenValidateTables_thenThrowTooManyPeopleException() {
+    // given
+    TableDto aTableDto = new TableDtoBuilder().withSpecifiedNumberOfCustomer(4).build();
+    TableDto anotherTableDto = new TableDtoBuilder().withSpecifiedNumberOfCustomer(3).build();
+
+    List<TableDto> tableDtos = Arrays.asList(aTableDto, anotherTableDto);
 
     // when
     Executable validatingTable = () -> covidValidatorDecorator.validateTables(tableDtos);
