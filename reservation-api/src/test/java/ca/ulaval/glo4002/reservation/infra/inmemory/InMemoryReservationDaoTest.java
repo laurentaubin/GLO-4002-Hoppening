@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-
 public class InMemoryReservationDaoTest {
   private static final long AN_ID = 123;
   private static final long ANOTHER_ID = 1234;
@@ -67,7 +66,7 @@ public class InMemoryReservationDaoTest {
     // when
     Reservation actualReservation = inMemoryReservationDao.getReservationById(AN_ID);
 
-    //then
+    // then
     assertThat(actualReservation).isEqualTo(expectedReservation);
   }
 

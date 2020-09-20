@@ -22,7 +22,6 @@ public class InMemoryReservationRepositoryTest {
   @Mock
   private InMemoryReservationDao reservationDao;
 
-
   @BeforeEach
   public void setUp() {
     reservationRepository = new InMemoryReservationRepository(reservationDao);

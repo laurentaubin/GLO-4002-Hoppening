@@ -28,7 +28,7 @@ public class BaseTableValidatorTest {
   public void givenTables_whenValidateTables_thenDoesNotThrow() {
     // given
     TableDto tableDto = new TableDtoBuilder().withAnyCustomer().build();
-    List<TableDto> tableDtos = Arrays.asList(tableDto);
+    List<TableDto> tableDtos = Collections.singletonList(tableDto);
 
     // when
     Executable validatingTable = () -> baseTableValidator.validateTables(tableDtos);

@@ -21,6 +21,7 @@ import ca.ulaval.glo4002.reservation.service.generator.id.IdGeneratorFactory;
 import ca.ulaval.glo4002.reservation.service.validator.DinnerDateValidator;
 import ca.ulaval.glo4002.reservation.service.validator.ReservationDateValidator;
 import ca.ulaval.glo4002.reservation.service.validator.ReservationValidator;
+import ca.ulaval.glo4002.reservation.service.validator.RestrictionValidator;
 import ca.ulaval.glo4002.reservation.service.validator.table.BaseTableValidator;
 import ca.ulaval.glo4002.reservation.service.validator.table.CovidValidatorDecorator;
 import ca.ulaval.glo4002.reservation.service.validator.table.TableValidator;
@@ -60,6 +61,8 @@ public class ReservationContext {
     ReservationDateValidator reservationDateValidator = new ReservationDateValidator(DATE_FORMAT,
                                                                                      OPENING_RESERVATION_DATE,
                                                                                      CLOSING_RESERVATION_DATE);
+    RestrictionValidator restrictionValidator = new RestrictionValidator();
+
     CustomerAssembler customerAssembler = new CustomerAssembler();
 
     return new ReservationService(idGenerator,
@@ -71,7 +74,8 @@ public class ReservationContext {
                                                                                            new CountryAssembler())),
                                   new ReservationValidator(dinnerDateValidator,
                                                            reservationDateValidator,
-                                                           tableValidator));
+                                                           tableValidator,
+                                                           restrictionValidator));
   }
 
   private Object[] createResources(ReservationService reservationService) {

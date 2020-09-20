@@ -97,8 +97,8 @@ class CustomerAssemblerTest {
 
     // given
     Customer customer = new CustomerBuilder().withRestriction(VEGETARIAN_ACTUAL_RESTRICTION)
-                                              .withRestriction(VEGAN_ACTUAL_RESTRICTION)
-                                              .build();
+                                             .withRestriction(VEGAN_ACTUAL_RESTRICTION)
+                                             .build();
 
     // when
     CustomerDto actualCustomerDto = customerAssembler.assembleDtoFromCustomer(customer);

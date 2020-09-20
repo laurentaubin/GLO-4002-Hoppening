@@ -31,10 +31,8 @@ public class ReservationService {
     reservationValidator.validate(createReservationRequestDto);
 
     long reservationId = idGenerator.getLongUuid();
-    Reservation
-      reservation =
-      reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
-                                                                   reservationId);
+    Reservation reservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
+                                                                                           reservationId);
     return reservationRepository.createReservation(reservation);
   }
 

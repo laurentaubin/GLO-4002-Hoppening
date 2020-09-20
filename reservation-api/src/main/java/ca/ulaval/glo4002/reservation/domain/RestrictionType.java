@@ -1,5 +1,7 @@
 package ca.ulaval.glo4002.reservation.domain;
 
+import ca.ulaval.glo4002.reservation.service.exception.InvalidRestrictionException;
+
 public enum RestrictionType {
   VEGETARIAN("vegetarian", 500),
   VEGAN("vegan", 1000),
@@ -30,6 +32,6 @@ public enum RestrictionType {
         return restriction;
       }
     }
-    throw new RuntimeException();
+    throw new InvalidRestrictionException();
   }
 }

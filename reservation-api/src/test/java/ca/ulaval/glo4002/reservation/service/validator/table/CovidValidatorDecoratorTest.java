@@ -40,7 +40,7 @@ public class CovidValidatorDecoratorTest {
   public void givenValidTables_whenValidateTables_thenDoesNotThrow() {
     // given
     TableDto tableDto = new TableDtoBuilder().withAnyCustomer().build();
-    List<TableDto> tableDtos = Collections.singletonList(tableDto);
+    List<TableDto> tableDtos = Arrays.asList(tableDto);
 
     // when
     Executable validatingTable = () -> covidValidatorDecorator.validateTables(tableDtos);

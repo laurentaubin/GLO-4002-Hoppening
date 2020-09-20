@@ -20,11 +20,11 @@ public class InMemoryReservationDao {
   }
 
   public Reservation getReservationById(long reservationId) {
-     for(Reservation reservation : reservations){
-       if(reservation.getId() == reservationId){
-         return reservation;
-       }
-     }
-     throw new NonExistingReservationException();
+    for (Reservation reservation : reservations) {
+      if (reservation.getId() == reservationId) {
+        return reservation;
+      }
+    }
+    throw new NonExistingReservationException();
   }
 }

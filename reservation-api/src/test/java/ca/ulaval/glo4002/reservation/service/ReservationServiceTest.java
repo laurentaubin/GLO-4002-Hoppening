@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import ca.ulaval.glo4002.reservation.service.exception.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,10 +23,6 @@ import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
-import ca.ulaval.glo4002.reservation.service.exception.InvalidDinnerDateException;
-import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationDateException;
-import ca.ulaval.glo4002.reservation.service.exception.InvalidReservationQuantityException;
-import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
 import ca.ulaval.glo4002.reservation.service.validator.ReservationValidator;
 
