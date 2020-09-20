@@ -23,7 +23,7 @@ docker run -p 8080:8080 -p 8181:8181 application-glo4002
 Il est possible de créer une réservation en effectuant un POST à l'endpoint ``/reservations``.
 Le format de la requête doit suivre la structure suivante:
 
-```
+```json
 {
   "vendorCode": "TEAM"::string,
   "dinnerDate": "2150-07-21T15:23:20.142Z"::string,
@@ -64,11 +64,14 @@ L'ID de la réservation créé se trouvera dans le header ``Location`` de la ré
     - vegan
     - allergies
     - illness
+- Il doit y avoir au moins une table dans une requête
+- Chaque table doit avoir au moins un client
+- Les dates doivent suivre le format `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`
     
 ### Obtenir les informations sur une réservation
 Pour obtenir une réservation, faire une requête GET sur le endpoint ``/reservations/<reservationId>``, où `reservationId` est l'ID de la réservation désirée.
 Les réponses ont la forme suivante:
-```
+```json
 {
     "reservationPrice": 0.00::float,
     "dinnerDate": "2150-07-21T15:23:20.142Z"::string,
