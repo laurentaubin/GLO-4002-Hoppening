@@ -2,7 +2,6 @@ package ca.ulaval.glo4002.reservation.service.assembler;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +9,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.domain.Customer;
 import ca.ulaval.glo4002.reservation.domain.RestrictionType;
+import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 
 class CustomerAssemblerTest {
   private static final String VEGETARIAN_RESTRICTION = "vegetarian";
@@ -120,5 +120,22 @@ class CustomerAssemblerTest {
     // then
     assertThat(actualCustomerDto.getName()).isEqualTo(customer.getName());
     assertThat(actualCustomerDto.getRestrictions()).hasSize(0);
+  }
+
+  @Test
+  public void givenACustomerWithUnorderedRestrictions_whenAssembleDtoFromCustomer_thenReturnCustomerWithRestrictionInOrder() {
+    // given
+    Customer customer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN)
+                                             .withRestriction(RestrictionType.ILLNESS)
+                                             .build();
+
+    // when
+    CustomerDto actualCustomerDto = customerAssembler.assembleDtoFromCustomer(customer);
+
+    // then
+    assertThat(actualCustomerDto.getRestrictions()
+                                .get(0)).isEqualTo(RestrictionType.ILLNESS.toString());
+    assertThat(actualCustomerDto.getRestrictions()
+                                .get(1)).isEqualTo(RestrictionType.VEGAN.toString());
   }
 }
