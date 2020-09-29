@@ -52,8 +52,7 @@ public class CovidValidatorDecoratorTest {
   @Test
   public void givenTablesWithExceedingNumberOfCustomersPerTable_whenValidateTables_thenThrowTooManyPeopleException() {
     // given
-    TableDto tableDto = new TableDtoBuilder().withSpecifiedNumberOfCustomer(
-      EXCEEDING_NUMBER_OF_CUSTOMERS_PER_TABLE)
+    TableDto tableDto = new TableDtoBuilder().withSpecifiedNumberOfCustomer(EXCEEDING_NUMBER_OF_CUSTOMERS_PER_TABLE)
                                              .build();
     List<TableDto> tableDtos = Collections.singletonList(tableDto);
 

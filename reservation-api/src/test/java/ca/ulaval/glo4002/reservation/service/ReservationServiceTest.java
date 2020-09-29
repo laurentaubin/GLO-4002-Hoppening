@@ -3,10 +3,8 @@ package ca.ulaval.glo4002.reservation.service;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import ca.ulaval.glo4002.reservation.service.exception.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRequestDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
@@ -23,6 +20,7 @@ import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
+import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
 import ca.ulaval.glo4002.reservation.service.validator.ReservationValidator;
 
@@ -30,6 +28,7 @@ import ca.ulaval.glo4002.reservation.service.validator.ReservationValidator;
 public class ReservationServiceTest {
   private static final long AN_ID = 4321;
   private static final String RESERVATION_NOT_FOUND_EXCEPTION = "Reservation with number 4321 not found";
+  private static final String A_DATE = "2150-11-16T23:59:59.999Z";
 
   @Mock
   private IdGenerator idGenerator;
@@ -57,7 +56,7 @@ public class ReservationServiceTest {
   }
 
   @Test
-  public void givenReservationServiceInInitialState_whenCreatingReservation_thenReturnReservationId() {
+  public void givenReservationServiceInInitialState_whenCreateReservation_thenReturnReservationId() {
     // given
     Reservation reservation = new ReservationBuilder().withId(AN_ID).withAnyTable().build();
     setUpReservationServiceMocksForIdTests(reservation, AN_ID);
@@ -71,43 +70,12 @@ public class ReservationServiceTest {
   }
 
   @Test
-  public void givenEmptyTables_whenCreatingReservation_thenThrowInvalidReservationQuantityException() {
-    // given
-    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
-    doThrow(new InvalidReservationQuantityException()).when(reservationValidator)
-                                                      .validate(createReservationRequestDto);
-
+  public void whenCreateReservation_thenReservationValidatorIsCalled() {
     // when
-    Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
+    reservationService.createReservation(createReservationRequestDto);
 
     // then
-    assertThrows(InvalidReservationQuantityException.class, creatingReservation);
-  }
-
-  @Test
-  public void givenARequestWithAnOutOfBoundDinnerDate_whenCreatingReservation_thenThrowInvalidDinnerDateException() {
-    // given
-    doThrow(InvalidDinnerDateException.class).when(reservationValidator)
-                                             .validate(createReservationRequestDto);
-
-    // when
-    Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
-
-    // then
-    assertThrows(InvalidDinnerDateException.class, creatingReservation);
-  }
-
-  @Test
-  public void givenARequestWithAnOutOfBoundReservationDate_whenCreatingReservation_thenThrowInvalidReservationDateException() {
-    // given
-    doThrow(InvalidReservationDateException.class).when(reservationValidator)
-                                                  .validate(createReservationRequestDto);
-
-    // when
-    Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
-
-    // then
-    assertThrows(InvalidReservationDateException.class, creatingReservation);
+    verify(reservationValidator).validate(createReservationRequestDto);
   }
 
   @Test
@@ -123,7 +91,6 @@ public class ReservationServiceTest {
 
     // then
     assertThat(actualReservationDto).isEqualTo(expectedReservationDto);
-
   }
 
   @Test

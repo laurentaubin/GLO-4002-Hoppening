@@ -5,11 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
-import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.builder.TableDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.domain.RestrictionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +13,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRequestDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
+import ca.ulaval.glo4002.reservation.api.reservation.builder.TableDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
+import ca.ulaval.glo4002.reservation.domain.RestrictionType;
 import ca.ulaval.glo4002.reservation.service.validator.table.TableValidator;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +35,9 @@ class ReservationValidatorTest {
   @Mock
   RestrictionValidator restrictionValidator;
 
+  @Mock
+  MaximumCustomerCapacityPerDayValidator maximumCustomerCapacityPerDayValidator;
+
   private ReservationValidator reservationValidator;
 
   @BeforeEach
@@ -42,7 +45,8 @@ class ReservationValidatorTest {
     reservationValidator = new ReservationValidator(dinnerDateValidator,
                                                     reservationDateValidator,
                                                     tableValidator,
-                                                    restrictionValidator);
+                                                    restrictionValidator,
+                                                    maximumCustomerCapacityPerDayValidator);
   }
 
   @Test
@@ -110,5 +114,17 @@ class ReservationValidatorTest {
 
     // then
     verify(restrictionValidator).validate(any());
+  }
+
+  @Test
+  public void givenARestriction_whenValidate_thenMaximumCustomerCapacityIsValidated() {
+    // given
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
+
+    // when
+    reservationValidator.validate(createReservationRequestDto);
+
+    // then
+    verify(maximumCustomerCapacityPerDayValidator).validate(createReservationRequestDto);
   }
 }

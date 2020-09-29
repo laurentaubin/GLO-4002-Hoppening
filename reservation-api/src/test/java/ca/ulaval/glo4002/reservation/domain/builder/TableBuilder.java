@@ -24,6 +24,14 @@ public class TableBuilder {
     return this;
   }
 
+  public TableBuilder withSpecifiedNumberOfCustomers(int numberOfCustomers) {
+    for (int customerNumber = 0; customerNumber < numberOfCustomers; customerNumber++) {
+      Customer customer = new CustomerBuilder().build();
+      customers.add(customer);
+    }
+    return this;
+  }
+
   public Table build() {
     return new Table(customers);
   }

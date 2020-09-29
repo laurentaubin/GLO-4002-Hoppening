@@ -2,10 +2,12 @@ package ca.ulaval.glo4002.reservation.domain;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 
 @ExtendWith(MockitoExtension.class)
@@ -19,7 +21,7 @@ public class ReservationTest {
   private Table aTable;
 
   @Mock
-  Table anotherTable;
+  private Table anotherTable;
 
   @Test
   public void givenAReservationWithEmptyTable_whenGetReservationFees_thenReturnNoCost() {

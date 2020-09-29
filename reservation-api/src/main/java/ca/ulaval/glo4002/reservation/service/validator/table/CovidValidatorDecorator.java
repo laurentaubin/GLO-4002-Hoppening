@@ -9,13 +9,15 @@ public class CovidValidatorDecorator extends TableValidatorDecorator {
   private final int maxNumberOfCustomersPerTable;
   private final int maxNumberOfCustomersPerReservation;
 
-  public CovidValidatorDecorator(TableValidator tableValidator, int maxNumberOfCustomersPerTable, int maxNumberOfCustomerPerReservation) {
+  public CovidValidatorDecorator(TableValidator tableValidator,
+                                 int maxNumberOfCustomersPerTable,
+                                 int maxNumberOfCustomerPerReservation)
+  {
     super(tableValidator);
     this.maxNumberOfCustomersPerTable = maxNumberOfCustomersPerTable;
     this.maxNumberOfCustomersPerReservation = maxNumberOfCustomerPerReservation;
   }
 
-  @Override
   public void validateTables(List<TableDto> tables) {
     validateNumberOfCustomers(tables);
     super.validateTables(tables);

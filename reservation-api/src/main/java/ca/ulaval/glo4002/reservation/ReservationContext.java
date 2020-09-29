@@ -11,17 +11,10 @@ import ca.ulaval.glo4002.reservation.infra.inmemory.InMemoryReservationDao;
 import ca.ulaval.glo4002.reservation.infra.inmemory.InMemoryReservationRepository;
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
 import ca.ulaval.glo4002.reservation.service.ReservationService;
-import ca.ulaval.glo4002.reservation.service.assembler.CountryAssembler;
-import ca.ulaval.glo4002.reservation.service.assembler.CustomerAssembler;
-import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
-import ca.ulaval.glo4002.reservation.service.assembler.ReservationDetailsAssembler;
-import ca.ulaval.glo4002.reservation.service.assembler.TableAssembler;
+import ca.ulaval.glo4002.reservation.service.assembler.*;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGeneratorFactory;
-import ca.ulaval.glo4002.reservation.service.validator.DinnerDateValidator;
-import ca.ulaval.glo4002.reservation.service.validator.ReservationDateValidator;
-import ca.ulaval.glo4002.reservation.service.validator.ReservationValidator;
-import ca.ulaval.glo4002.reservation.service.validator.RestrictionValidator;
+import ca.ulaval.glo4002.reservation.service.validator.*;
 import ca.ulaval.glo4002.reservation.service.validator.table.BaseTableValidator;
 import ca.ulaval.glo4002.reservation.service.validator.table.CovidValidatorDecorator;
 import ca.ulaval.glo4002.reservation.service.validator.table.TableValidator;
@@ -37,6 +30,7 @@ public class ReservationContext {
   private static final String CLOSING_DINNER_DATE = "2150-07-30T23:59:59.999Z";
   private static final String OPENING_RESERVATION_DATE = "2150-01-01T00:00:00.000Z";
   private static final String CLOSING_RESERVATION_DATE = "2150-07-16T23:59:59.999Z";
+  private static final int MAX_NUMBER_OF_CUSTOMERS_PER_DAY = 42;
 
   private ReservationServer server;
 
@@ -65,6 +59,10 @@ public class ReservationContext {
 
     CustomerAssembler customerAssembler = new CustomerAssembler();
 
+    MaximumCustomerCapacityPerDayValidator maximumCustomerCapacityPerDayValidator = new MaximumCustomerCapacityPerDayValidator(MAX_NUMBER_OF_CUSTOMERS_PER_DAY,
+                                                                                                                               reservationRepository,
+                                                                                                                               DATE_FORMAT);
+
     return new ReservationService(idGenerator,
                                   reservationRepository,
                                   new ReservationAssembler(DATE_FORMAT,
@@ -75,7 +73,8 @@ public class ReservationContext {
                                   new ReservationValidator(dinnerDateValidator,
                                                            reservationDateValidator,
                                                            tableValidator,
-                                                           restrictionValidator));
+                                                           restrictionValidator,
+                                                           maximumCustomerCapacityPerDayValidator));
   }
 
   private Object[] createResources(ReservationService reservationService) {

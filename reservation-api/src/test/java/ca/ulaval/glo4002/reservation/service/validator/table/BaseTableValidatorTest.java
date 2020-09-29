@@ -3,7 +3,6 @@ package ca.ulaval.glo4002.reservation.service.validator.table;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
