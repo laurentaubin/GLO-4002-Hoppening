@@ -1,8 +1,9 @@
 package ca.ulaval.glo4002.reservation.service.validator;
 
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
-import ca.ulaval.glo4002.reservation.domain.RestrictionType;
 import java.util.List;
+
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 public class RestrictionValidator {
 

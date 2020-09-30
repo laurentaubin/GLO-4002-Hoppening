@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
-import ca.ulaval.glo4002.reservation.domain.Customer;
-import ca.ulaval.glo4002.reservation.domain.RestrictionType;
+import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
+import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 public class CustomerAssembler {
   public Customer assembleFromCustomerDto(CustomerDto customerDto) {

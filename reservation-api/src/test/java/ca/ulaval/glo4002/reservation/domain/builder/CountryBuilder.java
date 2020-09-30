@@ -1,6 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.builder;
 
-import ca.ulaval.glo4002.reservation.domain.Country;
+import ca.ulaval.glo4002.reservation.domain.reservation.Country;
 
 public class CountryBuilder {
   private static final String A_CODE = "CA";

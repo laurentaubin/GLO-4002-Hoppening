@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.reservation.domain;
+package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import java.util.Set;
 

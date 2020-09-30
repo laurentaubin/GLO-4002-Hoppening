@@ -3,7 +3,7 @@ package ca.ulaval.glo4002.reservation.infra.inmemory;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 
 public class InMemoryReservationDao {

@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDetailsDto;
-import ca.ulaval.glo4002.reservation.domain.Country;
-import ca.ulaval.glo4002.reservation.domain.ReservationDetails;
+import ca.ulaval.glo4002.reservation.domain.reservation.Country;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationDetails;
 
 public class ReservationDetailsAssembler {
   private final CountryAssembler countryAssembler;

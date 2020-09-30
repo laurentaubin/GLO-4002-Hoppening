@@ -1,52 +1,53 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
-
-import ca.ulaval.glo4002.reservation.domain.date.DinnerDate;
-import ca.ulaval.glo4002.reservation.domain.date.ReservationDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Reservation {
 
-  private final ReservationId reservationId;
-  private final DinnerDate dinnerDate;
+  private final long id;
+  private final String vendorCode;
+  private final LocalDateTime dinnerDate;
   private final List<Table> tables;
-  private final ReservationDate reservationDate;
+  private final ReservationDetails reservationDetails;
 
-  public Reservation(ReservationId reservationId,
-                     DinnerDate dinnerDate,
+  public Reservation(long id,
+                     String vendorCode,
+                     LocalDateTime dinnerDate,
                      List<Table> tables,
-                     ReservationDate reservationDate)
+                     ReservationDetails reservationDetails)
   {
-    this.reservationId = reservationId;
+    this.id = id;
+    this.vendorCode = vendorCode;
     this.dinnerDate = dinnerDate;
     this.tables = tables;
-    this.reservationDate = reservationDate;
+    this.reservationDetails = reservationDetails;
   }
 
-  public ReservationId getReservationId() {
-    return reservationId;
+  public long getId() {
+    return id;
+  }
+
+  public String getVendorCode() {
+    return vendorCode;
   }
 
   public LocalDateTime getDinnerDate() {
-    return dinnerDate.getLocalDateTime();
+    return dinnerDate;
   }
 
   public List<Table> getTables() {
     return tables;
   }
 
-  public BigDecimal getReservationFees() {
-    BigDecimal reservationFees = BigDecimal.ZERO;
-    for (Table table : tables) {
-      reservationFees = reservationFees.add(table.getTableReservationFees());
-    }
-    return reservationFees;
+  public double getReservationFees() {
+    return tables.stream().mapToDouble(Table::getTableReservationFees).sum();
   }
 
-  public LocalDateTime getReservationDate() {
-    return reservationDate.getLocalDateTime();
+  public ReservationDetails getReservationDetails() {
+    return reservationDetails;
   }
 
   public Map<RestrictionType, Integer> getRestrictionTypeCount() {
@@ -56,39 +57,6 @@ public class Reservation {
                                                                         table.getRestrictionTypeCount());
     }
     return restrictionTypeCount;
-  }
-
-  public Set<RestrictionType> getRestrictionTypes() {
-    Set<RestrictionType> restrictionTypes = new HashSet<>();
-    for (Customer customer : this.getCustomers()) {
-      Set<RestrictionType> restrictions = customer.getRestrictions()
-                                                  .isEmpty() ? Set.of(RestrictionType.NONE)
-                                                             : customer.getRestrictions();
-      restrictionTypes.addAll(restrictions);
-    }
-    return restrictionTypes;
-  }
-
-  public int getNumberOfCustomers() {
-    return this.getCustomers().size();
-  }
-
-  public List<Customer> getCustomers() {
-    List<Customer> customers = new ArrayList<>();
-    for (Table table : this.tables) {
-      customers.addAll(table.getCustomers());
-    }
-    return customers;
-  }
-
-  public int getNumberOfRestrictions() {
-    int numberOfRestrictions = 0;
-    Map<RestrictionType, Integer> countPerRestrictionType = getRestrictionTypeCount();
-    for (RestrictionType restrictionType : countPerRestrictionType.keySet()) {
-      if (!restrictionType.equals(RestrictionType.NONE))
-        numberOfRestrictions += countPerRestrictionType.get(restrictionType);
-    }
-    return numberOfRestrictions;
   }
 
   private Map<RestrictionType, Integer> mergeCurrentCountWithTableRestrictionCount(Map<RestrictionType, Integer> currentCount,

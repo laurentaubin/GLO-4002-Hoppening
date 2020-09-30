@@ -2,9 +2,10 @@ package ca.ulaval.glo4002.reservation.service;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
-import ca.ulaval.glo4002.reservation.domain.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
+import ca.ulaval.glo4002.reservation.infra.inmemory.ReportRepository;
 import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
@@ -15,9 +16,11 @@ public class ReservationService {
   private final ReservationRepository reservationRepository;
   private final ReservationAssembler reservationAssembler;
   private final ReservationValidator reservationValidator;
+  private final ReportRepository reportRepository;
 
   public ReservationService(IdGenerator idGenerator,
                             ReservationRepository reservationRepository,
+                            ReportRepository reportRepository,
                             ReservationAssembler reservationAssembler,
                             ReservationValidator reservationValidator)
   {
@@ -25,6 +28,7 @@ public class ReservationService {
     this.reservationRepository = reservationRepository;
     this.reservationAssembler = reservationAssembler;
     this.reservationValidator = reservationValidator;
+    this.reportRepository = reportRepository;
   }
 
   public long createReservation(CreateReservationRequestDto createReservationRequestDto) {
@@ -33,6 +37,7 @@ public class ReservationService {
     long reservationId = idGenerator.getLongUuid();
     Reservation reservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
                                                                                            reservationId);
+    reportRepository.updateIngredientsQuantity(reservation);
     return reservationRepository.createReservation(reservation);
   }
 

@@ -15,10 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
-import ca.ulaval.glo4002.reservation.domain.Reservation;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
+import ca.ulaval.glo4002.reservation.infra.inmemory.ReportRepository;
 import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
@@ -29,6 +30,9 @@ public class ReservationServiceTest {
   private static final long AN_ID = 4321;
   private static final String RESERVATION_NOT_FOUND_EXCEPTION = "Reservation with number 4321 not found";
   private static final String A_DATE = "2150-11-16T23:59:59.999Z";
+
+  @Mock
+  private Reservation aReservation;
 
   @Mock
   private IdGenerator idGenerator;
@@ -45,12 +49,16 @@ public class ReservationServiceTest {
   @Mock
   private ReservationValidator reservationValidator;
 
+  @Mock
+  private ReportRepository reportRepository;
+
   private ReservationService reservationService;
 
   @BeforeEach
   public void setUp() {
     reservationService = new ReservationService(idGenerator,
                                                 reservationRepository,
+                                                reportRepository,
                                                 reservationAssembler,
                                                 reservationValidator);
   }
@@ -106,6 +114,21 @@ public class ReservationServiceTest {
     ReservationNotFoundException exception = assertThrows(ReservationNotFoundException.class,
                                                           gettingReservation);
     assertThat(exception.getDescription()).isEqualTo(RESERVATION_NOT_FOUND_EXCEPTION);
+  }
+
+  @Test
+  public void whenCreateReservation_thenReportRepositoryIsCalled() {
+
+    // given
+    given(idGenerator.getLongUuid()).willReturn(AN_ID);
+    given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
+                                                                       AN_ID)).willReturn(aReservation);
+
+    // when
+    reservationService.createReservation(createReservationRequestDto);
+
+    // then
+    verify(reportRepository).updateIngredientsQuantity(aReservation);
   }
 
   private void setUpReservationServiceMocksForIdTests(Reservation reservation, long id) {

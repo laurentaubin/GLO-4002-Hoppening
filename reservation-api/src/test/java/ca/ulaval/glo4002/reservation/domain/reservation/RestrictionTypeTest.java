@@ -1,13 +1,14 @@
-package ca.ulaval.glo4002.reservation.domain;
+package ca.ulaval.glo4002.reservation.domain.reservation;
 
-import ca.ulaval.glo4002.reservation.service.exception.InvalidRestrictionException;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import ca.ulaval.glo4002.reservation.service.exception.InvalidRestrictionException;
 
 @ExtendWith(MockitoExtension.class)
 public class RestrictionTypeTest {

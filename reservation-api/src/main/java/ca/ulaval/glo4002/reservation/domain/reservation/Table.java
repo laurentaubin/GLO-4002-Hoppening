@@ -1,6 +1,5 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +16,8 @@ public class Table {
     return customers;
   }
 
-  public BigDecimal getTableReservationFees() {
-    BigDecimal tableReservationFees = BigDecimal.ZERO;
-    for (Customer customer : customers) {
-      tableReservationFees = tableReservationFees.add(customer.getCustomerFees());
-    }
-    return tableReservationFees;
+  public double getTableReservationFees() {
+    return customers.stream().mapToDouble(Customer::getCustomerFees).sum();
   }
 
   public Map<RestrictionType, Integer> getRestrictionTypeCount() {

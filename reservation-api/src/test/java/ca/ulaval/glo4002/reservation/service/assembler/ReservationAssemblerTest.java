@@ -16,11 +16,11 @@ import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDetailsDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.TableDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.*;
-import ca.ulaval.glo4002.reservation.domain.*;
 import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationDetailsBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
+import ca.ulaval.glo4002.reservation.domain.reservation.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationAssemblerTest {

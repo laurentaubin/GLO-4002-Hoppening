@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.domain.Reservation;
-import ca.ulaval.glo4002.reservation.domain.ReservationDetails;
-import ca.ulaval.glo4002.reservation.domain.Table;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationDetails;
+import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 public class ReservationBuilder {
   private static final int A_ID = 12345;

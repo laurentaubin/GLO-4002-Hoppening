@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CountryDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CountryDto;
-import ca.ulaval.glo4002.reservation.domain.Country;
+import ca.ulaval.glo4002.reservation.domain.reservation.Country;
 
 public class CountryAssemblerTest {
   private CountryAssembler countryAssembler;

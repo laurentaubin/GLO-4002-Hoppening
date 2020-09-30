@@ -14,10 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.domain.Reservation;
-import ca.ulaval.glo4002.reservation.domain.Table;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 @ExtendWith(MockitoExtension.class)
 public class InMemoryReservationRepositoryTest {

@@ -3,7 +3,6 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -17,10 +16,9 @@ import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
 
 @ExtendWith(MockitoExtension.class)
 public class TableTest {
-  private static final BigDecimal NO_PRICE = BigDecimal.ZERO;
-  private static final BigDecimal A_TABLE_EXPECTED_PRICE = BigDecimal.valueOf(1000);
-  private static final BigDecimal ANOTHER_TABLE_EXPECTED_PRICE = BigDecimal.valueOf(3000);
-  private static final BigDecimal TWO_TABLE_EXPECTED_PRICE = BigDecimal.valueOf(4000);
+  private static final double NO_PRICE = 0;
+  private static final double A_PRICE = 1000;
+  private static final double ANOTHER_PRICE = 3000;
   private static final int TWO_VEGANS = 2;
   private static final int ONE_CUSTOMER_WITH_ALLERGIES = 1;
   private static final int ONE_CUSTOMER_WITH_NO_RESTRICTION = 1;
@@ -37,7 +35,7 @@ public class TableTest {
     Table table = new TableBuilder().build();
 
     // when
-    BigDecimal price = table.getTableReservationFees();
+    double price = table.getTableReservationFees();
 
     // then
     assertThat(price).isEqualTo(NO_PRICE);
@@ -46,28 +44,29 @@ public class TableTest {
   @Test
   public void givenTableWithACustomer_whenGetPrice_thenReturnCustomerPrice() {
     // given
-    given(aCustomer.getCustomerFees()).willReturn(A_TABLE_EXPECTED_PRICE);
+    given(aCustomer.getCustomerFees()).willReturn(A_PRICE);
     Table table = new TableBuilder().withCustomer(aCustomer).build();
 
     // when
-    BigDecimal price = table.getTableReservationFees();
+    double price = table.getTableReservationFees();
 
     // then
-    assertThat(price).isEqualTo(A_TABLE_EXPECTED_PRICE);
+    assertThat(price).isEqualTo(A_PRICE);
   }
 
   @Test
   public void givenTableWithCustomers_whenGetPrice_thenReturnTotalPrice() {
     // given
-    given(aCustomer.getCustomerFees()).willReturn(A_TABLE_EXPECTED_PRICE);
-    given(anotherCustomer.getCustomerFees()).willReturn(ANOTHER_TABLE_EXPECTED_PRICE);
+    given(aCustomer.getCustomerFees()).willReturn(A_PRICE);
+    given(anotherCustomer.getCustomerFees()).willReturn(ANOTHER_PRICE);
     Table table = new TableBuilder().withCustomer(aCustomer).withCustomer(anotherCustomer).build();
+    double expectedPrice = A_PRICE + ANOTHER_PRICE;
 
     // when
-    BigDecimal totalPrice = table.getTableReservationFees();
+    double totalPrice = table.getTableReservationFees();
 
     // then
-    assertThat(totalPrice).isEqualTo(TWO_TABLE_EXPECTED_PRICE);
+    assertThat(totalPrice).isEqualTo(expectedPrice);
   }
 
   @Test

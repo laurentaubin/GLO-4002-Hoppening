@@ -7,8 +7,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResourceImpl;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
-import ca.ulaval.glo4002.reservation.infra.inmemory.InMemoryReservationDao;
-import ca.ulaval.glo4002.reservation.infra.inmemory.InMemoryReservationRepository;
+import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
 import ca.ulaval.glo4002.reservation.service.ReservationService;
 import ca.ulaval.glo4002.reservation.service.assembler.*;
@@ -57,14 +56,19 @@ public class ReservationContext {
                                                                                      CLOSING_RESERVATION_DATE);
     RestrictionValidator restrictionValidator = new RestrictionValidator();
 
-    CustomerAssembler customerAssembler = new CustomerAssembler();
-
     MaximumCustomerCapacityPerDayValidator maximumCustomerCapacityPerDayValidator = new MaximumCustomerCapacityPerDayValidator(MAX_NUMBER_OF_CUSTOMERS_PER_DAY,
                                                                                                                                reservationRepository,
                                                                                                                                DATE_FORMAT);
 
+    CustomerAssembler customerAssembler = new CustomerAssembler();
+
+    FullCourseFactory fullCourseFactory = new FullCourseFactory(new CourseRecipeFactory());
+    MenuRepository menuRepository = new MenuRepository(fullCourseFactory);
+    ReportRepository reportRepository = new ReportRepository(menuRepository);
+
     return new ReservationService(idGenerator,
                                   reservationRepository,
+                                  reportRepository,
                                   new ReservationAssembler(DATE_FORMAT,
                                                            new TableAssembler(customerAssembler),
                                                            customerAssembler,

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.domain.Customer;
-import ca.ulaval.glo4002.reservation.domain.Table;
+import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
+import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 public class TableAssembler {
   private final CustomerAssembler customerAssembler;

@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.domain.Reservation;
-import ca.ulaval.glo4002.reservation.domain.Table;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 
 public class InMemoryReservationRepository implements ReservationRepository {

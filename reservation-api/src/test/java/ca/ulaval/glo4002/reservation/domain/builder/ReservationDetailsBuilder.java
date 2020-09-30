@@ -2,8 +2,8 @@ package ca.ulaval.glo4002.reservation.domain.builder;
 
 import java.time.LocalDateTime;
 
-import ca.ulaval.glo4002.reservation.domain.Country;
-import ca.ulaval.glo4002.reservation.domain.ReservationDetails;
+import ca.ulaval.glo4002.reservation.domain.reservation.Country;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationDetails;
 
 public class ReservationDetailsBuilder {
   private static final LocalDateTime A_RESERVATION_DATE = LocalDateTime.now();

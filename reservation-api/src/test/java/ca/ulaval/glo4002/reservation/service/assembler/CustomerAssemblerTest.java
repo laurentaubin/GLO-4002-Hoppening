@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
-import ca.ulaval.glo4002.reservation.domain.Customer;
-import ca.ulaval.glo4002.reservation.domain.RestrictionType;
 import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
+import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
+import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 class CustomerAssemblerTest {
   private static final String VEGETARIAN_RESTRICTION = "vegetarian";

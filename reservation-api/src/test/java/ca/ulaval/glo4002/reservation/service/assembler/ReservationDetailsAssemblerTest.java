@@ -9,7 +9,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.builder.CountryDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDetailsDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CountryDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDetailsDto;
-import ca.ulaval.glo4002.reservation.domain.ReservationDetails;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationDetails;
 
 public class ReservationDetailsAssemblerTest {
   private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";

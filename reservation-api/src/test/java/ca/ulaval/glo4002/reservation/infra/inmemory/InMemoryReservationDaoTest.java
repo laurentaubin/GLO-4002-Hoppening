@@ -3,12 +3,13 @@ package ca.ulaval.glo4002.reservation.infra.inmemory;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import ca.ulaval.glo4002.reservation.domain.Reservation;
-import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
-import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+
+import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 
 public class InMemoryReservationDaoTest {
   private static final long AN_ID = 123;

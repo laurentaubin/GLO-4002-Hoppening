@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
-import ca.ulaval.glo4002.reservation.domain.Customer;
-import ca.ulaval.glo4002.reservation.domain.Reservation;
-import ca.ulaval.glo4002.reservation.domain.ReservationDetails;
-import ca.ulaval.glo4002.reservation.domain.Table;
+import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationDetails;
+import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 public class ReservationAssembler {
   private final DateTimeFormatter dateFormatter;

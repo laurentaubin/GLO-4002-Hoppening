@@ -2,17 +2,12 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.math.BigDecimal;
-
 import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 
 public class CustomerTest {
-  private static final BigDecimal BASE_PRICE = BigDecimal.valueOf(1000);
   private static final RestrictionType A_RESTRICTION_WITHOUT_FEE = RestrictionType.ALLERGIES;
-  private static final BigDecimal CUSTOMER_FEES_WITH_VEGAN_RESTRICTION = BigDecimal.valueOf(2000);
-  private static final BigDecimal CUSTOMER_FEES_WITH_VEGAN_AND_ILLNESS_RESTRICTION = BigDecimal.valueOf(2000);
 
   @Test
   public void givenCustomerWithoutRestrictions_whenGetCustomerFees_thenReturnBasePrice() {
@@ -20,10 +15,10 @@ public class CustomerTest {
     Customer customer = new CustomerBuilder().build();
 
     // when
-    BigDecimal price = customer.getCustomerFees();
+    double price = customer.getCustomerFees();
 
     // then
-    assertThat(price).isEqualTo(BASE_PRICE);
+    assertThat(price).isEqualTo(Customer.BASIC_CUSTOMER_FEES);
   }
 
   @Test
@@ -32,22 +27,23 @@ public class CustomerTest {
     Customer customer = new CustomerBuilder().withRestriction(A_RESTRICTION_WITHOUT_FEE).build();
 
     // when
-    BigDecimal price = customer.getCustomerFees();
+    double price = customer.getCustomerFees();
 
     // then
-    assertThat(price).isEqualTo(BASE_PRICE);
+    assertThat(price).isEqualTo(Customer.BASIC_CUSTOMER_FEES);
   }
 
   @Test
   public void givenCustomerWithRestriction_whenGetCustomerFees_thenReturnPriceAccordingToRestriction() {
     // given
     Customer customer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN).build();
+    double expectedPrice = Customer.BASIC_CUSTOMER_FEES + RestrictionType.VEGAN.getFees();
 
     // when
-    BigDecimal price = customer.getCustomerFees();
+    double price = customer.getCustomerFees();
 
     // then
-    assertThat(price).isEqualTo(CUSTOMER_FEES_WITH_VEGAN_RESTRICTION);
+    assertThat(price).isEqualTo(expectedPrice);
   }
 
   @Test
@@ -56,11 +52,13 @@ public class CustomerTest {
     Customer customer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN)
                                              .withRestriction(RestrictionType.ILLNESS)
                                              .build();
+    double expectedPrice = Customer.BASIC_CUSTOMER_FEES + RestrictionType.VEGAN.getFees()
+                           + RestrictionType.ILLNESS.getFees();
 
     // when
-    BigDecimal price = customer.getCustomerFees();
+    double price = customer.getCustomerFees();
 
     // then
-    assertThat(price).isEqualTo(CUSTOMER_FEES_WITH_VEGAN_AND_ILLNESS_RESTRICTION);
+    assertThat(price).isEqualTo(expectedPrice);
   }
 }
