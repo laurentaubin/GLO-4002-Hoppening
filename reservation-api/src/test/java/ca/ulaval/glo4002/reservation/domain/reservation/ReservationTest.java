@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Map;
 
@@ -16,9 +17,10 @@ import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 @ExtendWith(MockitoExtension.class)
 public class ReservationTest {
 
-  private static final double NO_COST = 0;
-  private static final double A_PRICE = 2500;
-  private static final double ANOTHER_PRICE = 2500;
+  private static final BigDecimal NO_COST = BigDecimal.ZERO;
+  private static final BigDecimal A_TABLE_EXPECTED_PRICE = BigDecimal.valueOf(2500);
+  private static final BigDecimal ANOTHER_TABLE_EXPECTED_PRICE = BigDecimal.valueOf(2500);
+  private static final BigDecimal PRICE_WITH_TWO_TABLES = BigDecimal.valueOf(5000);
   private static final Map<RestrictionType, Integer> TWO_VEGANS = Collections.singletonMap(RestrictionType.VEGAN,
                                                                                            2);
 
@@ -35,7 +37,7 @@ public class ReservationTest {
     Reservation reservation = new ReservationBuilder().withTable(aTable).build();
 
     // when
-    double price = reservation.getReservationFees();
+    BigDecimal price = reservation.getReservationFees();
 
     // then
     assertThat(price).isEqualTo(NO_COST);
@@ -44,31 +46,30 @@ public class ReservationTest {
   @Test
   public void givenAReservationWithATable_whenGetReservationFees_thenReturnPriceAccordingToReservation() {
     // given
-    given(aTable.getTableReservationFees()).willReturn(A_PRICE);
+    given(aTable.getTableReservationFees()).willReturn(A_TABLE_EXPECTED_PRICE);
     Reservation reservation = new ReservationBuilder().withTable(aTable).build();
 
     // when
-    double price = reservation.getReservationFees();
+    BigDecimal price = reservation.getReservationFees();
 
     // then
-    assertThat(price).isEqualTo(A_PRICE);
+    assertThat(price).isEqualTo(A_TABLE_EXPECTED_PRICE);
   }
 
   @Test
   public void givenAReservationWithManyTables_whenGetReservationFees_thenReturnPriceAccordingToReservation() {
     // given
-    given(aTable.getTableReservationFees()).willReturn(A_PRICE);
-    given(anotherTable.getTableReservationFees()).willReturn(ANOTHER_PRICE);
+    given(aTable.getTableReservationFees()).willReturn(A_TABLE_EXPECTED_PRICE);
+    given(anotherTable.getTableReservationFees()).willReturn(ANOTHER_TABLE_EXPECTED_PRICE);
     Reservation reservation = new ReservationBuilder().withTable(aTable)
                                                       .withTable(anotherTable)
                                                       .build();
-    double expectedPrice = A_PRICE + ANOTHER_PRICE;
 
     // when
-    double price = reservation.getReservationFees();
+    BigDecimal price = reservation.getReservationFees();
 
     // then
-    assertThat(price).isEqualTo(expectedPrice);
+    assertThat(price).isEqualTo(PRICE_WITH_TWO_TABLES);
   }
 
   @Test

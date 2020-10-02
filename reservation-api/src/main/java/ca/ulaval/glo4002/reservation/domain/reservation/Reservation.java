@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -42,8 +43,12 @@ public class Reservation {
     return tables;
   }
 
-  public double getReservationFees() {
-    return tables.stream().mapToDouble(Table::getTableReservationFees).sum();
+  public BigDecimal getReservationFees() {
+    BigDecimal reservationFees = BigDecimal.ZERO;
+    for (Table table : tables) {
+      reservationFees = reservationFees.add(table.getTableReservationFees());
+    }
+    return reservationFees;
   }
 
   public ReservationDetails getReservationDetails() {

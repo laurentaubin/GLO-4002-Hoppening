@@ -1,10 +1,11 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class Customer {
 
-  public static final double BASIC_CUSTOMER_FEES = 1000;
+  public static final BigDecimal BASIC_CUSTOMER_FEES = BigDecimal.valueOf(1000);
   private final String name;
   private final CustomerRestriction restriction;
 
@@ -21,7 +22,7 @@ public class Customer {
     return restriction.getRestrictions();
   }
 
-  public double getCustomerFees() {
-    return BASIC_CUSTOMER_FEES + restriction.getAdditionalFees();
+  public BigDecimal getCustomerFees() {
+    return BASIC_CUSTOMER_FEES.add(restriction.getAdditionalFees());
   }
 }

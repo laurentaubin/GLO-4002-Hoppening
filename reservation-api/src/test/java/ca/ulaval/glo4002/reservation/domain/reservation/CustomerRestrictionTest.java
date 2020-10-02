@@ -2,6 +2,7 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Set;
 
@@ -9,7 +10,8 @@ import org.junit.jupiter.api.Test;
 
 public class CustomerRestrictionTest {
 
-  private static final double NO_ADDITIONAL_FEE = 0;
+  private static final BigDecimal NO_ADDITIONAL_FEE = BigDecimal.ZERO;
+  private static final BigDecimal VEGAN_RESTRICTION_EXPECTED_PRICE = BigDecimal.valueOf(1000);
 
   @Test
   public void givenNoRestriction_whenGetAdditionalFees_thenReturnNoAdditionalFees() {
@@ -18,7 +20,7 @@ public class CustomerRestrictionTest {
     CustomerRestriction restriction = new CustomerRestriction(noRestriction);
 
     // when
-    double price = restriction.getAdditionalFees();
+    BigDecimal price = restriction.getAdditionalFees();
 
     // then
     assertThat(price).isEqualTo(NO_ADDITIONAL_FEE);
@@ -31,10 +33,10 @@ public class CustomerRestrictionTest {
     CustomerRestriction restriction = new CustomerRestriction(veganRestriction);
 
     // when
-    double price = restriction.getAdditionalFees();
+    BigDecimal price = restriction.getAdditionalFees();
 
     // then
-    assertThat(price).isEqualTo(RestrictionType.VEGAN.getFees());
+    assertThat(price).isEqualTo(VEGAN_RESTRICTION_EXPECTED_PRICE);
   }
 
   @Test
@@ -43,12 +45,10 @@ public class CustomerRestrictionTest {
     Set<RestrictionType> veganRestriction = Set.of(RestrictionType.VEGAN, RestrictionType.ILLNESS);
     CustomerRestriction restriction = new CustomerRestriction(veganRestriction);
 
-    double expectedPrice = RestrictionType.VEGAN.getFees() + RestrictionType.ILLNESS.getFees();
-
     // when
-    double price = restriction.getAdditionalFees();
+    BigDecimal price = restriction.getAdditionalFees();
 
     // then
-    assertThat(price).isEqualTo(expectedPrice);
+    assertThat(price).isEqualTo(VEGAN_RESTRICTION_EXPECTED_PRICE);
   }
 }

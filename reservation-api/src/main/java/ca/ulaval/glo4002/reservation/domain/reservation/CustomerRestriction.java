@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class CustomerRestriction {
@@ -14,7 +15,11 @@ public class CustomerRestriction {
     return restrictions;
   }
 
-  public double getAdditionalFees() {
-    return restrictions.stream().mapToDouble(RestrictionType::getFees).sum();
+  public BigDecimal getAdditionalFees() {
+    BigDecimal additionalFees = BigDecimal.ZERO;
+    for (RestrictionType restrictionType : restrictions) {
+      additionalFees = additionalFees.add(restrictionType.getFees());
+    }
+    return additionalFees;
   }
 }

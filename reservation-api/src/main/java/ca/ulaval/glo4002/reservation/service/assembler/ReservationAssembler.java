@@ -1,5 +1,7 @@
 package ca.ulaval.glo4002.reservation.service.assembler;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -61,8 +63,8 @@ public class ReservationAssembler {
     return reservationDto;
   }
 
-  private double formatReservationPrice(double reservationFees) {
-    return (double) Math.round(reservationFees * 100) / 100;
+  private BigDecimal formatReservationPrice(BigDecimal reservationFees) {
+    return reservationFees.setScale(2, RoundingMode.HALF_UP);
   }
 
   private LocalDateTime assembleDinnerDateFromString(String dinnerDate) {

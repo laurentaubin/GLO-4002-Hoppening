@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.service.assembler;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +31,8 @@ class ReservationAssemblerTest {
   private static final LocalDateTime DATE = LocalDateTime.of(2001, 9, 11, 16, 12, 12, 142000000);
   private static final String DATE_STRING = "2001-09-11T16:12:12.142Z";
   private static final String VEGAN_RESTRICTION = "vegan";
-  private static final double A_ROUNDED_RESERVATION_PRICE = 1234.57;
-  private static final double A_RESERVATION_PRICE = 1234.5678;
+  private static final BigDecimal A_ROUNDED_RESERVATION_PRICE = BigDecimal.valueOf(1234.57);
+  private static final BigDecimal A_RESERVATION_PRICE = BigDecimal.valueOf(1234.5678);
 
   @Mock
   private TableAssembler tableAssembler;

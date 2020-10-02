@@ -2,18 +2,20 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import ca.ulaval.glo4002.reservation.service.exception.InvalidRestrictionException;
 
+import java.math.BigDecimal;
+
 public enum RestrictionType {
-  VEGETARIAN("vegetarian", 500),
-  VEGAN("vegan", 1000),
-  ALLERGIES("allergies", 0),
-  ILLNESS("illness", 0),
-  NONE("none", 0);
+  VEGETARIAN("vegetarian", BigDecimal.valueOf(500)),
+  VEGAN("vegan", BigDecimal.valueOf(1000)),
+  ALLERGIES("allergies", BigDecimal.ZERO),
+  ILLNESS("illness", BigDecimal.ZERO),
+  NONE("none", BigDecimal.ZERO);
 
   private final String name;
 
-  private final double fees;
+  private final BigDecimal fees;
 
-  RestrictionType(String name, double fees) {
+  RestrictionType(String name, BigDecimal fees) {
     this.name = name;
     this.fees = fees;
   }
@@ -23,7 +25,7 @@ public enum RestrictionType {
     return name;
   }
 
-  public double getFees() {
+  public BigDecimal getFees() {
     return fees;
   }
 

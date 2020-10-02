@@ -1,10 +1,11 @@
 package ca.ulaval.glo4002.reservation.api.reservation.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ReservationDto {
   private String dinnerDate;
-  private double reservationPrice;
+  private BigDecimal reservationPrice;
   private List<CustomerDto> customers;
 
   public String getDinnerDate() {
@@ -15,11 +16,11 @@ public class ReservationDto {
     this.dinnerDate = dinnerDate;
   }
 
-  public double getReservationPrice() {
+  public BigDecimal getReservationPrice() {
     return reservationPrice;
   }
 
-  public void setReservationPrice(double reservationPrice) {
+  public void setReservationPrice(BigDecimal reservationPrice) {
     this.reservationPrice = reservationPrice;
   }
 
