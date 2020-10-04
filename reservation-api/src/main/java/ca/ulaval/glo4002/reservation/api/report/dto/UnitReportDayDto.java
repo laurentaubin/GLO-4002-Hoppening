@@ -3,17 +3,17 @@ package ca.ulaval.glo4002.reservation.api.report.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
-
-import ca.ulaval.glo4002.reservation.api.report.presenter.IngredientReportInformationDto;
 
 public class UnitReportDayDto {
-  private final String date;
-  private final List<IngredientReportInformationDto> ingredients;
-  private final BigDecimal totalPrice;
+  private String date;
+  private List<IngredientsReportInformationDto> ingredients;
+  private BigDecimal totalPrice;
+
+  public UnitReportDayDto() {
+  }
 
   public UnitReportDayDto(LocalDate date,
-                          List<IngredientReportInformationDto> ingredients,
+                          List<IngredientsReportInformationDto> ingredients,
                           BigDecimal totalPrice)
   {
     this.date = date.toString();
@@ -25,31 +25,15 @@ public class UnitReportDayDto {
     return date;
   }
 
-  public List<IngredientReportInformationDto> getIngredients() {
+  public void setIngredients(List<IngredientsReportInformationDto> ingredients) {
+    this.ingredients = ingredients;
+  }
+
+  public List<IngredientsReportInformationDto> getIngredients() {
     return ingredients;
   }
 
   public BigDecimal getTotalPrice() {
     return totalPrice;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-
-    if (o == this)
-      return true;
-    if (!(o instanceof UnitReportDayDto)) {
-      return false;
-    }
-
-    UnitReportDayDto unitReportDayDto = (UnitReportDayDto) o;
-
-    return unitReportDayDto.date.equals(date) && unitReportDayDto.ingredients.equals(ingredients)
-           && unitReportDayDto.totalPrice.compareTo(totalPrice) == 0;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(date, ingredients, totalPrice);
   }
 }

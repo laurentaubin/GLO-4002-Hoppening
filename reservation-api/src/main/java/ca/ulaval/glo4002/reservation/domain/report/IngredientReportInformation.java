@@ -7,11 +7,11 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 
 public class IngredientReportInformation {
   private final IngredientName ingredientName;
-  private final BigDecimal quantity;
+  private final double quantity;
   private final BigDecimal totalPrice;
 
   public IngredientReportInformation(IngredientName ingredientName,
-                                     BigDecimal quantity,
+                                     double quantity,
                                      BigDecimal totalPrice)
   {
     this.ingredientName = ingredientName;
@@ -19,11 +19,11 @@ public class IngredientReportInformation {
     this.totalPrice = totalPrice;
   }
 
-  public IngredientName getIngredientName() {
+  public IngredientName getIngredient() {
     return ingredientName;
   }
 
-  public BigDecimal getQuantity() {
+  public double getQuantity() {
     return quantity;
   }
 
@@ -41,8 +41,8 @@ public class IngredientReportInformation {
     }
     IngredientReportInformation ingredientReportInformation = (IngredientReportInformation) o;
     return Objects.equals(ingredientName, ingredientReportInformation.ingredientName)
-           && quantity.compareTo(ingredientReportInformation.quantity) == 0
-           && totalPrice.compareTo(ingredientReportInformation.totalPrice) == 0;
+           && Objects.equals(quantity, ingredientReportInformation.quantity)
+           && Objects.equals(totalPrice, ingredientReportInformation.totalPrice);
   }
 
   @Override

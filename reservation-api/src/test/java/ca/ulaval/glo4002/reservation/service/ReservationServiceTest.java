@@ -19,11 +19,12 @@ import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
-import ca.ulaval.glo4002.reservation.infra.inmemory.ReportRepository;
-import ca.ulaval.glo4002.reservation.service.assembler.ReservationAssembler;
-import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
-import ca.ulaval.glo4002.reservation.service.generator.id.IdGenerator;
-import ca.ulaval.glo4002.reservation.service.validator.ReservationValidator;
+import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
+import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
+import ca.ulaval.glo4002.reservation.service.reservation.assembler.ReservationAssembler;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
+import ca.ulaval.glo4002.reservation.service.reservation.id.IdGenerator;
+import ca.ulaval.glo4002.reservation.service.reservation.validator.ReservationValidator;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
@@ -50,7 +51,7 @@ public class ReservationServiceTest {
   private ReservationValidator reservationValidator;
 
   @Mock
-  private ReportRepository reportRepository;
+  private IngredientQuantityRepository ingredientQuantityRepository;
 
   private ReservationService reservationService;
 
@@ -58,7 +59,7 @@ public class ReservationServiceTest {
   public void setUp() {
     reservationService = new ReservationService(idGenerator,
                                                 reservationRepository,
-                                                reportRepository,
+                                                ingredientQuantityRepository,
                                                 reservationAssembler,
                                                 reservationValidator);
   }
@@ -128,7 +129,7 @@ public class ReservationServiceTest {
     reservationService.createReservation(createReservationRequestDto);
 
     // then
-    verify(reportRepository).updateIngredientsQuantity(aReservation);
+    verify(ingredientQuantityRepository).updateIngredientsQuantity(aReservation);
   }
 
   private void setUpReservationServiceMocksForIdTests(Reservation reservation, long id) {

@@ -1,11 +1,12 @@
 package ca.ulaval.glo4002.reservation.api.mappers;
 
-import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
-import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
-import ca.ulaval.glo4002.reservation.service.exception.ReservationNotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
+import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
+import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
 
 @Provider
 public class CatchNotFoundExceptionMapper implements ExceptionMapper<ReservationNotFoundException> {

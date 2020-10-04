@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
 import ca.ulaval.glo4002.reservation.exception.ReservationException;
-import ca.ulaval.glo4002.reservation.service.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinnerDateException;
 
 public class ExceptionResponseAssemblerTest {
 

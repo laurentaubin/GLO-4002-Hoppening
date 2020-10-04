@@ -1,7 +1,5 @@
 package ca.ulaval.glo4002.reservation.api.report;
 
-import ca.ulaval.glo4002.reservation.api.report.presenter.expense.ExpenseReportPresenter;
-import ca.ulaval.glo4002.reservation.domain.report.expense.ExpenseReport;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -9,15 +7,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import ca.ulaval.glo4002.reservation.api.report.assembler.ChefReportDtoAssembler;
-import ca.ulaval.glo4002.reservation.api.report.dto.ChefReportDto;
-import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportPresenter;
+import ca.ulaval.glo4002.reservation.api.report.assembler.ReportPeriodAssembler;
+import ca.ulaval.glo4002.reservation.api.report.assembler.UnitReportDtoAssembler;
+import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDto;
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
-import ca.ulaval.glo4002.reservation.domain.material.MaterialReport;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientReport;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientReportPresenter;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientReportType;
-import ca.ulaval.glo4002.reservation.domain.report.chef.ChefReport;
+import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
+import ca.ulaval.glo4002.reservation.domain.report.ReportType;
+import ca.ulaval.glo4002.reservation.domain.report.UnitReport;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @Path("/reports")
@@ -25,63 +21,36 @@ public class ReportResource {
 
   private final ReportService reportService;
   private final ReportDateValidator reportDateValidator;
-  private final IngredientReportPresenterFactory ingredientReportPresenterFactory;
-  private final ChefReportDtoAssembler chefReportDtoAssembler;
-  private final MaterialReportPresenter materialReportPresenter;
-  private final ExpenseReportPresenter expenseReportPresenter;
+  private final ReportPeriodAssembler reportPeriodAssembler;
+  private final UnitReportDtoAssembler unitReportDtoAssembler;
 
   public ReportResource(ReportService reportService,
                         ReportDateValidator reportDateValidator,
-                        IngredientReportPresenterFactory ingredientReportPresenterFactory,
-                        ChefReportDtoAssembler chefReportDtoAssembler,
-                        MaterialReportPresenter materialReportPresenter, ExpenseReportPresenter expenseReportPresenter)
+                        ReportPeriodAssembler reportPeriodAssembler,
+                        UnitReportDtoAssembler unitReportDtoAssembler)
   {
     this.reportService = reportService;
     this.reportDateValidator = reportDateValidator;
-    this.ingredientReportPresenterFactory = ingredientReportPresenterFactory;
-    this.chefReportDtoAssembler = chefReportDtoAssembler;
-    this.materialReportPresenter = materialReportPresenter;
-    this.expenseReportPresenter = expenseReportPresenter;
+    this.reportPeriodAssembler = reportPeriodAssembler;
+    this.unitReportDtoAssembler = unitReportDtoAssembler;
   }
 
   @GET
   @Path("/ingredients")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getIngredientReport(@QueryParam("startDate") String startDate,
-                                      @QueryParam("endDate") String endDate,
-                                      @QueryParam("type") String type)
+  public Response getReport(@QueryParam("startDate") String startDate,
+                            @QueryParam("endDate") String endDate,
+                            @QueryParam("type") String type)
   {
     reportDateValidator.validate(startDate, endDate);
-    IngredientReport ingredientReport = reportService.getIngredientReport(startDate, endDate);
-    IngredientReportPresenter ingredientReportPresenter = ingredientReportPresenterFactory.create(IngredientReportType.valueOfName(type));
-    return ingredientReportPresenter.presentReport(ingredientReport);
+    UnitReportDto unitReportDto = getUnitReportDto(startDate, endDate, type);
+    return Response.ok().entity(unitReportDto).build();
   }
 
-  @GET
-  @Path("/chefs")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getChefReport() {
-    ChefReport chefReport = reportService.getChefReport();
-    ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
-    return Response.ok().entity(chefReportDto).build();
-  }
-
-  @GET
-  @Path("/material")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getMaterialReport(@QueryParam("startDate") String startDate,
-                                    @QueryParam("endDate") String endDate)
-  {
-    reportDateValidator.validate(startDate, endDate);
-    MaterialReport materialReport = reportService.getMaterialReport(startDate, endDate);
-    return materialReportPresenter.presentReport(materialReport);
-  }
-
-  @GET
-  @Path("/total")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getExpenseReport(){
-    ExpenseReport expenseReport = reportService.getExpenseReport();
-    return expenseReportPresenter.presentReport(expenseReport);
+  private UnitReportDto getUnitReportDto(String startDate, String endDate, String type) {
+    ReportPeriod reportPeriod = reportPeriodAssembler.assembleReportPeriod(startDate, endDate);
+    ReportType reportType = ReportType.valueOfName(type);
+    UnitReport unitReport = reportService.getUnitReport(reportPeriod, reportType);
+    return unitReportDtoAssembler.assemble(unitReport);
   }
 }

@@ -1,26 +1,25 @@
 package ca.ulaval.glo4002.reservation.api.report.validator;
 
-import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportDateException;
-import ca.ulaval.glo4002.reservation.service.report.ReportService;
+import java.time.LocalDate;
+
+import ca.ulaval.glo4002.reservation.api.report.exception.InvalidReportDateException;
 
 public class ReportDateValidator {
-  private final String reportDateRegex;
-  private final ReportService reportService;
-
-  public ReportDateValidator(String reportDateRegex, ReportService reportService) {
-    this.reportDateRegex = reportDateRegex;
-    this.reportService = reportService;
-  }
-
   public void validate(String startDate, String endDate) {
-    if (areDatesInvalid(startDate, endDate)) {
-      throw new InvalidReportDateException(reportService.getDinnerPeriodDto().getStartDate(),
-                                           reportService.getDinnerPeriodDto().getEndDate());
+    if (areDatesValid(startDate, endDate)) {
+      throw new InvalidReportDateException();
     }
   }
 
-  private boolean areDatesInvalid(String startDate, String endDate) {
-    return startDate == null || endDate == null || !startDate.matches(reportDateRegex)
-           || !endDate.matches(reportDateRegex);
+  private boolean areDatesValid(String startDate, String endDate) {
+    return areDatesNull(startDate, endDate) || isStartDateAfterEndDate(startDate, endDate);
+  }
+
+  private boolean areDatesNull(String startDate, String endDate) {
+    return startDate == null || endDate == null;
+  }
+
+  private boolean isStartDateAfterEndDate(String startDate, String endDate) {
+    return LocalDate.parse(startDate).isAfter(LocalDate.parse(endDate));
   }
 }

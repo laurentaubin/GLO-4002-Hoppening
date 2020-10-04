@@ -1,6 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
-import ca.ulaval.glo4002.reservation.service.exception.InvalidRestrictionException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidRestrictionException;
 
 import java.math.BigDecimal;
 

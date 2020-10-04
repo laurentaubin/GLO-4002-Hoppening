@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.service.exception.InvalidRestrictionException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidRestrictionException;
 
 @ExtendWith(MockitoExtension.class)
 public class RestrictionTypeTest {
