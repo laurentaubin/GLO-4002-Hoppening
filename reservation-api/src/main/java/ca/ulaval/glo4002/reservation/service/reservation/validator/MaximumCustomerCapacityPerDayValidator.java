@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
+import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
 public class MaximumCustomerCapacityPerDayValidator {

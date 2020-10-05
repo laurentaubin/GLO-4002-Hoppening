@@ -1,8 +1,8 @@
-package ca.ulaval.glo4002.reservation.infra;
-
-import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+package ca.ulaval.glo4002.reservation.service.reservation;
 
 import java.time.LocalDateTime;
+
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 
 public interface ReservationRepository {
 

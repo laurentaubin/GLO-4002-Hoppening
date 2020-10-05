@@ -6,7 +6,7 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.Table;
-import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
+import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
 
 public class InMemoryReservationRepository implements ReservationRepository {
   private final InMemoryReservationDao inMemoryReservationDao;
