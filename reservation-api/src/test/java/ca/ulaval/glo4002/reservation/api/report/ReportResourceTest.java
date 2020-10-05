@@ -20,10 +20,10 @@ import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportResourceTest {
-  public static final String START_DATE = "2150-07-23";
-  public static final String END_DATE = "2150-07-27";
-  public static final String REPORT_TYPE_STRING = "unit";
-  public static final ReportType REPORT_TYPE = ReportType.UNIT;
+  private static final String START_DATE = "2150-07-23";
+  private static final String END_DATE = "2150-07-27";
+  private static final String REPORT_TYPE_STRING = "unit";
+  private static final ReportType REPORT_TYPE = ReportType.UNIT;
 
   @Mock
   private ReportService reportService;

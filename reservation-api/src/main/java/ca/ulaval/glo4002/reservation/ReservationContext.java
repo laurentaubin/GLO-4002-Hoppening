@@ -12,6 +12,7 @@ import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.report.UnitReportGenerator;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationAuthorizer;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientHttpClient;
@@ -85,7 +86,8 @@ public class ReservationContext {
                                                            reservationDateValidator,
                                                            tableValidator,
                                                            restrictionValidator,
-                                                           maximumCustomerCapacityPerDayValidator));
+                                                           maximumCustomerCapacityPerDayValidator),
+                                  new ReservationAuthorizer(ingredientQuantityRepository));
   }
 
   private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository) {

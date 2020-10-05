@@ -163,6 +163,38 @@ public class IngredientQuantityRepositoryTest {
 
   }
 
+  @Test
+  public void givenCarrotsInPersistence_whenCheckingIfContainsCarrots_thenMenuContainsCarrots() {
+    // given
+    Map<IngredientName, Double> menuWithCarrots = givenMenuWithCarrots();
+    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(menuWithCarrots);
+    Reservation reservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
+    ingredientQuantityRepository.updateIngredientsQuantity(reservation);
+
+    // when
+    boolean doesContainCarrots = ingredientQuantityRepository.containsIngredientAtDate(IngredientName.CARROTS,
+                                                                                       A_DINNER_DATE.toLocalDate());
+
+    // then
+    assertThat(doesContainCarrots).isTrue();
+  }
+
+  @Test
+  public void givenNoCarrotsInPersistence_whenCheckingIfContainsCarrots_thenMenuDoesNotContainCarrots() {
+    // given
+    Map<IngredientName, Double> ingredientNameDoubleMap = givenVeganCourseIngredientsQuantity();
+    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(ingredientNameDoubleMap);
+    Reservation reservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
+    ingredientQuantityRepository.updateIngredientsQuantity(reservation);
+
+    // when
+    boolean doesContainCarrots = ingredientQuantityRepository.containsIngredientAtDate(IngredientName.CARROTS,
+                                                                                       A_DINNER_DATE.toLocalDate());
+
+    // then
+    assertThat(doesContainCarrots).isFalse();
+  }
+
   private void populateReportRepository(LocalDateTime aDinnerDate,
                                         LocalDateTime anotherDinnerDate)
   {
@@ -226,5 +258,11 @@ public class IngredientQuantityRepositoryTest {
     Customer customer = new CustomerBuilder().withRestriction(restrictionType).build();
     Table table = new TableBuilder().withCustomer(customer).build();
     return new ReservationBuilder().withTable(table).withDinnerDate(dinnerDate).build();
+  }
+
+  private Map<IngredientName, Double> givenMenuWithCarrots() {
+    Map<IngredientName, Double> ingredientNameDoubleMap = new HashMap<>();
+    ingredientNameDoubleMap.put(IngredientName.CARROTS, 2.0);
+    return ingredientNameDoubleMap;
   }
 }

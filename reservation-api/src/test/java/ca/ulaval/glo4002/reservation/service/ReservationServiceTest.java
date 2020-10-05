@@ -12,11 +12,14 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRequestDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.builder.ReservationDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
+import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationAuthorizer;
 import ca.ulaval.glo4002.reservation.infra.ReservationRepository;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
@@ -30,7 +33,6 @@ import ca.ulaval.glo4002.reservation.service.reservation.validator.ReservationVa
 public class ReservationServiceTest {
   private static final long AN_ID = 4321;
   private static final String RESERVATION_NOT_FOUND_EXCEPTION = "Reservation with number 4321 not found";
-  private static final String A_DATE = "2150-11-16T23:59:59.999Z";
 
   @Mock
   private Reservation aReservation;
@@ -53,6 +55,9 @@ public class ReservationServiceTest {
   @Mock
   private IngredientQuantityRepository ingredientQuantityRepository;
 
+  @Mock
+  private ReservationAuthorizer reservationAuthorizer;
+
   private ReservationService reservationService;
 
   @BeforeEach
@@ -61,11 +66,12 @@ public class ReservationServiceTest {
                                                 reservationRepository,
                                                 ingredientQuantityRepository,
                                                 reservationAssembler,
-                                                reservationValidator);
+                                                reservationValidator,
+                                                reservationAuthorizer);
   }
 
   @Test
-  public void givenReservationServiceInInitialState_whenCreateReservation_thenReturnReservationId() {
+  public void whenCreateReservation_thenReturnReservationId() {
     // given
     Reservation reservation = new ReservationBuilder().withId(AN_ID).withAnyTable().build();
     setUpReservationServiceMocksForIdTests(reservation, AN_ID);
@@ -80,6 +86,9 @@ public class ReservationServiceTest {
 
   @Test
   public void whenCreateReservation_thenReservationValidatorIsCalled() {
+    // given
+    given(reservationAuthorizer.isReservationAllergicFriendly(any())).willReturn(true);
+
     // when
     reservationService.createReservation(createReservationRequestDto);
 
@@ -118,23 +127,44 @@ public class ReservationServiceTest {
   }
 
   @Test
-  public void whenCreateReservation_thenReportRepositoryIsCalled() {
-
+  public void givenReservationIsAllowed_whenCreateReservation_thenPersistenceIsUpdated() {
     // given
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
     given(idGenerator.getLongUuid()).willReturn(AN_ID);
     given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
                                                                        AN_ID)).willReturn(aReservation);
+    given(reservationAuthorizer.isReservationAllergicFriendly(aReservation)).willReturn(true);
 
     // when
     reservationService.createReservation(createReservationRequestDto);
 
     // then
     verify(ingredientQuantityRepository).updateIngredientsQuantity(aReservation);
+    verify(reservationRepository).createReservation(aReservation);
+  }
+
+  @Test
+  public void givenReservationIsNotAllowed_whenCreateReservation_thenPersistenceIsNotUpdated() {
+    // given
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
+    given(idGenerator.getLongUuid()).willReturn(AN_ID);
+    given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
+                                                                       AN_ID)).willReturn(aReservation);
+    given(reservationAuthorizer.isReservationAllergicFriendly(aReservation)).willReturn(false);
+
+    // when
+    Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
+
+    // then
+    assertThrows(ForbiddenReservationException.class, creatingReservation);
+    verify(ingredientQuantityRepository, never()).updateIngredientsQuantity(aReservation);
+    verify(reservationRepository, never()).createReservation(aReservation);
   }
 
   private void setUpReservationServiceMocksForIdTests(Reservation reservation, long id) {
     given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
                                                                        id)).willReturn(reservation);
+    given(reservationAuthorizer.isReservationAllergicFriendly(reservation)).willReturn(true);
     given(reservationRepository.createReservation(reservation)).willReturn(id);
   }
 }

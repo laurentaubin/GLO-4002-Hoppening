@@ -13,7 +13,9 @@ public enum ReservationErrorCode {
   TOO_MANY_PEOPLE("The reservation tries to bring a number of people which does not comply with recent governement laws.",
                   Response.Status.BAD_REQUEST.getStatusCode()),
   RESERVATION_NOT_FOUND("Reservation with number RESERVATION_NUMBER not found",
-                        Response.Status.NOT_FOUND.getStatusCode());
+                        Response.Status.NOT_FOUND.getStatusCode()),
+  TOO_PICKY("You seem to be too picky and now, you cannot make a reservation for this date.",
+            Response.Status.BAD_REQUEST.getStatusCode());
 
   private final String message;
   private final int code;

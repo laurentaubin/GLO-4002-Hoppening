@@ -85,4 +85,8 @@ public class IngredientQuantityRepository {
     }
     return mergedMap;
   }
+
+  public boolean containsIngredientAtDate(IngredientName ingredientName, LocalDate date) {
+    return getIngredientsQuantity(date).containsKey(ingredientName);
+  }
 }
