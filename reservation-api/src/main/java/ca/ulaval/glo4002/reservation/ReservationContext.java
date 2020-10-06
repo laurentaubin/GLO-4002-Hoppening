@@ -21,8 +21,6 @@ import ca.ulaval.glo4002.reservation.service.report.ReportService;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.*;
-import ca.ulaval.glo4002.reservation.service.reservation.id.IdGenerator;
-import ca.ulaval.glo4002.reservation.service.reservation.id.IdGeneratorFactory;
 import ca.ulaval.glo4002.reservation.service.reservation.validator.*;
 import ca.ulaval.glo4002.reservation.service.reservation.validator.table.BaseTableValidator;
 import ca.ulaval.glo4002.reservation.service.reservation.validator.table.CovidValidatorDecorator;
@@ -30,7 +28,6 @@ import ca.ulaval.glo4002.reservation.service.reservation.validator.table.TableVa
 
 public class ReservationContext {
   private static final int PORT = 8181;
-  private static final boolean USE_UNIVERSALLY_UNIQUE_ID_GENERATOR = true;
   private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_TABLE = 4;
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_RESERVATION = 6;
@@ -56,7 +53,6 @@ public class ReservationContext {
 
   private ReservationService createReservationService(IngredientQuantityRepository ingredientQuantityRepository) {
     ReservationRepository reservationRepository = new InMemoryReservationRepository(new InMemoryReservationDao());
-    IdGenerator idGenerator = new IdGeneratorFactory().create(USE_UNIVERSALLY_UNIQUE_ID_GENERATOR);
     TableValidator tableValidator = new CovidValidatorDecorator(new BaseTableValidator(),
                                                                 MAX_NUMBER_OF_CUSTOMERS_PER_TABLE,
                                                                 MAX_NUMBER_OF_CUSTOMERS_PER_RESERVATION);
@@ -74,8 +70,7 @@ public class ReservationContext {
 
     CustomerAssembler customerAssembler = new CustomerAssembler();
 
-    return new ReservationService(idGenerator,
-                                  reservationRepository,
+    return new ReservationService(reservationRepository,
                                   ingredientQuantityRepository,
                                   new ReservationAssembler(DATE_FORMAT,
                                                            new TableAssembler(customerAssembler),

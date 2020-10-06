@@ -8,27 +8,27 @@ import java.util.Map;
 
 public class Reservation {
 
-  private final long id;
+  private final ReservationId reservationId;
   private final String vendorCode;
   private final LocalDateTime dinnerDate;
   private final List<Table> tables;
   private final ReservationDetails reservationDetails;
 
-  public Reservation(long id,
+  public Reservation(ReservationId reservationId,
                      String vendorCode,
                      LocalDateTime dinnerDate,
                      List<Table> tables,
                      ReservationDetails reservationDetails)
   {
-    this.id = id;
+    this.reservationId = reservationId;
     this.vendorCode = vendorCode;
     this.dinnerDate = dinnerDate;
     this.tables = tables;
     this.reservationDetails = reservationDetails;
   }
 
-  public long getId() {
-    return id;
+  public ReservationId getReservationId() {
+    return reservationId;
   }
 
   public String getVendorCode() {

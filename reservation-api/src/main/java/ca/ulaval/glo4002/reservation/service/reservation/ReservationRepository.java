@@ -3,12 +3,13 @@ package ca.ulaval.glo4002.reservation.service.reservation;
 import java.time.LocalDateTime;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 
 public interface ReservationRepository {
 
-  long createReservation(Reservation reservation);
+  ReservationId createReservation(Reservation reservation);
 
-  Reservation getReservationById(long reservationId);
+  Reservation getReservationById(ReservationId reservationId);
 
   int getTotalNumberOfCustomersForADay(LocalDateTime date);
 }

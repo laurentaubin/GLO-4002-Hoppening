@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
 
@@ -15,11 +16,11 @@ public class InMemoryReservationRepository implements ReservationRepository {
     this.inMemoryReservationDao = inMemoryReservationDao;
   }
 
-  public long createReservation(Reservation reservation) {
+  public ReservationId createReservation(Reservation reservation) {
     return inMemoryReservationDao.createReservation(reservation);
   }
 
-  public Reservation getReservationById(long reservationId) {
+  public Reservation getReservationById(ReservationId reservationId) {
     return inMemoryReservationDao.getReservationById(reservationId);
   }
 

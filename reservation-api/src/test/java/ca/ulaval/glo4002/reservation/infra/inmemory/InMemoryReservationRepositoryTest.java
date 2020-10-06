@@ -17,11 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 @ExtendWith(MockitoExtension.class)
 public class InMemoryReservationRepositoryTest {
-  private static final long AN_ID = 543;
   private static final LocalDateTime A_DATE = LocalDateTime.of(2020, 7, 20, 23, 23);
   private static final LocalDateTime ANOTHER_DATE = LocalDateTime.of(2050, 1, 14, 1, 4);
   private static final int FOUR_CUSTOMERS = 4;
@@ -34,33 +34,36 @@ public class InMemoryReservationRepositoryTest {
   @Mock
   private InMemoryReservationDao reservationDao;
 
+  @Mock
+  private ReservationId reservationId;
+
   private InMemoryReservationRepository reservationRepository;
 
   @BeforeEach
   public void setUp() {
     reservationRepository = new InMemoryReservationRepository(reservationDao);
-    reservation = new ReservationBuilder().withId(AN_ID).withAnyTable().build();
+    reservation = new ReservationBuilder().withId(reservationId).withAnyTable().build();
   }
 
   @Test
   public void whenCreatingReservation_thenReturnNewReservationId() {
     // given
-    given(reservationDao.createReservation(reservation)).willReturn(AN_ID);
+    given(reservationDao.createReservation(reservation)).willReturn(reservationId);
 
     // when
-    long expectedReservationId = reservationRepository.createReservation(reservation);
+    ReservationId expectedReservationId = reservationRepository.createReservation(reservation);
 
     // then
-    assertThat(expectedReservationId).isEqualTo(AN_ID);
+    assertThat(expectedReservationId).isEqualTo(reservationId);
   }
 
   @Test
   public void whenGettingReservationById_thenReturnProperReservation() {
     // given
-    given(reservationDao.getReservationById(AN_ID)).willReturn(reservation);
+    given(reservationDao.getReservationById(reservationId)).willReturn(reservation);
 
     // when
-    Reservation actualReservation = reservationRepository.getReservationById(AN_ID);
+    Reservation actualReservation = reservationRepository.getReservationById(reservationId);
 
     // then
     assertThat(actualReservation).isEqualTo(reservation);

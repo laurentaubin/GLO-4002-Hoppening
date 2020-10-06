@@ -2,6 +2,7 @@ package ca.ulaval.glo4002.reservation.api.reservation;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -23,10 +24,10 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDetailsDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatException;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinnerDateException;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationDateException;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationResourceTest {
@@ -44,6 +45,9 @@ public class ReservationResourceTest {
   @Mock
   private DateFormatValidator dateFormatValidator;
 
+  @Mock
+  private ReservationId reservationId;
+
   private ReservationResource reservationResource;
 
   @BeforeEach
@@ -54,8 +58,10 @@ public class ReservationResourceTest {
   @Test
   public void whenCreateNewReservation_thenReservationIsCreated() {
     // given
+    given(reservationId.getLongId()).willReturn(AN_ID);
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withAnyTable()
                                                                                                       .build();
+    given(reservationService.createReservation(createReservationRequestDto)).willReturn(reservationId);
 
     // when
     reservationResource.createReservation(createReservationRequestDto);
@@ -69,7 +75,8 @@ public class ReservationResourceTest {
     // given
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withAnyTable()
                                                                                                       .build();
-    given(reservationService.createReservation(createReservationRequestDto)).willReturn(AN_ID);
+    given(reservationService.createReservation(createReservationRequestDto)).willReturn(reservationId);
+    given(reservationId.getLongId()).willReturn(AN_ID);
 
     // when
     Response createReservationResponse = reservationResource.createReservation(createReservationRequestDto);
@@ -180,25 +187,12 @@ public class ReservationResourceTest {
   public void whenGetReservation_thenReturnReservationResponse() {
     // given
     ReservationDto expectedReservationDto = new ReservationDtoBuilder().withAnyCustomers().build();
-    given(reservationService.getReservationDtoById(AN_ID)).willReturn(expectedReservationDto);
+    given(reservationService.getReservationDtoById(any())).willReturn(expectedReservationDto);
 
     // when
     Response response = reservationResource.getReservation(AN_ID);
 
     // then
     assertThat(response.getEntity()).isEqualTo(expectedReservationDto);
-  }
-
-  @Test
-  public void givenGetInvalidReservationRequest_whenGetReservation_thenReturnReservationException() {
-    // given
-    ReservationNotFoundException notFoundException = new ReservationNotFoundException(AN_ID);
-    given(reservationService.getReservationDtoById(AN_ID)).willThrow(notFoundException);
-
-    // when
-    Executable gettingReservation = () -> reservationResource.getReservation(AN_ID);
-
-    // then
-    assertThrows(ReservationNotFoundException.class, gettingReservation);
   }
 }

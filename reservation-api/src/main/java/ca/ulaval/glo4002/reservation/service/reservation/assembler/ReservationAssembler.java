@@ -11,10 +11,7 @@ import java.util.stream.Collectors;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
-import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
-import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationDetails;
-import ca.ulaval.glo4002.reservation.domain.reservation.Table;
+import ca.ulaval.glo4002.reservation.domain.reservation.*;
 
 public class ReservationAssembler {
   private final DateTimeFormatter dateFormatter;
@@ -33,16 +30,14 @@ public class ReservationAssembler {
     this.reservationDetailsAssembler = reservationDetailsAssembler;
   }
 
-  public Reservation assembleFromCreateReservationRequestDto(CreateReservationRequestDto createReservationRequestDto,
-                                                             long id)
-  {
+  public Reservation assembleFromCreateReservationRequestDto(CreateReservationRequestDto createReservationRequestDto) {
     LocalDateTime dinnerDate = assembleDinnerDateFromString(createReservationRequestDto.getDinnerDate());
     List<Table> tables = createReservationRequestDto.getTables()
                                                     .stream()
                                                     .map(tableAssembler::assembleFromTableDto)
                                                     .collect(Collectors.toList());
     ReservationDetails reservationDetails = reservationDetailsAssembler.assembleFromReservationDetailsDto(createReservationRequestDto.getReservationDetails());
-    return new Reservation(id,
+    return new Reservation(new ReservationId(),
                            createReservationRequestDto.getVendorCode(),
                            dinnerDate,
                            tables,

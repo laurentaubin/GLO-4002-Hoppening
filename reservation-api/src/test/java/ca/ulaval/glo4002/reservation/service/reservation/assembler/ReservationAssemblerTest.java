@@ -66,10 +66,9 @@ class ReservationAssemblerTest {
     given(tableAssembler.assembleFromTableDto(tableDto)).willReturn(table);
 
     // when
-    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
-                                                                                                   AN_ID);
+    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto);
+
     // then
-    assertThat(expectedReservation.getId()).isEqualTo(AN_ID);
     assertThat(expectedReservation.getTables()).contains(table);
   }
 
@@ -80,8 +79,7 @@ class ReservationAssemblerTest {
                                                                                                       .build();
 
     // when
-    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
-                                                                                                   AN_ID);
+    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto);
 
     // then
     assertThat(expectedReservation.getVendorCode()).isEqualTo(VENDOR_CODE);
@@ -94,8 +92,7 @@ class ReservationAssemblerTest {
                                                                                                       .build();
 
     // when
-    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
-                                                                                                   AN_ID);
+    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto);
 
     // then
     assertThat(expectedReservation.getDinnerDate()).isEqualTo(DATE);
@@ -111,8 +108,7 @@ class ReservationAssemblerTest {
     given(reservationDetailsAssembler.assembleFromReservationDetailsDto(reservationDetailsDto)).willReturn(reservationDetails);
 
     // when
-    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto,
-                                                                                                   AN_ID);
+    Reservation expectedReservation = reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto);
     // then
     assertThat(expectedReservation.getReservationDetails()).isEqualTo(reservationDetails);
   }

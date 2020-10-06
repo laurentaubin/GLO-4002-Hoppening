@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 
 public class InMemoryReservationDao {
@@ -14,14 +15,14 @@ public class InMemoryReservationDao {
     return reservations;
   }
 
-  public long createReservation(Reservation reservation) {
+  public ReservationId createReservation(Reservation reservation) {
     reservations.add(reservation);
-    return reservation.getId();
+    return reservation.getReservationId();
   }
 
-  public Reservation getReservationById(long reservationId) {
+  public Reservation getReservationById(ReservationId reservationId) {
     for (Reservation reservation : reservations) {
-      if (reservation.getId() == reservationId) {
+      if (reservationId.equals(reservation.getReservationId())) {
         return reservation;
       }
     }

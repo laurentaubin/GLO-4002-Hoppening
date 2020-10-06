@@ -6,28 +6,28 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationDetails;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 public class ReservationBuilder {
-  private static final int A_ID = 12345;
   private static final String A_VENDOR_CODE = "vendor code";
   private static final LocalDateTime A_DINNER_DATE = LocalDateTime.now();
 
-  private long id;
+  private ReservationId id;
   private String vendorCode;
   private LocalDateTime dinnerDate;
   private final List<Table> tables;
   private ReservationDetails reservationDetails;
 
   public ReservationBuilder() {
-    id = A_ID;
+    id = new ReservationId();
     vendorCode = A_VENDOR_CODE;
     dinnerDate = A_DINNER_DATE;
     tables = new ArrayList<>();
     reservationDetails = new ReservationDetailsBuilder().build();
   }
 
-  public ReservationBuilder withId(long id) {
+  public ReservationBuilder withId(ReservationId id) {
     this.id = id;
     return this;
   }

@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
 
 @Path("/reservations")
@@ -33,15 +34,17 @@ public class ReservationResource {
     dateFormatValidator.validateFormat(createReservationRequestDto.getReservationDetails()
                                                                   .getReservationDate());
 
-    long reservationId = reservationService.createReservation(createReservationRequestDto);
-    URI reservationLocation = URI.create(String.format("/reservations/%s", reservationId));
+    ReservationId reservationId = reservationService.createReservation(createReservationRequestDto);
+    URI reservationLocation = URI.create(String.format("/reservations/%s",
+                                                       reservationId.getLongId()));
     return Response.created(reservationLocation).build();
   }
 
   @GET
   @Path("/{reservationId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getReservation(@PathParam("reservationId") long reservationId) {
+  public Response getReservation(@PathParam("reservationId") long id) {
+    ReservationId reservationId = new ReservationId(id);
     ReservationDto reservationDto = reservationService.getReservationDtoById(reservationId);
     return Response.ok().entity(reservationDto).build();
   }

@@ -4,18 +4,18 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ReservationId {
-  private final String vendorCodeId;
+  private final long id;
 
-  public ReservationId(String vendorCodeId) {
-    this.vendorCodeId = vendorCodeId;
+  public ReservationId() {
+    id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
   }
 
-  public static long generateUUID() {
-    return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+  public ReservationId(long reservationId) {
+    id = reservationId;
   }
 
-  public String getVendorCodeId() {
-    return vendorCodeId;
+  public long getLongId() {
+    return id;
   }
 
   @Override
@@ -27,11 +27,11 @@ public class ReservationId {
       return false;
     }
     ReservationId reservationId = (ReservationId) o;
-    return Objects.equals(vendorCodeId, reservationId.vendorCodeId);
+    return Objects.equals(id, reservationId.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(vendorCodeId);
+    return Objects.hash(id);
   }
 }
