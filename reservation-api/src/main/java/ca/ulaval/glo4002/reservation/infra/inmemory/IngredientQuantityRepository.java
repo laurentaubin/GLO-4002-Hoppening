@@ -7,16 +7,17 @@ import java.util.Map;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
+import ca.ulaval.glo4002.reservation.domain.util.MapUtil;
 
 public class IngredientQuantityRepository {
 
   private final Map<LocalDate, Map<IngredientName, Double>> ingredientsQuantityPerDay = new HashMap<>();
 
-  private final MenuRepository menuRepository;
+  private final ReservationIngredientCalculator reservationIngredientCalculator;
 
-  public IngredientQuantityRepository(MenuRepository menuRepository) {
-    this.menuRepository = menuRepository;
+  public IngredientQuantityRepository(ReservationIngredientCalculator reservationIngredientCalculator) {
+    this.reservationIngredientCalculator = reservationIngredientCalculator;
   }
 
   public boolean isEmpty() {
@@ -24,18 +25,21 @@ public class IngredientQuantityRepository {
   }
 
   public void updateIngredientsQuantity(Reservation reservation) {
-    Map<RestrictionType, Integer> reservationRestrictionTypeCount = reservation.getRestrictionTypeCount();
-    Map<IngredientName, Double> currentIngredientsQuantity = getCurrentIngredientsQuantity(LocalDate.from(reservation.getDinnerDate()));
+    Map<IngredientName, Double> currentIngredientsQuantity = getIngredientsQuantity(LocalDate.from(reservation.getDinnerDate()));
 
-    Map<IngredientName, Double> reservationIngredientsQuantity = getReservationIngredientsQuantity(reservationRestrictionTypeCount);
-    Map<IngredientName, Double> updatedIngredientsQuantity = mergeIngredientsQuantity(reservationIngredientsQuantity,
-                                                                                      currentIngredientsQuantity);
+    Map<IngredientName, Double> reservationIngredientsQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
+    Map<IngredientName, Double> updatedIngredientsQuantity = MapUtil.merge(reservationIngredientsQuantity,
+                                                                           currentIngredientsQuantity);
     ingredientsQuantityPerDay.put(LocalDate.from(reservation.getDinnerDate()),
                                   updatedIngredientsQuantity);
   }
 
   public Map<IngredientName, Double> getIngredientsQuantity(LocalDate date) {
-    return getCurrentIngredientsQuantity(date);
+    if (ingredientsQuantityPerDay.containsKey(date)) {
+      return ingredientsQuantityPerDay.get(date);
+    }
+    ingredientsQuantityPerDay.put(date, new HashMap<>());
+    return ingredientsQuantityPerDay.get(date);
   }
 
   public Map<LocalDate, Map<IngredientName, Double>> getIngredientsQuantity(ReportPeriod reportPeriod) {
@@ -46,44 +50,6 @@ public class IngredientQuantityRepository {
       }
     }
     return ingredientsQuantity;
-  }
-
-  private Map<IngredientName, Double> getReservationIngredientsQuantity(Map<RestrictionType, Integer> reservationRestrictionTypeCount) {
-    Map<IngredientName, Double> reservationIngredientsQuantity = new HashMap<>();
-
-    for (Map.Entry<RestrictionType, Integer> restrictionTypeCount : reservationRestrictionTypeCount.entrySet()) {
-      Map<IngredientName, Double> ingredientsQuantity = menuRepository.getIngredientsQuantity(restrictionTypeCount.getKey());
-      for (Map.Entry<IngredientName, Double> ingredientQuantity : ingredientsQuantity.entrySet()) {
-        ingredientQuantity.setValue(ingredientQuantity.getValue()
-                                    * restrictionTypeCount.getValue());
-      }
-      reservationIngredientsQuantity = mergeIngredientsQuantity(reservationIngredientsQuantity,
-                                                                ingredientsQuantity);
-    }
-    return reservationIngredientsQuantity;
-  }
-
-  private Map<IngredientName, Double> getCurrentIngredientsQuantity(LocalDate date) {
-    if (ingredientsQuantityPerDay.containsKey(date)) {
-      return ingredientsQuantityPerDay.get(date);
-    }
-    ingredientsQuantityPerDay.put(date, new HashMap<>());
-    return ingredientsQuantityPerDay.get(date);
-  }
-
-  private Map<IngredientName, Double> mergeIngredientsQuantity(Map<IngredientName, Double> currentIngredientInformation,
-                                                               Map<IngredientName, Double> ingredientInformationForRestriction)
-  {
-    Map<IngredientName, Double> mergedMap = new HashMap<>(currentIngredientInformation);
-    for (Map.Entry<IngredientName, Double> entry : ingredientInformationForRestriction.entrySet()) {
-      if (currentIngredientInformation.containsKey(entry.getKey())) {
-        mergedMap.put(entry.getKey(),
-                      currentIngredientInformation.get(entry.getKey()) + entry.getValue());
-      } else {
-        mergedMap.put(entry.getKey(), entry.getValue());
-      }
-    }
-    return mergedMap;
   }
 
   public boolean containsIngredientAtDate(IngredientName ingredientName, LocalDate date) {

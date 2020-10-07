@@ -13,6 +13,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.report.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationAuthorizer;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
 import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientHttpClient;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceRepository;
@@ -41,8 +42,10 @@ public class ReservationContext {
   private ReservationServer server;
 
   public void start() {
-    IngredientQuantityRepository ingredientQuantityRepository = createReportRepository();
-    ReservationService reservationService = createReservationService(ingredientQuantityRepository);
+    ReservationIngredientCalculator reservationIngredientCalculator = createReservationIngredientCalculator();
+    IngredientQuantityRepository ingredientQuantityRepository = new IngredientQuantityRepository(reservationIngredientCalculator);
+    ReservationService reservationService = createReservationService(ingredientQuantityRepository,
+                                                                     reservationIngredientCalculator);
     ReportService reportService = createReportService(ingredientQuantityRepository);
 
     Object[] resources = createResources(reservationService, reportService);
@@ -51,7 +54,9 @@ public class ReservationContext {
     server.start();
   }
 
-  private ReservationService createReservationService(IngredientQuantityRepository ingredientQuantityRepository) {
+  private ReservationService createReservationService(IngredientQuantityRepository ingredientQuantityRepository,
+                                                      ReservationIngredientCalculator reservationIngredientCalculator)
+  {
     ReservationRepository reservationRepository = new InMemoryReservationRepository(new InMemoryReservationDao());
     TableValidator tableValidator = new CovidValidatorDecorator(new BaseTableValidator(),
                                                                 MAX_NUMBER_OF_CUSTOMERS_PER_TABLE,
@@ -82,7 +87,8 @@ public class ReservationContext {
                                                            tableValidator,
                                                            restrictionValidator,
                                                            maximumCustomerCapacityPerDayValidator),
-                                  new ReservationAuthorizer(ingredientQuantityRepository));
+                                  new ReservationAuthorizer(ingredientQuantityRepository,
+                                                            reservationIngredientCalculator));
   }
 
   private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository) {
@@ -125,10 +131,10 @@ public class ReservationContext {
     return new ReservationServer(PORT, resources);
   }
 
-  private IngredientQuantityRepository createReportRepository() {
+  private ReservationIngredientCalculator createReservationIngredientCalculator() {
     FullCourseFactory fullCourseFactory = new FullCourseFactory(new CourseRecipeFactory());
     MenuRepository menuRepository = new MenuRepository(fullCourseFactory);
-    return new IngredientQuantityRepository(menuRepository);
+    return new ReservationIngredientCalculator(menuRepository);
   }
 
   private UnitReportDtoAssembler createUnitReportDtoAssembler() {

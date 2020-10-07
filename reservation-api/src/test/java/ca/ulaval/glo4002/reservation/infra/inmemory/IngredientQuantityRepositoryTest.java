@@ -1,7 +1,6 @@
 package ca.ulaval.glo4002.reservation.infra.inmemory;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import java.time.LocalDate;
@@ -21,10 +20,7 @@ import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
-import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
-import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
-import ca.ulaval.glo4002.reservation.domain.reservation.Table;
+import ca.ulaval.glo4002.reservation.domain.reservation.*;
 
 @ExtendWith(MockitoExtension.class)
 public class IngredientQuantityRepositoryTest {
@@ -34,19 +30,19 @@ public class IngredientQuantityRepositoryTest {
   private static final LocalDate END_DATE = LocalDate.of(2150, 7, 23);
 
   @Mock
-  private MenuRepository menuRepository;
+  private ReservationIngredientCalculator reservationIngredientCalculator;
 
   private IngredientQuantityRepository ingredientQuantityRepository;
 
   @BeforeEach
   public void setUp() {
-    ingredientQuantityRepository = new IngredientQuantityRepository(menuRepository);
+    ingredientQuantityRepository = new IngredientQuantityRepository(reservationIngredientCalculator);
   }
 
   @Test
   public void whenInitialized_thenRepositoryIsEmpty() {
     // when
-    IngredientQuantityRepository ingredientQuantityRepository = new IngredientQuantityRepository(menuRepository);
+    IngredientQuantityRepository ingredientQuantityRepository = new IngredientQuantityRepository(reservationIngredientCalculator);
 
     // then
     assertThat(ingredientQuantityRepository.isEmpty()).isTrue();
@@ -56,7 +52,6 @@ public class IngredientQuantityRepositoryTest {
   public void givenAReservation_whenUpdateIngredientInformation_thenIngredientInformationShouldBeUpdated() {
     // given
     Reservation reservation = new ReservationBuilder().withAnyTable().build();
-    given(menuRepository.getIngredientsQuantity(any())).willReturn(givenIngredientsQuantity());
 
     // when
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
@@ -81,7 +76,7 @@ public class IngredientQuantityRepositoryTest {
     Reservation reservation = new ReservationBuilder().withAnyTable()
                                                       .withDinnerDate(A_DINNER_DATE)
                                                       .build();
-    given(menuRepository.getIngredientsQuantity(any())).willReturn(expectedIngredientsQuantity);
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(expectedIngredientsQuantity);
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
     // when
@@ -97,7 +92,7 @@ public class IngredientQuantityRepositoryTest {
     Reservation reservation = new ReservationBuilder().withAnyTable()
                                                       .withDinnerDate(A_DINNER_DATE)
                                                       .build();
-    given(menuRepository.getIngredientsQuantity(any())).willReturn(givenIngredientsQuantity());
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(givenIngredientsQuantity());
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
@@ -119,8 +114,7 @@ public class IngredientQuantityRepositoryTest {
     Reservation reservation = new ReservationBuilder().withTable(table)
                                                       .withDinnerDate(A_DINNER_DATE)
                                                       .build();
-    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(givenVeganCourseIngredientsQuantity());
-    given(menuRepository.getIngredientsQuantity(RestrictionType.ILLNESS)).willReturn(givenIllnessCourseIngredientsQuantity());
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(givenIllnessAndVeganIngredientsQuantity());
 
     // when
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
@@ -135,8 +129,8 @@ public class IngredientQuantityRepositoryTest {
     // given
     Reservation aReservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
     Reservation anotherReservation = givenAReservation(RestrictionType.ILLNESS, A_DINNER_DATE);
-    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(givenVeganCourseIngredientsQuantity());
-    given(menuRepository.getIngredientsQuantity(RestrictionType.ILLNESS)).willReturn(givenIllnessCourseIngredientsQuantity());
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(aReservation)).willReturn(givenVeganCourseIngredientsQuantity());
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(anotherReservation)).willReturn(givenIllnessCourseIngredientsQuantity());
     ingredientQuantityRepository.updateIngredientsQuantity(aReservation);
     ingredientQuantityRepository.updateIngredientsQuantity(anotherReservation);
 
@@ -160,15 +154,14 @@ public class IngredientQuantityRepositoryTest {
     assertThat(ingredientsQuantity.get(LocalDate.from(A_DINNER_DATE))).isEqualTo(ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE)));
     assertThat(ingredientsQuantity.get(LocalDate.from(ANOTHER_DINNER_DATE))).isEqualTo(ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(ANOTHER_DINNER_DATE)));
     assertThat(ingredientsQuantity.get(END_DATE)).isNull();
-
   }
 
   @Test
   public void givenCarrotsInPersistence_whenCheckingIfContainsCarrots_thenMenuContainsCarrots() {
     // given
     Map<IngredientName, Double> menuWithCarrots = givenMenuWithCarrots();
-    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(menuWithCarrots);
     Reservation reservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(menuWithCarrots);
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
     // when
@@ -182,9 +175,9 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenNoCarrotsInPersistence_whenCheckingIfContainsCarrots_thenMenuDoesNotContainCarrots() {
     // given
-    Map<IngredientName, Double> ingredientNameDoubleMap = givenVeganCourseIngredientsQuantity();
-    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(ingredientNameDoubleMap);
+    Map<IngredientName, Double> veganMenu = givenVeganCourseIngredientsQuantity();
     Reservation reservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(veganMenu);
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
     // when
@@ -200,8 +193,6 @@ public class IngredientQuantityRepositoryTest {
   {
     Reservation aReservation = givenAReservation(RestrictionType.VEGAN, aDinnerDate);
     Reservation anotherReservation = givenAReservation(RestrictionType.ILLNESS, anotherDinnerDate);
-    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(givenVeganCourseIngredientsQuantity());
-    given(menuRepository.getIngredientsQuantity(RestrictionType.ILLNESS)).willReturn(givenIllnessCourseIngredientsQuantity());
     ingredientQuantityRepository.updateIngredientsQuantity(aReservation);
     ingredientQuantityRepository.updateIngredientsQuantity(anotherReservation);
   }

@@ -3,7 +3,6 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
-import ca.ulaval.glo4002.reservation.domain.fullcourse.MenuRepository;
+import ca.ulaval.glo4002.reservation.infra.inmemory.MenuRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationIngredientCalculatorTest {
@@ -38,22 +37,22 @@ class ReservationIngredientCalculatorTest {
     Customer customer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN).build();
     Table table = new TableBuilder().withCustomer(customer).build();
     Reservation reservation = new ReservationBuilder().withTable(table).build();
-    Map<IngredientName, BigDecimal> veganMenu = givenVeganCourseIngredientsQuantity();
-    given(menuRepository.getIngredientsQuantityByRestrictionType(RestrictionType.VEGAN)).willReturn(veganMenu);
+    Map<IngredientName, Double> veganMenu = givenVeganCourseIngredientsQuantity();
+    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(veganMenu);
 
     // when
-    Map<IngredientName, BigDecimal> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
+    Map<IngredientName, Double> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
 
     // then
     assertThat(ingredientQuantity).isEqualTo(veganMenu);
   }
 
-  private Map<IngredientName, BigDecimal> givenVeganCourseIngredientsQuantity() {
-    Map<IngredientName, BigDecimal> ingredientDoubleMap = new HashMap<>();
-    ingredientDoubleMap.put(IngredientName.TOMATO, BigDecimal.valueOf(5.0));
-    ingredientDoubleMap.put(IngredientName.KIWI, BigDecimal.valueOf(8.0));
-    ingredientDoubleMap.put(IngredientName.WORCESTERSHIRE_SAUCE, BigDecimal.valueOf(5.0));
-    ingredientDoubleMap.put(IngredientName.KIMCHI, BigDecimal.valueOf(10.0));
+  private Map<IngredientName, Double> givenVeganCourseIngredientsQuantity() {
+    Map<IngredientName, Double> ingredientDoubleMap = new HashMap<>();
+    ingredientDoubleMap.put(IngredientName.TOMATO, 5.0);
+    ingredientDoubleMap.put(IngredientName.KIWI, 8.0);
+    ingredientDoubleMap.put(IngredientName.WORCESTERSHIRE_SAUCE, 5.0);
+    ingredientDoubleMap.put(IngredientName.KIMCHI, 10.0);
     return ingredientDoubleMap;
   }
 }
