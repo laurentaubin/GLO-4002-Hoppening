@@ -12,7 +12,7 @@ import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.report.UnitReportGenerator;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationAuthorizer;
+import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
 import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientHttpClient;
@@ -58,6 +58,7 @@ public class ReservationContext {
                                                       ReservationIngredientCalculator reservationIngredientCalculator)
   {
     ReservationRepository reservationRepository = new InMemoryReservationRepository(new InMemoryReservationDao());
+
     TableValidator tableValidator = new CovidValidatorDecorator(new BaseTableValidator(),
                                                                 MAX_NUMBER_OF_CUSTOMERS_PER_TABLE,
                                                                 MAX_NUMBER_OF_CUSTOMERS_PER_RESERVATION);
@@ -87,8 +88,10 @@ public class ReservationContext {
                                                            tableValidator,
                                                            restrictionValidator,
                                                            maximumCustomerCapacityPerDayValidator),
-                                  new ReservationAuthorizer(ingredientQuantityRepository,
-                                                            reservationIngredientCalculator));
+
+                                  new AllergiesValidator(ingredientQuantityRepository,
+                                                         reservationIngredientCalculator,
+                                                         reservationRepository));
   }
 
   private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository) {

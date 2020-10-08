@@ -1,5 +1,7 @@
 package ca.ulaval.glo4002.reservation.infra.inmemory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import ca.ulaval.glo4002.reservation.domain.fullcourse.FullCourse;
@@ -19,5 +21,16 @@ public class MenuRepository {
 
   private FullCourse getCourseByRestrictionType(RestrictionType restrictionType) {
     return menu.get(restrictionType);
+  }
+
+  public List<RestrictionType> getRestrictionTypesByIngredient(IngredientName ingredientName) {
+    List<RestrictionType> restrictionTypes = new ArrayList<>();
+    for (RestrictionType restriction : RestrictionType.values()) {
+      Map<IngredientName, Double> ingredientsQuantity = getIngredientsQuantity(restriction);
+      if (ingredientsQuantity.containsKey(ingredientName)) {
+        restrictionTypes.add(restriction);
+      }
+    }
+    return restrictionTypes;
   }
 }

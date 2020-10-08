@@ -24,14 +24,16 @@ public class FullCourse {
   {
     Map<IngredientName, Double> updatedTotalIngredientsQuantity = new HashMap<>(ingredientsQuantity);
     for (Ingredient ingredient : ingredients) {
-      if (updatedTotalIngredientsQuantity.containsKey(ingredient.getIngredient())) {
-        updatedTotalIngredientsQuantity.replace(ingredient.getIngredient(),
-                                                updatedTotalIngredientsQuantity.get(ingredient.getIngredient())
-                                                                            + ingredient.getQuantity());
+      if (updatedTotalIngredientsQuantity.containsKey(ingredient.getIngredientName())) {
+        updatedTotalIngredientsQuantity.replace(ingredient.getIngredientName(),
+                                                updatedTotalIngredientsQuantity.get(ingredient.getIngredientName())
+                                                                                + ingredient.getQuantity());
       } else {
-        updatedTotalIngredientsQuantity.put(ingredient.getIngredient(), ingredient.getQuantity());
+        updatedTotalIngredientsQuantity.put(ingredient.getIngredientName(),
+                                            ingredient.getQuantity());
       }
     }
     return updatedTotalIngredientsQuantity;
   }
+
 }

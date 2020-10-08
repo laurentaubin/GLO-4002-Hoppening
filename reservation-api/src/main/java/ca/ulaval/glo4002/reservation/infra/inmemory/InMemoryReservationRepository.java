@@ -2,6 +2,7 @@ package ca.ulaval.glo4002.reservation.infra.inmemory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
@@ -42,5 +43,18 @@ public class InMemoryReservationRepository implements ReservationRepository {
         }
     }
     return numberOfCustomers;
+  }
+
+  public List<Reservation> getReservationsByDate(LocalDateTime date) {
+    List<Reservation> reservations = inMemoryReservationDao.getReservations();
+    List<Reservation> reservationsByDate = new ArrayList<>();
+
+    for (Reservation reservation : reservations) {
+      if (reservation.getDinnerDate().toLocalDate().isEqual(date.toLocalDate())) {
+        reservationsByDate.add(reservation);
+      }
+    }
+
+    return reservationsByDate;
   }
 }

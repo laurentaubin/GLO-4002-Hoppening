@@ -3,15 +3,13 @@ package ca.ulaval.glo4002.reservation.domain.fullcourse;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 
 public class RecipeTest {
 
-  private final Ingredient ingredient = new Ingredient(IngredientName.CARROTS,
-                                                       BigDecimal.valueOf(3));
+  private final Ingredient ingredient = new Ingredient(IngredientName.CARROTS, 3);
 
   private final Recipe recipe = new Recipe();
 

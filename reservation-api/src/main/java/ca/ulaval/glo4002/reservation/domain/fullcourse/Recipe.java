@@ -17,4 +17,13 @@ public class Recipe {
   public List<Ingredient> getIngredients() {
     return ingredients;
   }
+
+  public boolean containsIngredient(IngredientName ingredientName) {
+    for (Ingredient ingredient : ingredients) {
+      if (ingredient.getIngredientName() == ingredientName) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

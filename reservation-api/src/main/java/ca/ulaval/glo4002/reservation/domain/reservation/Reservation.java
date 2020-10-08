@@ -2,9 +2,7 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Reservation {
 
@@ -62,6 +60,19 @@ public class Reservation {
                                                                         table.getRestrictionTypeCount());
     }
     return restrictionTypeCount;
+  }
+
+  public Set<RestrictionType> getRestrictionTypes() {
+    Set<RestrictionType> restrictionTypes = new HashSet<>();
+    for (Table table : tables) {
+      for (Customer customer : table.getCustomers()) {
+        Set<RestrictionType> restrictions = customer.getRestrictions()
+                                                    .isEmpty() ? Set.of(RestrictionType.NONE)
+                                                               : customer.getRestrictions();
+        restrictionTypes.addAll(restrictions);
+      }
+    }
+    return restrictionTypes;
   }
 
   private Map<RestrictionType, Integer> mergeCurrentCountWithTableRestrictionCount(Map<RestrictionType, Integer> currentCount,

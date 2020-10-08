@@ -9,7 +9,7 @@ public class Ingredient {
     this.quantity = quantity;
   }
 
-  public IngredientName getIngredient() {
+  public IngredientName getIngredientName() {
     return ingredientName;
   }
 

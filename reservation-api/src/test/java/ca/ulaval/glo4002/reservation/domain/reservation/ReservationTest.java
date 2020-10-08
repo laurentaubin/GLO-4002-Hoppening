@@ -6,12 +6,14 @@ import static org.mockito.BDDMockito.given;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,6 +25,8 @@ public class ReservationTest {
   private static final BigDecimal PRICE_WITH_TWO_TABLES = BigDecimal.valueOf(5000);
   private static final Map<RestrictionType, Integer> TWO_VEGANS = Collections.singletonMap(RestrictionType.VEGAN,
                                                                                            2);
+  private static final RestrictionType ALLERGIES_RESTRICTION = RestrictionType.ALLERGIES;
+  private static final RestrictionType NONE_RESTRICTION = RestrictionType.NONE;
 
   @Mock
   private Table aTable;
@@ -83,5 +87,22 @@ public class ReservationTest {
 
     // then
     assertThat(restrictionTypeCount.get(RestrictionType.VEGAN)).isEqualTo(2);
+  }
+
+  @Test
+  public void givenAReservation_whenGetRestrictionTypes_thenReturnRestrictionTypes() {
+    Customer customer = new CustomerBuilder().withRestriction(ALLERGIES_RESTRICTION)
+                                             .withRestriction(NONE_RESTRICTION)
+                                             .build();
+    given(aTable.getCustomers()).willReturn(Collections.singletonList(customer));
+    Reservation reservation = new ReservationBuilder().withTable(aTable).build();
+
+    // when
+    Set<RestrictionType> restrictionTypes = reservation.getRestrictionTypes();
+
+    // then
+    assertThat(restrictionTypes).contains(ALLERGIES_RESTRICTION);
+    assertThat(restrictionTypes).contains(NONE_RESTRICTION);
+
   }
 }

@@ -19,8 +19,8 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationReques
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
+import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationAuthorizer;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
@@ -57,7 +57,7 @@ public class ReservationServiceTest {
   private ReservationId reservationId;
 
   @Mock
-  private ReservationAuthorizer reservationAuthorizer;
+  private AllergiesValidator allergiesValidator;
 
   private ReservationService reservationService;
 
@@ -67,7 +67,7 @@ public class ReservationServiceTest {
                                                 ingredientQuantityRepository,
                                                 reservationAssembler,
                                                 reservationValidator,
-                                                reservationAuthorizer);
+                                                allergiesValidator);
   }
 
   @Test
@@ -86,7 +86,7 @@ public class ReservationServiceTest {
   @Test
   public void whenCreateReservation_thenReservationValidatorIsCalled() {
     // given
-    given(reservationAuthorizer.isReservationAllergicFriendly(any())).willReturn(true);
+    given(allergiesValidator.isReservationAllergicFriendly(any())).willReturn(true);
 
     // when
     reservationService.createReservation(createReservationRequestDto);
@@ -133,7 +133,7 @@ public class ReservationServiceTest {
     // given
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
     given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto)).willReturn(aReservation);
-    given(reservationAuthorizer.isReservationAllergicFriendly(aReservation)).willReturn(true);
+    given(allergiesValidator.isReservationAllergicFriendly(aReservation)).willReturn(true);
 
     // when
     reservationService.createReservation(createReservationRequestDto);
@@ -144,11 +144,11 @@ public class ReservationServiceTest {
   }
 
   @Test
-  public void givenReservationIsNotAllowed_whenCreateReservation_thenPersistenceIsNotUpdated() {
+  public void givenReservationIsNotAllergicFriendly_whenCreateReservation_thenPersistenceIsNotUpdated() {
     // given
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
     given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto)).willReturn(aReservation);
-    given(reservationAuthorizer.isReservationAllergicFriendly(aReservation)).willReturn(false);
+    given(allergiesValidator.isReservationAllergicFriendly(aReservation)).willReturn(false);
 
     // when
     Executable creatingReservation = () -> reservationService.createReservation(createReservationRequestDto);
@@ -163,9 +163,8 @@ public class ReservationServiceTest {
                                                       ReservationId reservationId)
   {
     given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto)).willReturn(reservation);
-    given(reservationAuthorizer.isReservationAllergicFriendly(reservation)).willReturn(true);
+    given(allergiesValidator.isReservationAllergicFriendly(reservation)).willReturn(true);
 
     given(reservationRepository.createReservation(reservation)).willReturn(reservationId);
-
   }
 }

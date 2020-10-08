@@ -113,4 +113,28 @@ public class InMemoryReservationRepositoryTest {
     // then
     assertThat(totalNumberOfReservationForADay).isEqualTo(EIGHT_CUSTOMERS);
   }
+
+  @Test
+  public void givenNoReservationForDate_whenGetReservationByDate_thenNoReservationsAreReturned() {
+    // when
+    List<Reservation> reservations = reservationRepository.getReservationsByDate(ANOTHER_DATE);
+
+    // then
+    assertThat(reservations).isEmpty();
+  }
+
+  @Test
+  public void givenReservationForADate_whenGetReservationByDate_thenAReservationIsReturnedWithAProperDate() {
+    // given
+    Reservation aReservation = new ReservationBuilder().withDinnerDate(A_DATE).build();
+
+    List<Reservation> reservations = Collections.singletonList(aReservation);
+    given(reservationDao.getReservations()).willReturn(reservations);
+
+    // when
+    List<Reservation> reservationByDate = reservationRepository.getReservationsByDate(A_DATE);
+
+    // then
+    assertThat(reservationByDate.get(0).getDinnerDate()).isEqualTo(A_DATE);
+  }
 }
