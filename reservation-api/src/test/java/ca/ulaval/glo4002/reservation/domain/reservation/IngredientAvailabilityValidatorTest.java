@@ -3,7 +3,6 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,9 +28,7 @@ public class IngredientAvailabilityValidatorTest {
                                                                                         7,
                                                                                         23);
 
-  private static final LocalDate OPENING_DATE = LocalDate.of(2150, 7, 20);
-
-  private static final BigDecimal QUANTITY = BigDecimal.valueOf(20);
+  private static final double QUANTITY = 20;
 
   @Mock
   private ReservationIngredientCalculator reservationIngredientCalculator;
@@ -57,14 +54,13 @@ public class IngredientAvailabilityValidatorTest {
     // given
     given(reservation.getDinnerDate()).willReturn(DATE_OUTSIDE_TOMATO_AVAILABILITY_PERIOD.atStartOfDay());
     given(anIngredientStock.getIngredientName()).willReturn(TOMATO);
-    given(anIngredientStock.isAvailable(reservation.getDinnerDate().toLocalDate(),
-                                        OPENING_DATE)).willReturn(false);
+    given(anIngredientStock.isAvailable(reservation.getDinnerDate()
+                                                   .toLocalDate())).willReturn(false);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(Map.of(TOMATO,
                                                                                                             QUANTITY));
 
     // when
-    boolean isReservationAllowed = this.ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation,
-                                                                                                              OPENING_DATE);
+    boolean isReservationAllowed = this.ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation);
 
     // then
     assertThat(isReservationAllowed).isFalse();
@@ -76,8 +72,7 @@ public class IngredientAvailabilityValidatorTest {
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(Collections.emptyMap());
 
     // when
-    boolean isReservationAllowed = ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation,
-                                                                                                         OPENING_DATE);
+    boolean isReservationAllowed = ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation);
 
     // then
     assertThat(isReservationAllowed).isTrue();

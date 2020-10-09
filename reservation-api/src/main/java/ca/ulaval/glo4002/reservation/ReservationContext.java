@@ -1,7 +1,10 @@
 package ca.ulaval.glo4002.reservation;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import ca.ulaval.glo4002.reservation.api.report.ReportResource;
 import ca.ulaval.glo4002.reservation.api.report.assembler.IngredientReportInformationDtoAssembler;
@@ -11,6 +14,10 @@ import ca.ulaval.glo4002.reservation.api.report.assembler.UnitReportDtoAssembler
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
 import ca.ulaval.glo4002.reservation.domain.report.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
@@ -38,6 +45,9 @@ public class ReservationContext {
   private static final String OPENING_RESERVATION_DATE = "2150-01-01T00:00:00.000Z";
   private static final String CLOSING_RESERVATION_DATE = "2150-07-16T23:59:59.999Z";
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_DAY = 42;
+  private static final LocalDate OPENING_DAY = LocalDate.of(2150, 7, 20);
+  private static final IngredientName TOMATO = IngredientName.TOMATO;
+  private static final int DAY_BEFORE_TOMATO_BECOME_AVAILABLE = 5;
 
   private ReservationServer server;
 
@@ -73,8 +83,9 @@ public class ReservationContext {
     MaximumCustomerCapacityPerDayValidator maximumCustomerCapacityPerDayValidator = new MaximumCustomerCapacityPerDayValidator(MAX_NUMBER_OF_CUSTOMERS_PER_DAY,
                                                                                                                                reservationRepository,
                                                                                                                                DATE_FORMAT);
-
     CustomerAssembler customerAssembler = new CustomerAssembler();
+
+    IngredientAvailabilityValidator ingredientAvailabilityValidator = createIngredientAvailabilityValidator(reservationIngredientCalculator);
 
     return new ReservationService(reservationRepository,
                                   ingredientQuantityRepository,
@@ -91,7 +102,8 @@ public class ReservationContext {
 
                                   new AllergiesValidator(ingredientQuantityRepository,
                                                          reservationIngredientCalculator,
-                                                         reservationRepository));
+                                                         reservationRepository),
+                                  ingredientAvailabilityValidator);
   }
 
   private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository) {
@@ -144,5 +156,11 @@ public class ReservationContext {
     IngredientReportInformationDtoAssembler ingredientReportInformationDtoAssembler = new IngredientReportInformationDtoAssembler();
     UnitReportDayDtoAssembler unitReportDayDtoAssembler = new UnitReportDayDtoAssembler(ingredientReportInformationDtoAssembler);
     return new UnitReportDtoAssembler(unitReportDayDtoAssembler);
+  }
+
+  private IngredientAvailabilityValidator createIngredientAvailabilityValidator(ReservationIngredientCalculator reservationIngredientCalculator) {
+    Set<Available> availables = new HashSet<>();
+    availables.add(new TomatoStock(OPENING_DAY, TOMATO, DAY_BEFORE_TOMATO_BECOME_AVAILABLE));
+    return new IngredientAvailabilityValidator(reservationIngredientCalculator, availables);
   }
 }

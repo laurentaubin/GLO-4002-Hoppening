@@ -1,7 +1,5 @@
 package ca.ulaval.glo4002.reservation.domain.fullcourse.stock;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,13 +20,10 @@ public class IngredientAvailabilityValidator {
     this.ingredientsStock = ingredientsStock;
   }
 
-  public boolean areIngredientsAvailableForReservation(Reservation reservation,
-                                                       LocalDate restaurantOpeningDate)
-  {
+  public boolean areIngredientsAvailableForReservation(Reservation reservation) {
     for (Available ingredientStock : ingredientsStock) {
       if (doesReservationContainIngredient(reservation, ingredientStock.getIngredientName())
-          && !(ingredientStock.isAvailable(reservation.getDinnerDate().toLocalDate(),
-                                           restaurantOpeningDate)))
+          && !(ingredientStock.isAvailable(reservation.getDinnerDate().toLocalDate())))
       {
         return false;
       }
@@ -39,7 +34,7 @@ public class IngredientAvailabilityValidator {
   private boolean doesReservationContainIngredient(Reservation reservation,
                                                    IngredientName ingredientName)
   {
-    Map<IngredientName, BigDecimal> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
+    Map<IngredientName, Double> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
     return ingredientQuantity.containsKey(ingredientName);
   }
 }

@@ -19,6 +19,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationReques
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
@@ -57,6 +58,9 @@ public class ReservationServiceTest {
   private ReservationId reservationId;
 
   @Mock
+  private IngredientAvailabilityValidator ingredientAvailabilityValidator;
+
+  @Mock
   private AllergiesValidator allergiesValidator;
 
   private ReservationService reservationService;
@@ -67,7 +71,8 @@ public class ReservationServiceTest {
                                                 ingredientQuantityRepository,
                                                 reservationAssembler,
                                                 reservationValidator,
-                                                allergiesValidator);
+                                                allergiesValidator,
+                                                ingredientAvailabilityValidator);
   }
 
   @Test
@@ -75,6 +80,7 @@ public class ReservationServiceTest {
     // given
     Reservation reservation = new ReservationBuilder().withId(reservationId).withAnyTable().build();
     setUpReservationServiceMocksForIdTests(reservation, reservationId);
+    given(ingredientAvailabilityValidator.areIngredientsAvailableForReservation(any())).willReturn(true);
 
     // when
     ReservationId returnedReservationId = reservationService.createReservation(createReservationRequestDto);
@@ -87,7 +93,7 @@ public class ReservationServiceTest {
   public void whenCreateReservation_thenReservationValidatorIsCalled() {
     // given
     given(allergiesValidator.isReservationAllergicFriendly(any())).willReturn(true);
-
+    given(ingredientAvailabilityValidator.areIngredientsAvailableForReservation(any())).willReturn(true);
     // when
     reservationService.createReservation(createReservationRequestDto);
 
@@ -134,6 +140,7 @@ public class ReservationServiceTest {
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
     given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto)).willReturn(aReservation);
     given(allergiesValidator.isReservationAllergicFriendly(aReservation)).willReturn(true);
+    given(ingredientAvailabilityValidator.areIngredientsAvailableForReservation(aReservation)).willReturn(true);
 
     // when
     reservationService.createReservation(createReservationRequestDto);
