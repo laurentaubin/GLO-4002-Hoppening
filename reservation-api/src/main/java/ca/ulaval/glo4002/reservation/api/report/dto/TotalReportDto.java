@@ -1,29 +1,27 @@
 package ca.ulaval.glo4002.reservation.api.report.dto;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import ca.ulaval.glo4002.reservation.api.report.presenter.IngredientReportInformationDto;
+import java.math.BigDecimal;
+import java.util.List;
+
 
 @JsonPropertyOrder({ "ingredients", "totalPrice" })
 public class TotalReportDto {
-  @JsonProperty("ingredients")
-  private final List<IngredientReportInformationDto> ingredients;
-  private final BigDecimal totalPrice;
+    @JsonProperty("ingredients")
+    private List<IngredientsReportInformationDto> ingredients;
+    private BigDecimal totalPrice;
 
-  public TotalReportDto(List<IngredientReportInformationDto> ingredients, BigDecimal totalPrice) {
-    this.ingredients = ingredients;
-    this.totalPrice = totalPrice;
-  }
+    public TotalReportDto() {
+    }
 
-  public List<IngredientReportInformationDto> getIngredients() {
-    return ingredients;
-  }
+    public TotalReportDto(List<IngredientsReportInformationDto> ingredients, BigDecimal totalPrice) {
+        this.ingredients = ingredients;
+        this.totalPrice = totalPrice;
+    }
 
-  public BigDecimal getTotalPrice() {
-    return totalPrice;
-  }
+    public List<IngredientsReportInformationDto> getIngredients() { return ingredients; }
+
+    public BigDecimal getTotalPrice() { return totalPrice; }
 }

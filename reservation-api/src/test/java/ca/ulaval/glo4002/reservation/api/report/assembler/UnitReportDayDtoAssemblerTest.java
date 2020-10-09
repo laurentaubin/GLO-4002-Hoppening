@@ -5,10 +5,10 @@ import static org.mockito.BDDMockito.given;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientReportInformation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.report.dto.IngredientsReportInformationDto;
 import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDayDto;
-import ca.ulaval.glo4002.reservation.domain.report.UnitReportDay;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportDay;
 
 @ExtendWith(MockitoExtension.class)
 public class UnitReportDayDtoAssemblerTest {
@@ -27,6 +27,8 @@ public class UnitReportDayDtoAssemblerTest {
   private static final String ANOTHER_DATE_STRING = "2150-07-23";
   private static final BigDecimal A_TOTAL_PRICE = BigDecimal.TEN;
   private static final BigDecimal ANOTHER_TOTAL_PRICE = BigDecimal.ONE;
+  private static final IngredientReportInformation AN_INGREDIENT_REPORT_INFORMATION = new IngredientReportInformation(IngredientName.BACON, 2.0, BigDecimal.valueOf(12));
+  private static final IngredientReportInformation ANOTHER_INGREDIENT_REPORT_INFORMATION = new IngredientReportInformation(IngredientName.BUTTERNUT_SQUASH, 2.0, BigDecimal.valueOf(13));
 
   @Mock
   private IngredientReportInformationDtoAssembler ingredientReportInformationDtoAssembler;
@@ -52,8 +54,10 @@ public class UnitReportDayDtoAssemblerTest {
   public void setUp() {
     given(aUnitReportDay.getDate()).willReturn(A_DATE);
     given(aUnitReportDay.getTotalPrice()).willReturn(A_TOTAL_PRICE);
+    given(aUnitReportDay.getIngredientsReportInformation()).willReturn(Set.of(AN_INGREDIENT_REPORT_INFORMATION));
     given(anotherUnitReportDay.getDate()).willReturn(ANOTHER_DATE);
     given(anotherUnitReportDay.getTotalPrice()).willReturn(ANOTHER_TOTAL_PRICE);
+    given(anotherUnitReportDay.getIngredientsReportInformation()).willReturn(Set.of(ANOTHER_INGREDIENT_REPORT_INFORMATION));
 
     unitReportDayDtoAssembler = new UnitReportDayDtoAssembler(ingredientReportInformationDtoAssembler);
   }
@@ -62,9 +66,9 @@ public class UnitReportDayDtoAssemblerTest {
   public void givenUnitReportLines_whenAssembleUnitReportLineDtos_thenAssembleCorrespondingDtos() {
     // given
     List<IngredientsReportInformationDto> aListOfIngredientRepotInformationDtos = givenAListOfIngredientReportInformationDtos();
-    given(ingredientReportInformationDtoAssembler.assemble(aUnitReportDay)).willReturn(aListOfIngredientRepotInformationDtos);
+    given(ingredientReportInformationDtoAssembler.assembleFromIngredientReportInformations(aUnitReportDay.getIngredientsReportInformation())).willReturn(aListOfIngredientRepotInformationDtos);
     List<IngredientsReportInformationDto> anotherListOfIngredientRepotInformationDtos = givenAnotherListOfIngredientReportInformationDtos();
-    given(ingredientReportInformationDtoAssembler.assemble(anotherUnitReportDay)).willReturn(anotherListOfIngredientRepotInformationDtos);
+    given(ingredientReportInformationDtoAssembler.assembleFromIngredientReportInformations(anotherUnitReportDay.getIngredientsReportInformation())).willReturn(anotherListOfIngredientRepotInformationDtos);
     List<UnitReportDay> unitReportDays = Arrays.asList(aUnitReportDay, anotherUnitReportDay);
 
     // when

@@ -6,25 +6,19 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({ "dates", "totalPrice" })
+@JsonPropertyOrder({"dates"})
 public class UnitReportDto {
   @JsonProperty("dates")
   private List<UnitReportDayDto> unitReportDayDtos;
-  private BigDecimal totalPrice;
 
   public UnitReportDto() {
   }
 
-  public UnitReportDto(List<UnitReportDayDto> unitReportDayDtos, BigDecimal totalPrice) {
+  public UnitReportDto(List<UnitReportDayDto> unitReportDayDtos) {
     this.unitReportDayDtos = unitReportDayDtos;
-    this.totalPrice = totalPrice;
   }
 
   public List<UnitReportDayDto> getUnitReportDayDtos() {
     return unitReportDayDtos;
-  }
-
-  public BigDecimal getTotalPrice() {
-    return totalPrice;
   }
 }

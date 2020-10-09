@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +36,7 @@ public class IngredientHttpClient {
                                     .constructCollectionType(List.class, IngredientPriceDto.class));
     } catch (Exception e) {
       System.out.println("error while getting ingredients information from external service api");
-      return null;
+      return List.of();
     }
   }
 

@@ -19,7 +19,7 @@ public class IngredientReportInformation {
     this.totalPrice = totalPrice;
   }
 
-  public IngredientName getIngredient() {
+  public IngredientName getIngredientName() {
     return ingredientName;
   }
 

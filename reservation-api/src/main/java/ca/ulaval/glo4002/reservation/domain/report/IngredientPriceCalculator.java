@@ -1,43 +1,38 @@
 package ca.ulaval.glo4002.reservation.domain.report;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.report.exception.IngredientNotFoundException;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
+import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceRepository;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
 
 public class IngredientPriceCalculator {
-  private final Map<IngredientName, BigDecimal> ingredientNameToPrice;
+    private HashMap<IngredientName, BigDecimal> archive;
 
-  public IngredientPriceCalculator() {
-    this.ingredientNameToPrice = new HashMap<>();
-  }
 
-  public IngredientPriceCalculator(Map<IngredientName, BigDecimal> ingredientNameToPrice) {
-    this.ingredientNameToPrice = ingredientNameToPrice;
-  }
-
-  public void generatePriceMapper(List<IngredientPriceDto> ingredientPriceDtos) {
-    for (IngredientPriceDto ingredientPriceDto : ingredientPriceDtos) {
-      if (IngredientName.contains(ingredientPriceDto.getName())) {
-        ingredientNameToPrice.put(IngredientName.valueOfName(ingredientPriceDto.getName()),
-                                  ingredientPriceDto.getPricePerKg());
-      }
+    public IngredientPriceCalculator() {
+        this.archive = new HashMap<>();
     }
-  }
 
-  public BigDecimal getTotalPrice(IngredientName ingredientName, BigDecimal quantity) {
-    try {
-      return ingredientNameToPrice.get(ingredientName).multiply(quantity);
-    } catch (NullPointerException e) {
-      throw new IngredientNotFoundException();
+    public void generatePriceMapper(List<IngredientPriceDto> ingredientPriceDtos) {
+        for(IngredientPriceDto ingredientPriceDto : ingredientPriceDtos){
+            if (IngredientName.contains(ingredientPriceDto.getName())) {
+                archive.put(
+                        IngredientName.valueOfName(ingredientPriceDto.getName()),
+                        ingredientPriceDto.getPricePerKg());
+            }
+        }
     }
-  }
 
-  public Map<IngredientName, BigDecimal> getIngredientNameToPrice() {
-    return ingredientNameToPrice;
-  }
+    public BigDecimal getTotalPrice(IngredientName ingredientName, double quantity) {
+        try {
+            return archive.get(ingredientName).multiply(BigDecimal.valueOf(quantity)).setScale(2, RoundingMode.HALF_UP);
+        } catch (NullPointerException e) {
+            throw new IngredientNotFoundException();
+        }
+    }
 }

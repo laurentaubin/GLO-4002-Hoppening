@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDayDto;
 import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDto;
-import ca.ulaval.glo4002.reservation.domain.report.UnitReport;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReport;
 
 @ExtendWith(MockitoExtension.class)
 class UnitReportDtoAssemblerTest {

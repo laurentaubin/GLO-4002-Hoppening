@@ -6,7 +6,7 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.api.report.dto.IngredientsReportInformationDto;
 import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDayDto;
-import ca.ulaval.glo4002.reservation.domain.report.UnitReportDay;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportDay;
 
 public class UnitReportDayDtoAssembler {
 
@@ -20,7 +20,7 @@ public class UnitReportDayDtoAssembler {
     List<UnitReportDayDto> unitReportDayDtos = new ArrayList<>();
     unitReportDays.sort(Comparator.comparing(UnitReportDay::getDate));
     for (UnitReportDay unitReportDay : unitReportDays) {
-      List<IngredientsReportInformationDto> ingredientsReportInformationDtos = ingredientReportInformationDtoAssembler.assemble(unitReportDay);
+      List<IngredientsReportInformationDto> ingredientsReportInformationDtos = ingredientReportInformationDtoAssembler.assembleFromIngredientReportInformations(unitReportDay.getIngredientsReportInformation());
       unitReportDayDtos.add(new UnitReportDayDto(unitReportDay.getDate(),
                                                  ingredientsReportInformationDtos,
                                                  unitReportDay.getTotalPrice()));

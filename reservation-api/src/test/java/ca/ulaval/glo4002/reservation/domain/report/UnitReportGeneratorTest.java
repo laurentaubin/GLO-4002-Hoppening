@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReport;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportDay;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
 
 public class UnitReportGeneratorTest {

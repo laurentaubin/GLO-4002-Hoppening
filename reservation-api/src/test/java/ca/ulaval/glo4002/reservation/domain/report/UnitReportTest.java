@@ -7,6 +7,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReport;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportDay;
+
 @ExtendWith(MockitoExtension.class)
 public class UnitReportTest {
 

@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.reservation.domain.report;
+package ca.ulaval.glo4002.reservation.domain.report.unit;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

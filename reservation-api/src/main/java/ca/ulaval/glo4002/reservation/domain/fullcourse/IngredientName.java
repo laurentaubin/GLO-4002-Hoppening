@@ -1,5 +1,7 @@
 package ca.ulaval.glo4002.reservation.domain.fullcourse;
 
+import ca.ulaval.glo4002.reservation.domain.fullcourse.exception.IngredientNameDoesNotExistException;
+
 public enum IngredientName {
   PORK_LOIN("Pork loin"),
   CARROTS("Carrots"),
@@ -25,6 +27,25 @@ public enum IngredientName {
 
   IngredientName(String name) {
     this.name = name;
+  }
+
+  public static IngredientName valueOfName(String name) {
+    for (IngredientName ingredientName : IngredientName.values()) {
+      if (ingredientName.toString().equals(name)) {
+        return ingredientName;
+      }
+    }
+    throw new IngredientNameDoesNotExistException();
+  }
+
+
+  public static boolean contains(String name) {
+    for (IngredientName ingredientName : IngredientName.values()) {
+      if (ingredientName.toString().equals(name)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override

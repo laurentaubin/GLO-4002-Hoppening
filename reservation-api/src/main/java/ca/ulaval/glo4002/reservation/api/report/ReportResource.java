@@ -8,12 +8,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import ca.ulaval.glo4002.reservation.api.report.assembler.ReportPeriodAssembler;
+import ca.ulaval.glo4002.reservation.api.report.assembler.TotalReportDtoAssembler;
 import ca.ulaval.glo4002.reservation.api.report.assembler.UnitReportDtoAssembler;
+import ca.ulaval.glo4002.reservation.api.report.dto.TotalReportDto;
 import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDto;
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.report.ReportType;
-import ca.ulaval.glo4002.reservation.domain.report.UnitReport;
+import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportTypeException;
+import ca.ulaval.glo4002.reservation.domain.report.total.TotalReport;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReport;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @Path("/reports")
@@ -23,16 +27,19 @@ public class ReportResource {
   private final ReportDateValidator reportDateValidator;
   private final ReportPeriodAssembler reportPeriodAssembler;
   private final UnitReportDtoAssembler unitReportDtoAssembler;
+  private final TotalReportDtoAssembler totalReportDtoAssembler;
 
   public ReportResource(ReportService reportService,
                         ReportDateValidator reportDateValidator,
                         ReportPeriodAssembler reportPeriodAssembler,
-                        UnitReportDtoAssembler unitReportDtoAssembler)
+                        UnitReportDtoAssembler unitReportDtoAssembler,
+                        TotalReportDtoAssembler totalReportDtoAssembler)
   {
     this.reportService = reportService;
     this.reportDateValidator = reportDateValidator;
     this.reportPeriodAssembler = reportPeriodAssembler;
     this.unitReportDtoAssembler = unitReportDtoAssembler;
+    this.totalReportDtoAssembler = totalReportDtoAssembler;
   }
 
   @GET
@@ -43,14 +50,30 @@ public class ReportResource {
                             @QueryParam("type") String type)
   {
     reportDateValidator.validate(startDate, endDate);
-    UnitReportDto unitReportDto = getUnitReportDto(startDate, endDate, type);
+    ReportType reportType = ReportType.valueOfName(type);
+    return getReportResponse(startDate, endDate, reportType);
+  }
+
+  private Response getReportResponse(String startDate, String endDate, ReportType reportType) {
+    ReportPeriod reportPeriod = reportPeriodAssembler.assembleReportPeriod(startDate, endDate);
+    if (reportType.equals(ReportType.UNIT)) {
+      return getUnitReportResponse(reportPeriod);
+    } else if (reportType.equals(ReportType.TOTAL)) {
+      return getTotalReportResponse(reportPeriod);
+    } else {
+      throw new InvalidReportTypeException();
+    }
+  }
+
+  private Response getUnitReportResponse(ReportPeriod reportPeriod) {
+    UnitReport unitReport = reportService.getUnitReport(reportPeriod);
+    UnitReportDto unitReportDto = unitReportDtoAssembler.assemble(unitReport);
     return Response.ok().entity(unitReportDto).build();
   }
 
-  private UnitReportDto getUnitReportDto(String startDate, String endDate, String type) {
-    ReportPeriod reportPeriod = reportPeriodAssembler.assembleReportPeriod(startDate, endDate);
-    ReportType reportType = ReportType.valueOfName(type);
-    UnitReport unitReport = reportService.getUnitReport(reportPeriod, reportType);
-    return unitReportDtoAssembler.assemble(unitReport);
+  private Response getTotalReportResponse(ReportPeriod reportPeriod) {
+    TotalReport totalReport = reportService.getTotalReport(reportPeriod);
+    TotalReportDto totalReportDto = totalReportDtoAssembler.assemble(totalReport);
+    return Response.ok().entity(totalReportDto).build();
   }
 }

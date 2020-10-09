@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ca.ulaval.glo4002.reservation.api.report.dto.IngredientsReportInformationDto;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportInformation;
-import ca.ulaval.glo4002.reservation.domain.report.UnitReportDay;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportDay;
 
 @ExtendWith(MockitoExtension.class)
 public class IngredientReportInformationDtoAssemblerTest {
@@ -43,7 +43,7 @@ public class IngredientReportInformationDtoAssemblerTest {
     given(unitReportDay.getIngredientsReportInformation()).willReturn(givenIngredientReportInformation());
 
     // when
-    List<IngredientsReportInformationDto> ingredientsReportInformationDtos = ingredientReportInformationDtoAssembler.assemble(unitReportDay);
+    List<IngredientsReportInformationDto> ingredientsReportInformationDtos = ingredientReportInformationDtoAssembler.assembleFromIngredientReportInformations(unitReportDay.getIngredientsReportInformation());
 
     // then
     assertThat(ingredientsReportInformationDtos.size()).isEqualTo(2);
@@ -55,7 +55,19 @@ public class IngredientReportInformationDtoAssemblerTest {
     given(unitReportDay.getIngredientsReportInformation()).willReturn(givenIngredientReportInformation());
 
     // when
-    List<IngredientsReportInformationDto> ingredientsReportInformationDtos = ingredientReportInformationDtoAssembler.assemble(unitReportDay);
+    List<IngredientsReportInformationDto> ingredientsReportInformationDtos = ingredientReportInformationDtoAssembler.assembleFromIngredientReportInformations(unitReportDay.getIngredientsReportInformation());
+
+    // then
+    IngredientsReportInformationDto firstIngredientReportInformation = ingredientsReportInformationDtos.get(0);
+    IngredientsReportInformationDto secondIngredientReportInformation = ingredientsReportInformationDtos.get(1);
+    assertThat(firstIngredientReportInformation.getIngredientName()).isEqualTo(BUTTERNUT_SQUASH_NAME.toString());
+    assertThat(secondIngredientReportInformation.getIngredientName()).isEqualTo(CHOCOLATE_NAME.toString());
+  }
+
+  @Test
+  public void givenIngredientReportInformation_whenAssembleFromIngredientReportInformations_thenAssemble() {
+    // when
+    List<IngredientsReportInformationDto> ingredientsReportInformationDtos = ingredientReportInformationDtoAssembler.assembleFromIngredientReportInformations(givenIngredientReportInformation());
 
     // then
     IngredientsReportInformationDto firstIngredientReportInformation = ingredientsReportInformationDtos.get(0);

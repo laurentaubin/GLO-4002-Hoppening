@@ -4,7 +4,7 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDayDto;
 import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDto;
-import ca.ulaval.glo4002.reservation.domain.report.UnitReport;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReport;
 
 public class UnitReportDtoAssembler {
 
@@ -16,7 +16,7 @@ public class UnitReportDtoAssembler {
 
   public UnitReportDto assemble(UnitReport unitReport) {
     List<UnitReportDayDto> unitReportDayDtos = unitReportDayDtoAssembler.assembleUnitReportDayDtos(unitReport.getUnitReportDays());
-    return new UnitReportDto(unitReportDayDtos, unitReport.getTotalPrice());
+    return new UnitReportDto(unitReportDayDtos);
   }
 
 }

@@ -19,12 +19,15 @@ public class ReportDateValidatorTest {
   private static final String AFTER_START_DATE = "2150-05-11";
   private static final String BEFORE_END_DATE = "2150-05-09";
   private static final String SAME_DATE = "2150-05-05";
+  private static final String DATE_REGEX = "[0-9]{4}[-][0-9]{2}[-][0-9]{2}";
+  private static final String EMPTY_DATE = "";
+  private static final String A_WORD = "nfdsdf";
 
   private ReportDateValidator reportDateValidator;
 
   @BeforeEach
   public void setUp() {
-    reportDateValidator = new ReportDateValidator();
+    reportDateValidator = new ReportDateValidator(DATE_REGEX);
   }
 
   @Test
@@ -74,5 +77,32 @@ public class ReportDateValidatorTest {
 
     // then
     assertDoesNotThrow(validatingDates);
+  }
+
+  @Test
+  public void givenStartBeingAEmptyString_whenValidate_thenDatesAreInvalid() {
+    // when
+    Executable validatingDates = () -> reportDateValidator.validate(EMPTY_DATE, BEFORE_END_DATE);
+
+    // then
+    assertThrows(InvalidReportDateException.class, validatingDates);
+  }
+
+  @Test
+  public void givenEndBeingAEmptyString_whenValidate_thenDatesAreInvalid() {
+    // when
+    Executable validatingDates = () -> reportDateValidator.validate(VALID_START_DATE, EMPTY_DATE);
+
+    // then
+    assertThrows(InvalidReportDateException.class, validatingDates);
+  }
+
+  @Test
+  public void givenADateBeingAWord_whenValidate_thenDatesAreInvalid() {
+    // when
+    Executable validatingDates = () -> reportDateValidator.validate(A_WORD, VALID_END_DATE);
+
+    // then
+    assertThrows(InvalidReportDateException.class, validatingDates);
   }
 }

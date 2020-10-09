@@ -7,19 +7,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 import ca.ulaval.glo4002.reservation.api.report.ReportResource;
-import ca.ulaval.glo4002.reservation.api.report.assembler.IngredientReportInformationDtoAssembler;
-import ca.ulaval.glo4002.reservation.api.report.assembler.ReportPeriodAssembler;
-import ca.ulaval.glo4002.reservation.api.report.assembler.UnitReportDayDtoAssembler;
-import ca.ulaval.glo4002.reservation.api.report.assembler.UnitReportDtoAssembler;
+import ca.ulaval.glo4002.reservation.api.report.assembler.*;
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
+
+
+import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceCalculator;
+import ca.ulaval.glo4002.reservation.domain.report.total.TotalReportGenerator;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
-import ca.ulaval.glo4002.reservation.domain.report.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
+import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
+
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
 import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientHttpClient;
@@ -40,6 +43,7 @@ public class ReservationContext {
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_TABLE = 4;
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_RESERVATION = 6;
   private static final String DATE_REGEX = "[0-9]{4}[-][0-9]{2}[-][0-9]{2}[T][0-9]{2}[:][0-9]{2}[:][0-9]{2}[.][0-9]{3}[Z]";
+  private static final String REPORT_DATE_REGEX = "[0-9]{4}[-][0-9]{2}[-][0-9]{2}";
   private static final String OPENING_DINNER_DATE = "2150-07-20T00:00:00.000Z";
   private static final String CLOSING_DINNER_DATE = "2150-07-30T23:59:59.999Z";
   private static final String OPENING_RESERVATION_DATE = "2150-01-01T00:00:00.000Z";
@@ -109,9 +113,11 @@ public class ReservationContext {
   private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository) {
     IngredientPriceRepository ingredientPriceRepository = new IngredientPriceRepository(new IngredientHttpClient());
     UnitReportGenerator unitReportGenerator = new UnitReportGenerator();
+    TotalReportGenerator totalReportGenerator = new TotalReportGenerator(new IngredientPriceCalculator());
     return new ReportService(ingredientQuantityRepository,
                              ingredientPriceRepository,
-                             unitReportGenerator);
+                             unitReportGenerator,
+                             totalReportGenerator);
   }
 
   private Object[] createResources(ReservationService reservationService,
@@ -132,14 +138,21 @@ public class ReservationContext {
   }
 
   private ReportResource createReportResource(ReportService reportService) {
-    ReportDateValidator reportDateValidator = new ReportDateValidator();
+    ReportDateValidator reportDateValidator = new ReportDateValidator(REPORT_DATE_REGEX);
     ReportPeriodAssembler reportPeriodAssembler = new ReportPeriodAssembler();
     UnitReportDtoAssembler unitReportDtoAssembler = createUnitReportDtoAssembler();
+    TotalReportDtoAssembler totalReportDtoAssembler = createTotalReportDtoAssembler();
 
     return new ReportResource(reportService,
                               reportDateValidator,
                               reportPeriodAssembler,
-                              unitReportDtoAssembler);
+                              unitReportDtoAssembler,
+                              totalReportDtoAssembler);
+  }
+
+  private TotalReportDtoAssembler createTotalReportDtoAssembler() {
+    IngredientReportInformationDtoAssembler ingredientReportInformationDtoAssembler = new IngredientReportInformationDtoAssembler();
+    return new TotalReportDtoAssembler(ingredientReportInformationDtoAssembler);
   }
 
   private ReservationServer createServer(Object[] resources) {

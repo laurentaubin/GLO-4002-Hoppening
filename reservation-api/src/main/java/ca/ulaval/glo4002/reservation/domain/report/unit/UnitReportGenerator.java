@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.reservation.domain.report;
+package ca.ulaval.glo4002.reservation.domain.report.unit;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientReportInformation;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
 
 public class UnitReportGenerator {
