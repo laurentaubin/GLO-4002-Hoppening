@@ -1,8 +1,9 @@
 {
   "completed": [
-    "RSV"
+    "RSV",
+    "DSO",
+    "GLI",
+    "AAC"
   ],
-  "started": [
-    "DSO"
-  ]
+  "started": []
 }
