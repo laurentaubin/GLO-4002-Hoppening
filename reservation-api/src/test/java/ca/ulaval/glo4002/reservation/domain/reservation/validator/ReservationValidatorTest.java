@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.reservation.service.reservation.validator;
+package ca.ulaval.glo4002.reservation.domain.reservation.validator;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,7 +19,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationReques
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
 import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
-import ca.ulaval.glo4002.reservation.service.reservation.validator.table.TableValidator;
+import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.TableValidator;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationValidatorTest {

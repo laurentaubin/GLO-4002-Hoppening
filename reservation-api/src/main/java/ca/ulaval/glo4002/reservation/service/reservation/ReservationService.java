@@ -7,11 +7,11 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabil
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
+import ca.ulaval.glo4002.reservation.domain.reservation.validator.ReservationValidator;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
-import ca.ulaval.glo4002.reservation.service.reservation.validator.ReservationValidator;
 
 public class ReservationService {
   private final ReservationRepository reservationRepository;

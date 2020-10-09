@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.reservation.service.reservation.validator.table;
+package ca.ulaval.glo4002.reservation.domain.reservation.validator.table;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

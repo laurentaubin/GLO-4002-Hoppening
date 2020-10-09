@@ -1,10 +1,10 @@
-package ca.ulaval.glo4002.reservation.service.reservation.validator;
+package ca.ulaval.glo4002.reservation.domain.reservation.validator;
 
 import java.util.List;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.service.reservation.validator.table.TableValidator;
+import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.TableValidator;
 
 public class ReservationValidator {
   private final DinnerDateValidator dinnerDateValidator;

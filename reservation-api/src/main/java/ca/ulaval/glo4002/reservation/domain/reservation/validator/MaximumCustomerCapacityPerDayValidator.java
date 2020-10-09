@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.reservation.service.reservation.validator;
+package ca.ulaval.glo4002.reservation.domain.reservation.validator;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -24,6 +24,10 @@ import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
+import ca.ulaval.glo4002.reservation.domain.reservation.validator.*;
+import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.BaseTableValidator;
+import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.CovidValidatorDecorator;
+import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.TableValidator;
 import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientHttpClient;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceRepository;
@@ -32,10 +36,6 @@ import ca.ulaval.glo4002.reservation.service.report.ReportService;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.*;
-import ca.ulaval.glo4002.reservation.service.reservation.validator.*;
-import ca.ulaval.glo4002.reservation.service.reservation.validator.table.BaseTableValidator;
-import ca.ulaval.glo4002.reservation.service.reservation.validator.table.CovidValidatorDecorator;
-import ca.ulaval.glo4002.reservation.service.reservation.validator.table.TableValidator;
 
 public class ReservationContext {
   private static final int PORT = 8181;
