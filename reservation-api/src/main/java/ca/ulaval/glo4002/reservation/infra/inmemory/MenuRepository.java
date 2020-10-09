@@ -16,7 +16,7 @@ public class MenuRepository {
   }
 
   public Map<IngredientName, Double> getIngredientsQuantity(RestrictionType restrictionType) {
-    return getCourseByRestrictionType(restrictionType).getIngredientsQuantity();
+    return getCourseByRestrictionType(restrictionType).getIngredientQuantities();
   }
 
   private FullCourse getCourseByRestrictionType(RestrictionType restrictionType) {

@@ -11,7 +11,7 @@ public class FullCourse {
     this.recipes = recipes;
   }
 
-  public Map<IngredientName, Double> getIngredientsQuantity() {
+  public Map<IngredientName, Double> getIngredientQuantities() {
     Map<IngredientName, Double> ingredientsQuantity = new HashMap<>();
     for (Recipe recipe : recipes) {
       ingredientsQuantity = updateIngredientsQuantity(ingredientsQuantity, recipe.getIngredients());

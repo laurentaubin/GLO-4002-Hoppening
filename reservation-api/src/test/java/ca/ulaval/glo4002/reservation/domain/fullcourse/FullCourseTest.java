@@ -3,7 +3,6 @@ package ca.ulaval.glo4002.reservation.domain.fullcourse;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class FullCourseTest {
-  private static final BigDecimal KIWI_QUANTITY = BigDecimal.valueOf(3);
-  private static final BigDecimal KIWI_TOTAL_QUANTITY = BigDecimal.valueOf(6);
-  private static final BigDecimal TUNA_QUANTITY = BigDecimal.valueOf(5);
-  private static final BigDecimal CARROTS_QUANTITY = BigDecimal.valueOf(6);
+  private static final double KIWI_QUANTITY = 3;
+  private static final double KIWI_TOTAL_QUANTITY = 6;
+  private static final double TUNA_QUANTITY = 5;
+  private static final double CARROTS_QUANTITY = 6;
 
   @Mock
   private Recipe aRecipe;
@@ -31,10 +30,10 @@ public class FullCourseTest {
     // given
     List<Recipe> recipes = givenRecipes();
     FullCourse fullCourse = new FullCourse(recipes);
-    Map<IngredientName, BigDecimal> expectedIngredientQuantities = givenExpectedIngredientQuantities();
+    Map<IngredientName, Double> expectedIngredientQuantities = givenExpectedIngredientQuantities();
 
     // when
-    Map<IngredientName, BigDecimal> ingredientQuantities = fullCourse.getIngredientQuantities();
+    Map<IngredientName, Double> ingredientQuantities = fullCourse.getIngredientQuantities();
 
     // then
     assertThat(ingredientQuantities).isEqualTo(expectedIngredientQuantities);
@@ -51,8 +50,8 @@ public class FullCourseTest {
     return List.of(aRecipe, anotherRecipe);
   }
 
-  private Map<IngredientName, BigDecimal> givenExpectedIngredientQuantities() {
-    Map<IngredientName, BigDecimal> expectedIngredientQuantities = new HashMap<>();
+  private Map<IngredientName, Double> givenExpectedIngredientQuantities() {
+    Map<IngredientName, Double> expectedIngredientQuantities = new HashMap<>();
     expectedIngredientQuantities.put(IngredientName.KIWI, KIWI_TOTAL_QUANTITY);
     expectedIngredientQuantities.put(IngredientName.TUNA, TUNA_QUANTITY);
     expectedIngredientQuantities.put(IngredientName.CARROTS, CARROTS_QUANTITY);
