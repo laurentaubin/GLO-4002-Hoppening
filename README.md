@@ -19,6 +19,13 @@ docker run -p 8080:8080 -p 8181:8181 application-glo4002
 ```
 
 ## Principales fonctionnalités
+
+### GLI total et unit report
+Nous avons décidé de ne pas créer d'abstraction pour les deux rapports (unit et total). Intuitivement, on sent que le client peut recevoir une abstraction pour recevoir les deux types de rapport étant donné qu'ils offrent sensiblement le même contrat. Par contre, on a réalisé que le type de rapport est un besoin de la couche UI pour construire la bonne réponse et les deux rapports du domaine n'ont pas la même structure et le même comportement. La logique de présentation est liée au type de rapport qu'on recoit en query param, c'est pourquoi on a choisi de faire la logique du choix de présentation dans la couche API.
+
+C'est aussi le cas pour les générateurs de rapport. Les deux types de générateur construisent des rapports, mais la construction et le type de retour sont différents. Le contrat des deux générateurs est donc différent. C'est pourquoi il a été décidé de ne pas créer d'abstraction pour les générateurs.
+
+
 ### Créer une réservation
 Il est possible de créer une réservation en effectuant un POST à l'endpoint ``/reservations``.
 Le format de la requête doit suivre la structure suivante:
