@@ -7,7 +7,6 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
 
 public class InMemoryReservationRepository implements ReservationRepository {
@@ -27,20 +26,20 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
   public int getTotalNumberOfCustomersForADay(LocalDateTime date) {
     List<Reservation> reservations = inMemoryReservationDao.getReservations();
-    return getTotalNumberOfCustomers(date, reservations);
+    return getTotalNumberOfCustomersOfAllReservationsAtDinnerDate(date, reservations);
   }
 
   private boolean isTheSameDate(LocalDateTime date, LocalDateTime dinnerDate) {
     return LocalDate.from(date).isEqual(LocalDate.from(dinnerDate));
   }
 
-  private int getTotalNumberOfCustomers(LocalDateTime date, List<Reservation> reservations) {
+  private int getTotalNumberOfCustomersOfAllReservationsAtDinnerDate(LocalDateTime date,
+                                                                     List<Reservation> reservations)
+  {
     int numberOfCustomers = 0;
     for (Reservation reservation : reservations) {
       if (isTheSameDate(date, reservation.getDinnerDate()))
-        for (Table table : reservation.getTables()) {
-          numberOfCustomers += table.getCustomers().size();
-        }
+        numberOfCustomers += reservation.getNumberOfCustomers();
     }
     return numberOfCustomers;
   }

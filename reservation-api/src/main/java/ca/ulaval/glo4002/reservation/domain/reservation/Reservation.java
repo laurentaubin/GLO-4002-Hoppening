@@ -75,6 +75,14 @@ public class Reservation {
     return restrictionTypes;
   }
 
+  public int getNumberOfCustomers() {
+    int numberOfCustomers = 0;
+    for (Table table : tables) {
+      numberOfCustomers += table.getCustomers().size();
+    }
+    return numberOfCustomers;
+  }
+
   private Map<RestrictionType, Integer> mergeCurrentCountWithTableRestrictionCount(Map<RestrictionType, Integer> currentCount,
                                                                                    Map<RestrictionType, Integer> tableCount)
   {

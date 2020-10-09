@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.given;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ public class ReservationTest {
                                                                                            2);
   private static final RestrictionType ALLERGIES_RESTRICTION = RestrictionType.ALLERGIES;
   private static final RestrictionType NONE_RESTRICTION = RestrictionType.NONE;
+  private static final int TOTAL_NUMBER_OF_CUSTOMERS = 2;
 
   @Mock
   private Table aTable;
@@ -91,6 +93,7 @@ public class ReservationTest {
 
   @Test
   public void givenAReservation_whenGetRestrictionTypes_thenReturnRestrictionTypes() {
+    // given
     Customer customer = new CustomerBuilder().withRestriction(ALLERGIES_RESTRICTION)
                                              .withRestriction(NONE_RESTRICTION)
                                              .build();
@@ -103,6 +106,39 @@ public class ReservationTest {
     // then
     assertThat(restrictionTypes).contains(ALLERGIES_RESTRICTION);
     assertThat(restrictionTypes).contains(NONE_RESTRICTION);
+  }
 
+  @Test
+  public void givenATableWithTwoCustomers_whenGetNumberOfCustomers_theNumberOfCustomersShouldBeTwo() {
+    // given
+    Table aTable = givenATableWithTwoCustomers();
+    Reservation reservation = new ReservationBuilder().withTable(aTable).build();
+
+    // when
+    int numberOfCustomers = reservation.getNumberOfCustomers();
+
+    // then
+    assertThat(numberOfCustomers).isEqualTo(2);
+  }
+
+  @Test
+  public void givenTwoTablesWithTwoCustomersEach_whenGetNumberOfCustomers_thenNumberOfCustomersShouldBeTheTotalOfAllTables() {
+    Table aTable = givenATableWithTwoCustomers();
+    Table anotherTable = givenATableWithTwoCustomers();
+    Reservation reservation = new ReservationBuilder().withTable(aTable)
+                                                      .withTable(anotherTable)
+                                                      .build();
+
+    // when
+    int numberOfCustomers = reservation.getNumberOfCustomers();
+
+    // then
+    assertThat(numberOfCustomers).isEqualTo(4);
+  }
+
+  private Table givenATableWithTwoCustomers() {
+    Customer aCustomer = new CustomerBuilder().build();
+    Customer anotherCustomer = new CustomerBuilder().build();
+    return new Table(List.of(aCustomer, anotherCustomer));
   }
 }
