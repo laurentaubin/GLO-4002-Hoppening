@@ -5,10 +5,11 @@ import static org.mockito.BDDMockito.given;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
-import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientReportInformation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.report.dto.IngredientsReportInformationDto;
 import ca.ulaval.glo4002.reservation.api.report.dto.UnitReportDayDto;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientReportInformation;
 import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportDay;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,8 +30,12 @@ public class UnitReportDayDtoAssemblerTest {
   private static final String ANOTHER_DATE_STRING = "2150-07-23";
   private static final BigDecimal A_TOTAL_PRICE = BigDecimal.TEN;
   private static final BigDecimal ANOTHER_TOTAL_PRICE = BigDecimal.ONE;
-  private static final IngredientReportInformation AN_INGREDIENT_REPORT_INFORMATION = new IngredientReportInformation(IngredientName.BACON, 2.0, BigDecimal.valueOf(12));
-  private static final IngredientReportInformation ANOTHER_INGREDIENT_REPORT_INFORMATION = new IngredientReportInformation(IngredientName.BUTTERNUT_SQUASH, 2.0, BigDecimal.valueOf(13));
+  private static final IngredientReportInformation AN_INGREDIENT_REPORT_INFORMATION = new IngredientReportInformation(IngredientName.BACON,
+                                                                                                                      BigDecimal.valueOf(2.0),
+                                                                                                                      BigDecimal.valueOf(12));
+  private static final IngredientReportInformation ANOTHER_INGREDIENT_REPORT_INFORMATION = new IngredientReportInformation(IngredientName.BUTTERNUT_SQUASH,
+                                                                                                                           BigDecimal.valueOf(2.0),
+                                                                                                                           BigDecimal.valueOf(13));
 
   @Mock
   private IngredientReportInformationDtoAssembler ingredientReportInformationDtoAssembler;
@@ -78,12 +85,14 @@ public class UnitReportDayDtoAssemblerTest {
     UnitReportDayDto firstUnitReportDayDto = unitReportDayDtos.get(0);
     assertThat(firstUnitReportDayDto.getDate()).isEqualTo(A_DATE_STRING);
     assertThat(firstUnitReportDayDto.getIngredients()).isEqualTo(aListOfIngredientRepotInformationDtos);
-    assertThat(firstUnitReportDayDto.getTotalPrice()).isEqualTo(A_TOTAL_PRICE);
+    assertThat(firstUnitReportDayDto.getTotalPrice()
+                                    .doubleValue()).isEqualTo(A_TOTAL_PRICE.doubleValue());
 
     UnitReportDayDto secondUnitReportDayDto = unitReportDayDtos.get(1);
     assertThat(secondUnitReportDayDto.getDate()).isEqualTo(ANOTHER_DATE_STRING);
     assertThat(secondUnitReportDayDto.getIngredients()).isEqualTo(anotherListOfIngredientRepotInformationDtos);
-    assertThat(secondUnitReportDayDto.getTotalPrice()).isEqualTo(ANOTHER_TOTAL_PRICE);
+    assertThat(secondUnitReportDayDto.getTotalPrice()
+                                     .doubleValue()).isEqualTo(ANOTHER_TOTAL_PRICE.doubleValue());
   }
 
   private List<IngredientsReportInformationDto> givenAListOfIngredientReportInformationDtos() {

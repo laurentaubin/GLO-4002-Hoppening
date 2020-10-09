@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -93,7 +94,7 @@ class AllergiesValidatorTest {
   public void givenReservationWithoutCarrots_whenCheckingIfAllergicFriendly_thenReservationIsAllowed() {
     // given
     Reservation reservation = givenReservationWithoutAllergicCustomer();
-    Map<IngredientName, Double> ingredientQuantity = givenIngredientQuantity(IngredientName.BACON);
+    Map<IngredientName, BigDecimal> ingredientQuantity = givenIngredientQuantity(IngredientName.BACON);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(ingredientQuantity);
 
     // when
@@ -107,7 +108,7 @@ class AllergiesValidatorTest {
   public void givenCarrotsAndNoAllergiesInReservationDate_whenCheckingIfAllergicFriendly_thenReservationIsAllowed() {
     // given
     Reservation reservation = givenReservationWithCarrots();
-    Map<IngredientName, Double> ingredientQuantity = givenIngredientQuantity(CARROTS_INGREDIENT);
+    Map<IngredientName, BigDecimal> ingredientQuantity = givenIngredientQuantity(CARROTS_INGREDIENT);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(ingredientQuantity);
 
     // when
@@ -121,7 +122,7 @@ class AllergiesValidatorTest {
   public void givenCarrotsAndAllergiesInReservationDate_whenCheckingIfAllergicFriendly_thenReservationIsForbidden() {
     // given
     Reservation reservation = givenReservationWithCarrots();
-    Map<IngredientName, Double> ingredientQuantity = givenIngredientQuantity(CARROTS_INGREDIENT);
+    Map<IngredientName, BigDecimal> ingredientQuantity = givenIngredientQuantity(CARROTS_INGREDIENT);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(ingredientQuantity);
     given(reservationRepository.getReservationsByDate(A_DATE_TIME)).willReturn(createReservationRepositoryWithAllergies(A_DATE_TIME));
 
@@ -136,7 +137,8 @@ class AllergiesValidatorTest {
   public void givenReservationWithAllergicCustomerAndCarrots_whenCheckingIfAllergicFriendly_thenReservationIsForbidden() {
     // given
     Reservation reservation = givenReservationWithAllergicCustomerAndCarrots();
-    Map<IngredientName, Double> menuWithCarrots = Collections.singletonMap(CARROTS_INGREDIENT, 1.0);
+    Map<IngredientName, BigDecimal> menuWithCarrots = Collections.singletonMap(CARROTS_INGREDIENT,
+                                                                               BigDecimal.valueOf(1.0));
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(menuWithCarrots);
 
     // when
@@ -185,7 +187,7 @@ class AllergiesValidatorTest {
     return Collections.singletonList(reservation);
   }
 
-  private Map<IngredientName, Double> givenIngredientQuantity(IngredientName ingredient) {
-    return Map.of(ingredient, 2.0);
+  private Map<IngredientName, BigDecimal> givenIngredientQuantity(IngredientName ingredient) {
+    return Map.of(ingredient, BigDecimal.valueOf(2.0));
   }
 }

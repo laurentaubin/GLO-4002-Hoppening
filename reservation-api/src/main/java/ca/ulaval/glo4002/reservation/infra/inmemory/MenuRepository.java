@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.infra.inmemory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class MenuRepository {
     menu = fullCourseFactory.create();
   }
 
-  public Map<IngredientName, Double> getIngredientsQuantity(RestrictionType restrictionType) {
+  public Map<IngredientName, BigDecimal> getIngredientsQuantity(RestrictionType restrictionType) {
     return getCourseByRestrictionType(restrictionType).getIngredientQuantities();
   }
 
@@ -26,7 +27,7 @@ public class MenuRepository {
   public List<RestrictionType> getRestrictionTypesByIngredient(IngredientName ingredientName) {
     List<RestrictionType> restrictionTypes = new ArrayList<>();
     for (RestrictionType restriction : RestrictionType.values()) {
-      Map<IngredientName, Double> ingredientsQuantity = getIngredientsQuantity(restriction);
+      Map<IngredientName, BigDecimal> ingredientsQuantity = getIngredientsQuantity(restriction);
       if (ingredientsQuantity.containsKey(ingredientName)) {
         restrictionTypes.add(restriction);
       }

@@ -1,10 +1,12 @@
 package ca.ulaval.glo4002.reservation.domain.fullcourse;
 
+import java.math.BigDecimal;
+
 public class Ingredient {
   private final IngredientName ingredientName;
-  private final double quantity;
+  private final BigDecimal quantity;
 
-  public Ingredient(IngredientName ingredientName, double quantity) {
+  public Ingredient(IngredientName ingredientName, BigDecimal quantity) {
     this.ingredientName = ingredientName;
     this.quantity = quantity;
   }
@@ -13,7 +15,7 @@ public class Ingredient {
     return ingredientName;
   }
 
-  public double getQuantity() {
+  public BigDecimal getQuantity() {
     return quantity;
   }
 }

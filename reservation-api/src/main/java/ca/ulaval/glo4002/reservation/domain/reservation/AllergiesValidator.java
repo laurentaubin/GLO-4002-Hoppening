@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class AllergiesValidator {
   }
 
   private boolean doesReservationContainACustomerWithARestrictionThatContainCarrots(Reservation reservation) {
-    Map<IngredientName, Double> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
+    Map<IngredientName, BigDecimal> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
     return ingredientQuantity.containsKey(IngredientName.CARROTS);
   }
 

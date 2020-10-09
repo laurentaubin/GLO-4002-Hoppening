@@ -1,7 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.report.total;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,7 @@ public class TotalReport {
   }
 
   public BigDecimal getTotalPrice() {
-    return totalPrice.setScale(2, RoundingMode.HALF_UP);
+    return totalPrice;
   }
 
   public void add(IngredientReportInformation ingredient) {
@@ -34,7 +33,8 @@ public class TotalReport {
       if (ingredientToAdd.getIngredientName().equals(existingIngredient.getIngredientName())) {
         ingredientsReportInformation.remove(existingIngredient);
         ingredientsReportInformation.add(new IngredientReportInformation(existingIngredient.getIngredientName(),
-                                                                         existingIngredient.getQuantity() + ingredientToAdd.getQuantity(),
+                                                                         existingIngredient.getQuantity()
+                                                                                           .add(ingredientToAdd.getQuantity()),
                                                                          existingIngredient.getTotalPrice()
                                                                                            .add(ingredientToAdd.getTotalPrice())));
         return;

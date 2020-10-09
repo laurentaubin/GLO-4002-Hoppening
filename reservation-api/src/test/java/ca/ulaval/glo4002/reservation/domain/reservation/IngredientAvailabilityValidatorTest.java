@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ public class IngredientAvailabilityValidatorTest {
                                                                                         7,
                                                                                         23);
 
-  private static final double QUANTITY = 20;
+  private static final BigDecimal QUANTITY = BigDecimal.valueOf(20);
 
   @Mock
   private ReservationIngredientCalculator reservationIngredientCalculator;

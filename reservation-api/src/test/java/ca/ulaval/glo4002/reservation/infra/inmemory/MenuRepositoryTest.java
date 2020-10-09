@@ -2,6 +2,7 @@ package ca.ulaval.glo4002.reservation.infra.inmemory;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class MenuRepositoryTest {
   @Test
   public void whenGetIngredientsQuantity_thenReturnReturnCorrespondingIngredientInformation() {
     // when
-    Map<IngredientName, Double> ingredientsQuantity = menuRepository.getIngredientsQuantity(ALLERGIES_RESTRICTION);
+    Map<IngredientName, BigDecimal> ingredientsQuantity = menuRepository.getIngredientsQuantity(ALLERGIES_RESTRICTION);
 
     // then
     assertThat(ingredientsQuantity).isNotEmpty();

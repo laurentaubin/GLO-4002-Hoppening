@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.service.report;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +35,12 @@ public class ReportService {
 
   public UnitReport getUnitReport(ReportPeriod reportPeriod) {
     List<IngredientPriceDto> ingredientPrices = ingredientPriceRepository.getIngredientsPrice();
-    Map<LocalDate, Map<IngredientName, Double>> ingredientsQuantityPerDay = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
+    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantityPerDay = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
     return unitReportGenerator.generateReport(ingredientPrices, ingredientsQuantityPerDay);
   }
 
   public TotalReport getTotalReport(ReportPeriod reportPeriod) {
-    Map<LocalDate, Map<IngredientName, Double>> ingredientsQuantityPerDay = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
+    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantityPerDay = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
     List<IngredientPriceDto> ingredientPrices = ingredientPriceRepository.getIngredientsPrice();
     return totalReportGenerator.generateReport(ingredientPrices, ingredientsQuantityPerDay);
   }

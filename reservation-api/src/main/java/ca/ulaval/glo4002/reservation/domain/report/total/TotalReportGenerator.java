@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.report.total;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +19,10 @@ public class TotalReportGenerator {
   }
 
   public TotalReport generateReport(List<IngredientPriceDto> ingredientPrices,
-                                    Map<LocalDate, Map<IngredientName, Double>> ingredientsQuantity)
+                                    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantity)
   {
     ingredientPriceCalculator.generatePriceMapper(ingredientPrices);
-    Map<IngredientName, Double> compressedMap = extractIngredientMapFromDateMap(ingredientsQuantity);
+    Map<IngredientName, BigDecimal> compressedMap = extractIngredientMapFromDateMap(ingredientsQuantity);
     TotalReport totalReport = new TotalReport();
 
     compressedMap.forEach((ingredientName, quantity) -> {
@@ -35,13 +36,13 @@ public class TotalReportGenerator {
     return totalReport;
   }
 
-  private Map<IngredientName, Double> extractIngredientMapFromDateMap(Map<LocalDate, Map<IngredientName, Double>> ingredientsQuantity) {
-    Map<IngredientName, Double> compressedMap = new HashMap<>();
-    for (Map<IngredientName, Double> iteratorMap : ingredientsQuantity.values()) {
+  private Map<IngredientName, BigDecimal> extractIngredientMapFromDateMap(Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantity) {
+    Map<IngredientName, BigDecimal> compressedMap = new HashMap<>();
+    for (Map<IngredientName, BigDecimal> iteratorMap : ingredientsQuantity.values()) {
       for (IngredientName ingredientName : iteratorMap.keySet()) {
         if (compressedMap.containsKey(ingredientName)) {
           compressedMap.put(ingredientName,
-                            compressedMap.get(ingredientName) + iteratorMap.get(ingredientName));
+                            compressedMap.get(ingredientName).add(iteratorMap.get(ingredientName)));
         } else {
           compressedMap.put(ingredientName, iteratorMap.get(ingredientName));
         }

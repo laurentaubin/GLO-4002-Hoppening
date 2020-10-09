@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.fullcourse.stock;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class IngredientAvailabilityValidator {
   private boolean doesReservationContainIngredient(Reservation reservation,
                                                    IngredientName ingredientName)
   {
-    Map<IngredientName, Double> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
+    Map<IngredientName, BigDecimal> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
     return ingredientQuantity.containsKey(ingredientName);
   }
 }

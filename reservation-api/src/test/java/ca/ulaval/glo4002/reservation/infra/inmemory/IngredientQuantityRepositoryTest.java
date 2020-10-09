@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.infra.inmemory;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -63,7 +64,7 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenEmptyRepository_whenGetIngredientInformation_thenReturnEmptyMap() {
     // when
-    Map<IngredientName, Double> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
+    Map<IngredientName, BigDecimal> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
 
     // then
     assertThat(ingredientsQuantity).isEmpty();
@@ -72,7 +73,7 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenExistingIngredientInformationAtDate_whenGetIngredientInformation_thenReturnIngredientInformationForDesiredDay() {
     // given
-    Map<IngredientName, Double> expectedIngredientsQuantity = givenIngredientsQuantity();
+    Map<IngredientName, BigDecimal> expectedIngredientsQuantity = givenIngredientsQuantity();
     Reservation reservation = new ReservationBuilder().withAnyTable()
                                                       .withDinnerDate(A_DINNER_DATE)
                                                       .build();
@@ -80,7 +81,7 @@ public class IngredientQuantityRepositoryTest {
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
     // when
-    Map<IngredientName, Double> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
+    Map<IngredientName, BigDecimal> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
 
     // then
     assertThat(ingredientsQuantity).isEqualTo(expectedIngredientsQuantity);
@@ -97,7 +98,7 @@ public class IngredientQuantityRepositoryTest {
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
     // when
-    Map<IngredientName, Double> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
+    Map<IngredientName, BigDecimal> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
 
     // then
     assertThat(ingredientsQuantity).isEqualTo(givenIngredientsQuantityEquivalentToTwoOfTheSameReservation());
@@ -135,7 +136,7 @@ public class IngredientQuantityRepositoryTest {
     ingredientQuantityRepository.updateIngredientsQuantity(anotherReservation);
 
     // when
-    Map<IngredientName, Double> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
+    Map<IngredientName, BigDecimal> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
 
     // then
     assertThat(ingredientsQuantity).isEqualTo(givenIllnessAndVeganIngredientsQuantity());
@@ -148,7 +149,7 @@ public class IngredientQuantityRepositoryTest {
     populateReportRepository(A_DINNER_DATE, ANOTHER_DINNER_DATE);
 
     // when
-    Map<LocalDate, Map<IngredientName, Double>> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
+    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
 
     // then
     assertThat(ingredientsQuantity.get(LocalDate.from(A_DINNER_DATE))).isEqualTo(ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE)));
@@ -159,7 +160,7 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenCarrotsInPersistence_whenCheckingIfContainsCarrots_thenMenuContainsCarrots() {
     // given
-    Map<IngredientName, Double> menuWithCarrots = givenMenuWithCarrots();
+    Map<IngredientName, BigDecimal> menuWithCarrots = givenMenuWithCarrots();
     Reservation reservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(menuWithCarrots);
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
@@ -175,7 +176,7 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenNoCarrotsInPersistence_whenCheckingIfContainsCarrots_thenMenuDoesNotContainCarrots() {
     // given
-    Map<IngredientName, Double> veganMenu = givenVeganCourseIngredientsQuantity();
+    Map<IngredientName, BigDecimal> veganMenu = givenVeganCourseIngredientsQuantity();
     Reservation reservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(veganMenu);
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
@@ -197,52 +198,52 @@ public class IngredientQuantityRepositoryTest {
     ingredientQuantityRepository.updateIngredientsQuantity(anotherReservation);
   }
 
-  private Map<IngredientName, Double> givenVeganCourseIngredientsQuantity() {
-    Map<IngredientName, Double> ingredientDoubleMap = new HashMap<>();
-    ingredientDoubleMap.put(IngredientName.TOMATO, 5.0);
-    ingredientDoubleMap.put(IngredientName.KIWI, 8.0);
-    ingredientDoubleMap.put(IngredientName.WORCESTERSHIRE_SAUCE, 5.0);
-    ingredientDoubleMap.put(IngredientName.KIMCHI, 10.0);
-    return ingredientDoubleMap;
+  private Map<IngredientName, BigDecimal> givenVeganCourseIngredientsQuantity() {
+    Map<IngredientName, BigDecimal> ingredientBigDecimalMap = new HashMap<>();
+    ingredientBigDecimalMap.put(IngredientName.TOMATO, BigDecimal.valueOf(5.0));
+    ingredientBigDecimalMap.put(IngredientName.KIWI, BigDecimal.valueOf(8.0));
+    ingredientBigDecimalMap.put(IngredientName.WORCESTERSHIRE_SAUCE, BigDecimal.valueOf(5.0));
+    ingredientBigDecimalMap.put(IngredientName.KIMCHI, BigDecimal.valueOf(10.0));
+    return ingredientBigDecimalMap;
   }
 
-  private Map<IngredientName, Double> givenIllnessCourseIngredientsQuantity() {
-    Map<IngredientName, Double> ingredientDoubleMap = new HashMap<>();
-    ingredientDoubleMap.put(IngredientName.SCALLOPS, 2.0);
-    ingredientDoubleMap.put(IngredientName.BUTTERNUT_SQUASH, 4.0);
-    ingredientDoubleMap.put(IngredientName.KIWI, 5.0);
-    ingredientDoubleMap.put(IngredientName.PEPPERONI, 2.0);
-    return ingredientDoubleMap;
+  private Map<IngredientName, BigDecimal> givenIllnessCourseIngredientsQuantity() {
+    Map<IngredientName, BigDecimal> ingredientBigDecimalMap = new HashMap<>();
+    ingredientBigDecimalMap.put(IngredientName.SCALLOPS, BigDecimal.valueOf(2.0));
+    ingredientBigDecimalMap.put(IngredientName.BUTTERNUT_SQUASH, BigDecimal.valueOf(4.0));
+    ingredientBigDecimalMap.put(IngredientName.KIWI, BigDecimal.valueOf(5.0));
+    ingredientBigDecimalMap.put(IngredientName.PEPPERONI, BigDecimal.valueOf(2.0));
+    return ingredientBigDecimalMap;
   }
 
-  private Map<IngredientName, Double> givenIllnessAndVeganIngredientsQuantity() {
-    Map<IngredientName, Double> ingredientDoubleMap = new HashMap<>();
-    ingredientDoubleMap.put(IngredientName.SCALLOPS, 2.0);
-    ingredientDoubleMap.put(IngredientName.BUTTERNUT_SQUASH, 4.0);
-    ingredientDoubleMap.put(IngredientName.KIWI, 13.0);
-    ingredientDoubleMap.put(IngredientName.PEPPERONI, 2.0);
-    ingredientDoubleMap.put(IngredientName.TOMATO, 5.0);
-    ingredientDoubleMap.put(IngredientName.WORCESTERSHIRE_SAUCE, 5.0);
-    ingredientDoubleMap.put(IngredientName.KIMCHI, 10.0);
-    return ingredientDoubleMap;
+  private Map<IngredientName, BigDecimal> givenIllnessAndVeganIngredientsQuantity() {
+    Map<IngredientName, BigDecimal> ingredientBigDecimalMap = new HashMap<>();
+    ingredientBigDecimalMap.put(IngredientName.SCALLOPS, BigDecimal.valueOf(2.0));
+    ingredientBigDecimalMap.put(IngredientName.BUTTERNUT_SQUASH, BigDecimal.valueOf(4.0));
+    ingredientBigDecimalMap.put(IngredientName.KIWI, BigDecimal.valueOf(13.0));
+    ingredientBigDecimalMap.put(IngredientName.PEPPERONI, BigDecimal.valueOf(2.0));
+    ingredientBigDecimalMap.put(IngredientName.TOMATO, BigDecimal.valueOf(5.0));
+    ingredientBigDecimalMap.put(IngredientName.WORCESTERSHIRE_SAUCE, BigDecimal.valueOf(5.0));
+    ingredientBigDecimalMap.put(IngredientName.KIMCHI, BigDecimal.valueOf(10.0));
+    return ingredientBigDecimalMap;
   }
 
-  private Map<IngredientName, Double> givenIngredientsQuantity() {
-    Map<IngredientName, Double> ingredientDoubleMap = new HashMap<>();
-    ingredientDoubleMap.put(IngredientName.MARMALADE, 5.0);
-    ingredientDoubleMap.put(IngredientName.PLANTAIN, 8.0);
-    ingredientDoubleMap.put(IngredientName.BACON, 5.0);
-    ingredientDoubleMap.put(IngredientName.TOFU, 10.0);
-    return ingredientDoubleMap;
+  private Map<IngredientName, BigDecimal> givenIngredientsQuantity() {
+    Map<IngredientName, BigDecimal> ingredientBigDecimalMap = new HashMap<>();
+    ingredientBigDecimalMap.put(IngredientName.MARMALADE, BigDecimal.valueOf(5.0));
+    ingredientBigDecimalMap.put(IngredientName.PLANTAIN, BigDecimal.valueOf(8.0));
+    ingredientBigDecimalMap.put(IngredientName.BACON, BigDecimal.valueOf(5.0));
+    ingredientBigDecimalMap.put(IngredientName.TOFU, BigDecimal.valueOf(10.0));
+    return ingredientBigDecimalMap;
   }
 
-  private Map<IngredientName, Double> givenIngredientsQuantityEquivalentToTwoOfTheSameReservation() {
-    Map<IngredientName, Double> ingredientDoubleMap = new HashMap<>();
-    ingredientDoubleMap.put(IngredientName.MARMALADE, 10.0);
-    ingredientDoubleMap.put(IngredientName.PLANTAIN, 16.0);
-    ingredientDoubleMap.put(IngredientName.BACON, 10.0);
-    ingredientDoubleMap.put(IngredientName.TOFU, 20.0);
-    return ingredientDoubleMap;
+  private Map<IngredientName, BigDecimal> givenIngredientsQuantityEquivalentToTwoOfTheSameReservation() {
+    Map<IngredientName, BigDecimal> ingredientBigDecimalMap = new HashMap<>();
+    ingredientBigDecimalMap.put(IngredientName.MARMALADE, BigDecimal.valueOf(10.0));
+    ingredientBigDecimalMap.put(IngredientName.PLANTAIN, BigDecimal.valueOf(16.0));
+    ingredientBigDecimalMap.put(IngredientName.BACON, BigDecimal.valueOf(10.0));
+    ingredientBigDecimalMap.put(IngredientName.TOFU, BigDecimal.valueOf(20.0));
+    return ingredientBigDecimalMap;
   }
 
   private Reservation givenAReservation(RestrictionType restrictionType, LocalDateTime dinnerDate) {
@@ -251,9 +252,9 @@ public class IngredientQuantityRepositoryTest {
     return new ReservationBuilder().withTable(table).withDinnerDate(dinnerDate).build();
   }
 
-  private Map<IngredientName, Double> givenMenuWithCarrots() {
-    Map<IngredientName, Double> ingredientNameDoubleMap = new HashMap<>();
-    ingredientNameDoubleMap.put(IngredientName.CARROTS, 2.0);
-    return ingredientNameDoubleMap;
+  private Map<IngredientName, BigDecimal> givenMenuWithCarrots() {
+    Map<IngredientName, BigDecimal> ingredientNameBigDecimalMap = new HashMap<>();
+    ingredientNameBigDecimalMap.put(IngredientName.CARROTS, BigDecimal.valueOf(2.0));
+    return ingredientNameBigDecimalMap;
   }
 }

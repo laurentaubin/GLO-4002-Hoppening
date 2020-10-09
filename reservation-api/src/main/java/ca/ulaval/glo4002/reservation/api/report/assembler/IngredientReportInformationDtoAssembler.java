@@ -1,7 +1,5 @@
 package ca.ulaval.glo4002.reservation.api.report.assembler;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -16,9 +14,7 @@ public class IngredientReportInformationDtoAssembler {
     for (IngredientReportInformation ingredientReportInformation : ingredientReportInformations) {
       ingredientsReportInformationDtos.add(new IngredientsReportInformationDto(ingredientReportInformation.getIngredientName()
                                                                                                           .toString(),
-                                                                               BigDecimal.valueOf(ingredientReportInformation.getQuantity())
-                                                                                         .setScale(2,
-                                                                                                   RoundingMode.HALF_UP),
+                                                                               ingredientReportInformation.getQuantity(),
                                                                                ingredientReportInformation.getTotalPrice()));
     }
     ingredientsReportInformationDtos.sort(Comparator.comparing(IngredientsReportInformationDto::getIngredientName));

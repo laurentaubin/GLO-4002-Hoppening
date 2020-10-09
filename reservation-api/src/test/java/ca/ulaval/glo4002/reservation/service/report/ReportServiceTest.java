@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.service.report;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class ReportServiceTest {
 
   private static final LocalDate A_DATE = LocalDate.of(2150, 7, 20);
   private static final IngredientName AN_INGREDIENT_NAME = IngredientName.BUTTERNUT_SQUASH;
-  private static final double A_QUANTITY = 5.0;
+  private static final BigDecimal A_QUANTITY = BigDecimal.valueOf(5.0);
 
   @Mock
   private IngredientQuantityRepository ingredientQuantityRepository;
@@ -82,7 +83,7 @@ public class ReportServiceTest {
     List<IngredientPriceDto> ingredientPriceDtos = givenIngredientPriceDtos();
     given(ingredientPriceRepository.getIngredientsPrice()).willReturn(ingredientPriceDtos);
 
-    Map<LocalDate, Map<IngredientName, Double>> ingredientsQuantity = givenIngredientsQuantity();
+    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantity = givenIngredientsQuantity();
     given(ingredientQuantityRepository.getIngredientsQuantity(reportPeriod)).willReturn(ingredientsQuantity);
 
     // when
@@ -97,7 +98,7 @@ public class ReportServiceTest {
     // given
     List<IngredientPriceDto> ingredientPriceDtos = givenIngredientPriceDtos();
     given(ingredientPriceRepository.getIngredientsPrice()).willReturn(ingredientPriceDtos);
-    Map<LocalDate, Map<IngredientName, Double>> ingredientsQuantity = givenIngredientsQuantity();
+    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantity = givenIngredientsQuantity();
     given(ingredientQuantityRepository.getIngredientsQuantity(reportPeriod)).willReturn(ingredientsQuantity);
 
     // when
@@ -111,11 +112,11 @@ public class ReportServiceTest {
     return Collections.singletonList(anIngredientPriceDto);
   }
 
-  private Map<LocalDate, Map<IngredientName, Double>> givenIngredientsQuantity() {
-    Map<IngredientName, Double> ingredientNameToQuantity = new HashMap<>();
+  private Map<LocalDate, Map<IngredientName, BigDecimal>> givenIngredientsQuantity() {
+    Map<IngredientName, BigDecimal> ingredientNameToQuantity = new HashMap<>();
     ingredientNameToQuantity.put(AN_INGREDIENT_NAME, A_QUANTITY);
 
-    Map<LocalDate, Map<IngredientName, Double>> dateToIngredientsQuantity = new HashMap<>();
+    Map<LocalDate, Map<IngredientName, BigDecimal>> dateToIngredientsQuantity = new HashMap<>();
     dateToIngredientsQuantity.put(A_DATE, ingredientNameToQuantity);
     return dateToIngredientsQuantity;
   }

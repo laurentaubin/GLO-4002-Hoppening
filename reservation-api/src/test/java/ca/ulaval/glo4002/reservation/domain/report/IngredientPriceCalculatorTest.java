@@ -1,105 +1,100 @@
 package ca.ulaval.glo4002.reservation.domain.report;
 
-import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
-import ca.ulaval.glo4002.reservation.domain.report.exception.IngredientNotFoundException;
-import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
-
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.report.exception.IngredientNotFoundException;
+import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
+
 @ExtendWith(MockitoExtension.class)
 class IngredientPriceCalculatorTest {
+  private static final BigDecimal EXPECTED_TOTAL_PRICE = BigDecimal.valueOf(3.0);
+  private static final BigDecimal EXPECTED_PRICE_PER_KG = BigDecimal.valueOf(1.0);
+  private static final BigDecimal EXPECTED_INGREDIENT_PRICE = BigDecimal.valueOf(10.0);
+  private static final IngredientName AN_INGREDIENT_NAME = IngredientName.BUTTERNUT_SQUASH;
+  private static final String INVALID_INGREDIENT_NAME_IN_DTO = "sauce";
 
-    private IngredientPriceCalculator ingredientPriceCalculator;
+  private IngredientPriceCalculator ingredientPriceCalculator;
 
-    @Mock
-    private IngredientPriceDto ingredientPriceDto1;
+  @Mock
+  private IngredientPriceDto ingredientPriceDto1;
 
-    @Mock
-    private IngredientPriceDto ingredientPriceDto2;
+  @Mock
+  private IngredientPriceDto ingredientPriceDto2;
 
-    private BigDecimal EXPECTED_TOTAL_PRICE = BigDecimal.valueOf(3.0).setScale(2, RoundingMode.HALF_UP);
+  @BeforeEach
+  public void setUp() {
+    ingredientPriceCalculator = new IngredientPriceCalculator();
+  }
 
-    private BigDecimal EXPECTED_PRICE_PER_KG = BigDecimal.valueOf(1.0).setScale(2, RoundingMode.HALF_UP);
+  @Test
+  public void givenListDtoIngredients_whenGetTotalPrice_thenReturnCorrectValue() {
+    // given
+    List<IngredientPriceDto> dtoList = givenTwoIngredientDtoList();
+    ingredientPriceCalculator.generatePriceMapper(dtoList);
 
-    private BigDecimal EXPECTED_INGREDIENT_PRICE = BigDecimal.valueOf(10.0).setScale(2, RoundingMode.HALF_UP);
+    // when
+    BigDecimal actualTotalPrice = ingredientPriceCalculator.getTotalPrice(IngredientName.PORK_LOIN,
+                                                                          BigDecimal.valueOf(3.0));
 
-    private IngredientName AN_INGREDIENT_NAME = IngredientName.BUTTERNUT_SQUASH;
+    // then
+    assertThat(actualTotalPrice.doubleValue()).isEqualTo(EXPECTED_TOTAL_PRICE.doubleValue());
+  }
 
-    private String INVALID_INGREDIENT_NAME_IN_DTO = "sauce";
+  @Test
+  public void givenListDtoIngredientsWithMissingIngredientName_whenGetTotalPrice_thenShouldThrowIngredientNotFoundException() {
+    // given
+    List<IngredientPriceDto> dtoList = givenTwoIngredientDtoList();
+    ingredientPriceCalculator.generatePriceMapper(dtoList);
 
-    @BeforeEach
-    public void setUp() {
-        ingredientPriceCalculator = new IngredientPriceCalculator();
-    }
+    // when
+    Executable gettingTotalPrice = () -> ingredientPriceCalculator.getTotalPrice(IngredientName.BACON,
+                                                                                 BigDecimal.valueOf(2.0));
 
-    @Test
-    public void givenListDtoIngredients_whenGetTotalPrice_thenReturnCorrectValue() {
-        // given
-        List<IngredientPriceDto> dtoList = givenTwoIngredientDtoList();
-        ingredientPriceCalculator.generatePriceMapper(dtoList);
+    // then
+    assertThrows(IngredientNotFoundException.class, gettingTotalPrice);
+  }
 
-        // when
-        BigDecimal actualTotalPrice = ingredientPriceCalculator.getTotalPrice(IngredientName.PORK_LOIN, 3.0);
+  @Test
+  public void givenInvalidEntryDtoList_whenGenerateArchive_thenShouldIgnoreInvalidEntryAndGenerateMapper() {
+    // given
+    List<IngredientPriceDto> dtoList = givenInvalidDtoList();
 
-        // then
-        assertThat(actualTotalPrice).isEqualTo(EXPECTED_TOTAL_PRICE);
-    }
+    // when
+    ingredientPriceCalculator.generatePriceMapper(dtoList);
 
-    @Test
-    public void givenListDtoIngredientsWithMissingIngredientName_whenGetTotalPrice_thenShouldThrowIngredientNotFoundException() {
-        // given
-        List<IngredientPriceDto> dtoList = givenTwoIngredientDtoList();
-        ingredientPriceCalculator.generatePriceMapper(dtoList);
+    // then
+    assertThat(ingredientPriceCalculator.getTotalPrice(AN_INGREDIENT_NAME,
+                                                       BigDecimal.valueOf(1))).isEqualTo(EXPECTED_INGREDIENT_PRICE);
+  }
 
-        // when
-        Executable gettingTotalPrice = () -> ingredientPriceCalculator.getTotalPrice(IngredientName.BACON, 2.0);
+  private List<IngredientPriceDto> givenTwoIngredientDtoList() {
+    given(ingredientPriceDto1.getName()).willReturn(IngredientName.PORK_LOIN.toString());
+    given(ingredientPriceDto1.getPricePerKg()).willReturn(EXPECTED_PRICE_PER_KG);
+    given(ingredientPriceDto2.getName()).willReturn(AN_INGREDIENT_NAME.toString());
+    given(ingredientPriceDto2.getPricePerKg()).willReturn(BigDecimal.TEN);
 
-        // then
-        assertThrows(IngredientNotFoundException.class, gettingTotalPrice);
-    }
+    return List.of(ingredientPriceDto1, ingredientPriceDto2);
+  }
 
-    @Test
-    public void givenInvalidEntryDtoList_whenGenerateArchive_thenShouldIgnoreInvalidEntryAndGenerateMapper() {
-        // given
-        List<IngredientPriceDto> dtoList = givenInvalidDtoList();
+  private List<IngredientPriceDto> givenInvalidDtoList() {
+    given(ingredientPriceDto1.getName()).willReturn(INVALID_INGREDIENT_NAME_IN_DTO);
+    given(ingredientPriceDto2.getName()).willReturn(AN_INGREDIENT_NAME.toString());
+    given(ingredientPriceDto2.getPricePerKg()).willReturn(BigDecimal.valueOf(10.0));
 
-        // when
-        ingredientPriceCalculator.generatePriceMapper(dtoList);
-
-        // then
-        assertThat(ingredientPriceCalculator.getTotalPrice(AN_INGREDIENT_NAME, 1))
-                                            .isEqualTo(EXPECTED_INGREDIENT_PRICE);
-    }
-
-    private List<IngredientPriceDto> givenTwoIngredientDtoList() {
-        given(ingredientPriceDto1.getName()).willReturn(IngredientName.PORK_LOIN.toString());
-        given(ingredientPriceDto1.getPricePerKg()).willReturn(EXPECTED_PRICE_PER_KG);
-        given(ingredientPriceDto2.getName()).willReturn(AN_INGREDIENT_NAME.toString());
-        given(ingredientPriceDto2.getPricePerKg()).willReturn(EXPECTED_INGREDIENT_PRICE);
-
-        return List.of(ingredientPriceDto1, ingredientPriceDto2);
-    }
-
-    private List<IngredientPriceDto> givenInvalidDtoList() {
-        given(ingredientPriceDto1.getName()).willReturn(INVALID_INGREDIENT_NAME_IN_DTO);
-        given(ingredientPriceDto2.getName()).willReturn(AN_INGREDIENT_NAME.toString());
-        given(ingredientPriceDto2.getPricePerKg()).willReturn(EXPECTED_INGREDIENT_PRICE);
-
-        return List.of(ingredientPriceDto1, ingredientPriceDto2);
-    }
-
+    return List.of(ingredientPriceDto1, ingredientPriceDto2);
+  }
 
 }

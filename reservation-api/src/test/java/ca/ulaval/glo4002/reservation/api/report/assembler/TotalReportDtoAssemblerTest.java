@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -25,12 +24,11 @@ import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportDay;
 @ExtendWith(MockitoExtension.class)
 class TotalReportDtoAssemblerTest {
   private TotalReportDtoAssembler totalReportDtoAssembler;
-  private static final BigDecimal REAL_TOTAL_PRICE = BigDecimal.valueOf(23).setScale(2,
-                                                                                 RoundingMode.CEILING);
+  private static final BigDecimal REAL_TOTAL_PRICE = BigDecimal.valueOf(23.0);
   private static final IngredientName BUTTERNUT_SQUASH_NAME = IngredientName.BUTTERNUT_SQUASH;
   private static final IngredientName CHOCOLATE_NAME = IngredientName.CHOCOLATE;
-  private static final double A_QUANTITY = 2.0;
-  private static final double ANOTHER_QUANTITY = 3.0;
+  private static final BigDecimal A_QUANTITY = BigDecimal.valueOf(2.0);
+  private static final BigDecimal ANOTHER_QUANTITY = BigDecimal.valueOf(3.0);
   private static final BigDecimal A_TOTAL_PRICE = BigDecimal.TEN;
   private static final BigDecimal ANOTHER_TOTAL_PRICE = BigDecimal.ONE;
 
@@ -67,7 +65,8 @@ class TotalReportDtoAssemblerTest {
     TotalReportDto totalreportDto = totalReportDtoAssembler.assemble(aReport);
 
     // then
-    assertThat(totalreportDto.getTotalPrice()).isEqualTo(REAL_TOTAL_PRICE);
+    assertThat(totalreportDto.getTotalPrice()
+                             .doubleValue()).isEqualTo(REAL_TOTAL_PRICE.doubleValue());
     assertThat(totalreportDto.getIngredients()).isEqualTo(list);
   }
 
