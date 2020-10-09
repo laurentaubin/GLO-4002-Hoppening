@@ -2,13 +2,15 @@ package ca.ulaval.glo4002.reservation.api.report.dto;
 
 import java.math.BigDecimal;
 
-public class IngredientsReportInformationDto {
-  private String ingredientName;
-  private BigDecimal quantity;
-  private BigDecimal totalPrice;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-  public IngredientsReportInformationDto() {
-  }
+@JsonPropertyOrder({ "name", "quantity", "totalPrice" })
+public class IngredientsReportInformationDto {
+  @JsonProperty("name")
+  private final String ingredientName;
+  private final BigDecimal quantity;
+  private final BigDecimal totalPrice;
 
   public IngredientsReportInformationDto(String ingredientName,
                                          BigDecimal quantity,
@@ -23,16 +25,8 @@ public class IngredientsReportInformationDto {
     return ingredientName;
   }
 
-  public void setIngredientName(String ingredientName) {
-    this.ingredientName = ingredientName;
-  }
-
   public BigDecimal getQuantity() {
     return quantity;
-  }
-
-  public void setQuantity(BigDecimal quantity) {
-    this.quantity = quantity;
   }
 
   public BigDecimal getTotalPrice() {
