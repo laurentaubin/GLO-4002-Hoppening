@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({ "name", "quantity", "totalPrice" })
+@JsonPropertyOrder({ "name", "totalPrice", "quantity" })
 public class IngredientsReportInformationDto {
   @JsonProperty("name")
   private final String ingredientName;
