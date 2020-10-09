@@ -7,25 +7,26 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
 
-public class InMemoryReservationRepository implements ReservationRepository {
-  private final InMemoryReservationDao inMemoryReservationDao;
+public class ReservationRepository
 
-  public InMemoryReservationRepository(InMemoryReservationDao inMemoryReservationDao) {
-    this.inMemoryReservationDao = inMemoryReservationDao;
+{
+  private final ReservationDao reservationDao;
+
+  public ReservationRepository(ReservationDao reservationDao) {
+    this.reservationDao = reservationDao;
   }
 
   public ReservationId createReservation(Reservation reservation) {
-    return inMemoryReservationDao.createReservation(reservation);
+    return reservationDao.createReservation(reservation);
   }
 
   public Reservation getReservationById(ReservationId reservationId) {
-    return inMemoryReservationDao.getReservationById(reservationId);
+    return reservationDao.getReservationById(reservationId);
   }
 
   public int getTotalNumberOfCustomersForADay(LocalDateTime date) {
-    List<Reservation> reservations = inMemoryReservationDao.getReservations();
+    List<Reservation> reservations = reservationDao.getReservations();
     return getTotalNumberOfCustomersOfAllReservationsAtDinnerDate(date, reservations);
   }
 
@@ -45,7 +46,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
   }
 
   public List<Reservation> getReservationsByDate(LocalDateTime date) {
-    List<Reservation> reservations = inMemoryReservationDao.getReservations();
+    List<Reservation> reservations = reservationDao.getReservations();
     List<Reservation> reservationsByDate = new ArrayList<>();
 
     for (Reservation reservation : reservations) {

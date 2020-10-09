@@ -7,7 +7,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 
-public class InMemoryReservationDao {
+public class ReservationDao {
 
   private final List<Reservation> reservations = new ArrayList<>();
 

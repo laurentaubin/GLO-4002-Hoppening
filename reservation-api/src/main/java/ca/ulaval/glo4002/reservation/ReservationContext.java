@@ -10,19 +10,15 @@ import ca.ulaval.glo4002.reservation.api.report.ReportResource;
 import ca.ulaval.glo4002.reservation.api.report.assembler.*;
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
-
-
-import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceCalculator;
-import ca.ulaval.glo4002.reservation.domain.report.total.TotalReportGenerator;
-import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceCalculator;
+import ca.ulaval.glo4002.reservation.domain.report.total.TotalReportGenerator;
+import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
-import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
-
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.*;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.BaseTableValidator;
@@ -33,7 +29,6 @@ import ca.ulaval.glo4002.reservation.infra.report.IngredientHttpClient;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceRepository;
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.*;
 
@@ -71,7 +66,7 @@ public class ReservationContext {
   private ReservationService createReservationService(IngredientQuantityRepository ingredientQuantityRepository,
                                                       ReservationIngredientCalculator reservationIngredientCalculator)
   {
-    ReservationRepository reservationRepository = new InMemoryReservationRepository(new InMemoryReservationDao());
+    ReservationRepository reservationRepository = new ReservationRepository(new ReservationDao());
 
     TableValidator tableValidator = new CovidValidatorDecorator(new BaseTableValidator(),
                                                                 MAX_NUMBER_OF_CUSTOMERS_PER_TABLE,

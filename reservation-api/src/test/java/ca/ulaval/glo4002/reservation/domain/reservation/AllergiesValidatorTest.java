@@ -20,7 +20,7 @@ import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationRepository;
+import ca.ulaval.glo4002.reservation.infra.inmemory.ReservationRepository;
 
 @ExtendWith(MockitoExtension.class)
 class AllergiesValidatorTest {

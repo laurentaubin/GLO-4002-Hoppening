@@ -21,7 +21,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 @ExtendWith(MockitoExtension.class)
-public class InMemoryReservationRepositoryTest {
+public class ReservationRepositoryTest {
   private static final LocalDateTime A_DATE = LocalDateTime.of(2020, 7, 20, 23, 23);
   private static final LocalDateTime ANOTHER_DATE = LocalDateTime.of(2050, 1, 14, 1, 4);
   private static final int FOUR_CUSTOMERS = 4;
@@ -32,16 +32,16 @@ public class InMemoryReservationRepositoryTest {
   private Reservation reservation;
 
   @Mock
-  private InMemoryReservationDao reservationDao;
+  private ReservationDao reservationDao;
 
   @Mock
   private ReservationId reservationId;
 
-  private InMemoryReservationRepository reservationRepository;
+  private ReservationRepository reservationRepository;
 
   @BeforeEach
   public void setUp() {
-    reservationRepository = new InMemoryReservationRepository(reservationDao);
+    reservationRepository = new ReservationRepository(reservationDao);
     reservation = new ReservationBuilder().withId(reservationId).withAnyTable().build();
   }
 

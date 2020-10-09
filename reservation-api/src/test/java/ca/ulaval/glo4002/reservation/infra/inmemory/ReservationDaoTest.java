@@ -16,7 +16,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 
 @ExtendWith(MockitoExtension.class)
-public class InMemoryReservationDaoTest {
+public class ReservationDaoTest {
   private static final long RESERVATION_ID = 4321;
 
   @Mock
@@ -25,17 +25,17 @@ public class InMemoryReservationDaoTest {
   @Mock
   private ReservationId anotherReservationId;
 
-  private InMemoryReservationDao inMemoryReservationDao;
+  private ReservationDao reservationDao;
 
   @BeforeEach
   public void setUp() {
-    inMemoryReservationDao = new InMemoryReservationDao();
+    reservationDao = new ReservationDao();
   }
 
   @Test
   public void whenCreatingNewReservationDao_thenPersistenceIsEmpty() {
     // when
-    InMemoryReservationDao newlyCreatedReservationDao = new InMemoryReservationDao();
+    ReservationDao newlyCreatedReservationDao = new ReservationDao();
 
     // then
     assertThat(newlyCreatedReservationDao.getReservations()).isEmpty();
@@ -47,11 +47,11 @@ public class InMemoryReservationDaoTest {
     Reservation aReservation = givenAReservation(aReservationId);
 
     // when
-    inMemoryReservationDao.createReservation(aReservation);
+    reservationDao.createReservation(aReservation);
 
     // then
-    assertThat(inMemoryReservationDao.getReservations()).hasSize(1);
-    assertThat(inMemoryReservationDao.getReservations()).contains(aReservation);
+    assertThat(reservationDao.getReservations()).hasSize(1);
+    assertThat(reservationDao.getReservations()).contains(aReservation);
   }
 
   @Test
@@ -60,7 +60,7 @@ public class InMemoryReservationDaoTest {
     Reservation aReservation = givenAReservation(aReservationId);
 
     // when
-    ReservationId expectedId = inMemoryReservationDao.createReservation(aReservation);
+    ReservationId expectedId = reservationDao.createReservation(aReservation);
 
     // then
     assertThat(expectedId).isEqualTo(aReservationId);
@@ -72,10 +72,10 @@ public class InMemoryReservationDaoTest {
     ReservationId reservationId = new ReservationId(RESERVATION_ID);
     ReservationId queryReservationId = new ReservationId(RESERVATION_ID);
     Reservation expectedReservation = givenAReservation(reservationId);
-    inMemoryReservationDao.createReservation(expectedReservation);
+    reservationDao.createReservation(expectedReservation);
 
     // when
-    Reservation actualReservation = inMemoryReservationDao.getReservationById(queryReservationId);
+    Reservation actualReservation = reservationDao.getReservationById(queryReservationId);
 
     // then
     assertThat(actualReservation).isEqualTo(expectedReservation);
@@ -85,10 +85,10 @@ public class InMemoryReservationDaoTest {
   public void givenInvalidIdWithExistingReservation_whenGettingReservationFromId_thenThrowNonExistingReservationException() {
     // given
     Reservation expectedReservation = givenAReservation(aReservationId);
-    inMemoryReservationDao.createReservation(expectedReservation);
+    reservationDao.createReservation(expectedReservation);
 
     // when
-    Executable gettingReservation = () -> inMemoryReservationDao.getReservationById(anotherReservationId);
+    Executable gettingReservation = () -> reservationDao.getReservationById(anotherReservationId);
 
     // then
     assertThrows(NonExistingReservationException.class, gettingReservation);
