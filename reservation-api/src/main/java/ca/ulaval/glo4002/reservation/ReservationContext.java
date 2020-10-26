@@ -20,6 +20,7 @@ import ca.ulaval.glo4002.reservation.domain.report.total.TotalReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.*;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.BaseTableValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.CovidValidatorDecorator;
@@ -66,7 +67,7 @@ public class ReservationContext {
   private ReservationService createReservationService(IngredientQuantityRepository ingredientQuantityRepository,
                                                       ReservationIngredientCalculator reservationIngredientCalculator)
   {
-    ReservationRepository reservationRepository = new ReservationRepository(new ReservationDao());
+    ReservationRepository reservationRepository = new InMemoryReservationRepository();
 
     TableValidator tableValidator = new CovidValidatorDecorator(new BaseTableValidator(),
                                                                 MAX_NUMBER_OF_CUSTOMERS_PER_TABLE,

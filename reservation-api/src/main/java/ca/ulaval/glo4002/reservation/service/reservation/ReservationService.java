@@ -7,10 +7,10 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabil
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.ReservationValidator;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
-import ca.ulaval.glo4002.reservation.infra.inmemory.ReservationRepository;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
 
@@ -48,7 +48,7 @@ public class ReservationService {
     }
 
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
-    return reservationRepository.createReservation(reservation);
+    return reservationRepository.saveReservation(reservation);
   }
 
   public ReservationDto getReservationDtoById(ReservationId reservationId) {

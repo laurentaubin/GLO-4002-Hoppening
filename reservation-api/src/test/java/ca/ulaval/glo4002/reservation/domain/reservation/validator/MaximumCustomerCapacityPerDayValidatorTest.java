@@ -16,7 +16,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.builder.CreateReservationRe
 import ca.ulaval.glo4002.reservation.api.reservation.builder.TableDtoBuilder;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.infra.inmemory.ReservationRepository;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
 @ExtendWith(MockitoExtension.class)

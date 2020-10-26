@@ -23,10 +23,10 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabil
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.ReservationValidator;
 import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
-import ca.ulaval.glo4002.reservation.infra.inmemory.ReservationRepository;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.ReservationAssembler;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
@@ -147,7 +147,7 @@ public class ReservationServiceTest {
 
     // then
     verify(ingredientQuantityRepository).updateIngredientsQuantity(aReservation);
-    verify(reservationRepository).createReservation(aReservation);
+    verify(reservationRepository).saveReservation(aReservation);
   }
 
   @Test
@@ -163,7 +163,7 @@ public class ReservationServiceTest {
     // then
     assertThrows(ForbiddenReservationException.class, creatingReservation);
     verify(ingredientQuantityRepository, never()).updateIngredientsQuantity(aReservation);
-    verify(reservationRepository, never()).createReservation(aReservation);
+    verify(reservationRepository, never()).saveReservation(aReservation);
   }
 
   private void setUpReservationServiceMocksForIdTests(Reservation reservation,
@@ -172,6 +172,6 @@ public class ReservationServiceTest {
     given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto)).willReturn(reservation);
     given(allergiesValidator.isReservationAllergicFriendly(reservation)).willReturn(true);
 
-    given(reservationRepository.createReservation(reservation)).willReturn(reservationId);
+    given(reservationRepository.saveReservation(reservation)).willReturn(reservationId);
   }
 }

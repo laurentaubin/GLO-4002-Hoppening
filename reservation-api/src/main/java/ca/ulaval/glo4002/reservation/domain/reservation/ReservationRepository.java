@@ -8,7 +8,7 @@ public interface ReservationRepository {
 
   Reservation getReservationById(ReservationId reservationId);
 
-  List<Reservation> getReservationsByDate(LocalDateTime date);
+  int getTotalNumberOfCustomersForADay(LocalDateTime date);
 
-  List<Reservation> getAllReservations();
+  List<Reservation> getReservationsByDate(LocalDateTime date);
 }

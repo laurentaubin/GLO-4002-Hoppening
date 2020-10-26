@@ -7,27 +7,40 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
+import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
 
-public class ReservationRepository
+public class InMemoryReservationRepository implements ReservationRepository {
+  private final List<Reservation> reservations = new ArrayList<>();
 
-{
-  private final ReservationDao reservationDao;
-
-  public ReservationRepository(ReservationDao reservationDao) {
-    this.reservationDao = reservationDao;
-  }
-
-  public ReservationId createReservation(Reservation reservation) {
-    return reservationDao.createReservation(reservation);
+  public ReservationId saveReservation(Reservation reservation) {
+    reservations.add(reservation);
+    return reservation.getReservationId();
   }
 
   public Reservation getReservationById(ReservationId reservationId) {
-    return reservationDao.getReservationById(reservationId);
+    for (Reservation reservation : reservations) {
+      if (reservationId.equals(reservation.getReservationId())) {
+        return reservation;
+      }
+    }
+    throw new NonExistingReservationException();
   }
 
   public int getTotalNumberOfCustomersForADay(LocalDateTime date) {
-    List<Reservation> reservations = reservationDao.getReservations();
     return getTotalNumberOfCustomersOfAllReservationsAtDinnerDate(date, reservations);
+  }
+
+  public List<Reservation> getReservationsByDate(LocalDateTime date) {
+    List<Reservation> reservationsByDate = new ArrayList<>();
+
+    for (Reservation reservation : reservations) {
+      if (reservation.getDinnerDate().toLocalDate().isEqual(date.toLocalDate())) {
+        reservationsByDate.add(reservation);
+      }
+    }
+
+    return reservationsByDate;
   }
 
   private boolean isTheSameDate(LocalDateTime date, LocalDateTime dinnerDate) {
@@ -43,18 +56,5 @@ public class ReservationRepository
         numberOfCustomers += reservation.getNumberOfCustomers();
     }
     return numberOfCustomers;
-  }
-
-  public List<Reservation> getReservationsByDate(LocalDateTime date) {
-    List<Reservation> reservations = reservationDao.getReservations();
-    List<Reservation> reservationsByDate = new ArrayList<>();
-
-    for (Reservation reservation : reservations) {
-      if (reservation.getDinnerDate().toLocalDate().isEqual(date.toLocalDate())) {
-        reservationsByDate.add(reservation);
-      }
-    }
-
-    return reservationsByDate;
   }
 }

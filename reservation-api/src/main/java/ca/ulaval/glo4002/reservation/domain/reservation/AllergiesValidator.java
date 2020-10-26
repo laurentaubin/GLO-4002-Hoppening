@@ -7,7 +7,6 @@ import java.util.Map;
 
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
-import ca.ulaval.glo4002.reservation.infra.inmemory.ReservationRepository;
 
 public class AllergiesValidator {
   private final IngredientQuantityRepository ingredientQuantityRepository;
