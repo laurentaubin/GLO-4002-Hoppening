@@ -12,6 +12,7 @@ import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.MenuRepository;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
@@ -157,7 +158,7 @@ public class ReservationContext {
 
   private ReservationIngredientCalculator createReservationIngredientCalculator() {
     FullCourseFactory fullCourseFactory = new FullCourseFactory(new CourseRecipeFactory());
-    MenuRepository menuRepository = new MenuRepository(fullCourseFactory);
+    MenuRepository menuRepository = new InMemoryMenuRepository(fullCourseFactory);
     return new ReservationIngredientCalculator(menuRepository);
   }
 

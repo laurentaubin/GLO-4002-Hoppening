@@ -17,7 +17,7 @@ import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
-import ca.ulaval.glo4002.reservation.infra.inmemory.MenuRepository;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.MenuRepository;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationIngredientCalculatorTest {
@@ -39,7 +39,7 @@ class ReservationIngredientCalculatorTest {
     Table table = new TableBuilder().withCustomer(customer).build();
     Reservation reservation = new ReservationBuilder().withTable(table).build();
     Map<IngredientName, BigDecimal> veganMenu = givenVeganCourseIngredientsQuantity();
-    given(menuRepository.getIngredientsQuantity(RestrictionType.VEGAN)).willReturn(veganMenu);
+    given(menuRepository.getIngredientsQuantityByRestrictionType(RestrictionType.VEGAN)).willReturn(veganMenu);
 
     // when
     Map<IngredientName, BigDecimal> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
