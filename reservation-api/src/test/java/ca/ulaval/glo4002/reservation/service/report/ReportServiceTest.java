@@ -17,12 +17,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceRepository;
+import ca.ulaval.glo4002.reservation.domain.report.ReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
-import ca.ulaval.glo4002.reservation.domain.report.total.TotalReportGenerator;
-import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportGenerator;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
-import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceTest {
@@ -44,10 +43,7 @@ public class ReportServiceTest {
   private IngredientPriceDto anIngredientPriceDto;
 
   @Mock
-  private UnitReportGenerator unitReportGenerator;
-
-  @Mock
-  private TotalReportGenerator totalReportGenerator;
+  private ReportGenerator reportGenerator;
 
   private ReportService reportService;
 
@@ -55,30 +51,29 @@ public class ReportServiceTest {
   public void setUp() {
     reportService = new ReportService(ingredientQuantityRepository,
                                       ingredientPriceRepository,
-                                      unitReportGenerator,
-                                      totalReportGenerator);
+                                      reportGenerator);
   }
 
   @Test
-  public void whenGetReport_thenIngredientsPriceAreRetrieved() {
+  public void whenGetReportResponse_thenIngredientsPriceAreRetrieved() {
     // when
-    reportService.getUnitReport(reportPeriod);
+    reportService.getReportResponse(reportPeriod);
 
     // then
     verify(ingredientPriceRepository).getIngredientsPrice();
   }
 
   @Test
-  public void whenGetReport_ThenIngredientsQuantityAreRetrieved() {
+  public void whenGetReportResponse_ThenIngredientsQuantityAreRetrieved() {
     // when
-    reportService.getUnitReport(reportPeriod);
+    reportService.getReportResponse(reportPeriod);
 
     // then
     verify(ingredientQuantityRepository).getIngredientsQuantity(reportPeriod);
   }
 
   @Test
-  public void givenIngredientPriceDtosAndIngredientsQuantity_whenGetReport_thenReportIsGenerated() {
+  public void givenIngredientPriceDtosAndIngredientsQuantity_whenGetReportResponse_thenReportIsGenerated() {
     // given
     List<IngredientPriceDto> ingredientPriceDtos = givenIngredientPriceDtos();
     given(ingredientPriceRepository.getIngredientsPrice()).willReturn(ingredientPriceDtos);
@@ -87,25 +82,10 @@ public class ReportServiceTest {
     given(ingredientQuantityRepository.getIngredientsQuantity(reportPeriod)).willReturn(ingredientsQuantity);
 
     // when
-    reportService.getUnitReport(reportPeriod);
+    reportService.getReportResponse(reportPeriod);
 
     // then
-    verify(unitReportGenerator).generateReport(ingredientPriceDtos, ingredientsQuantity);
-  }
-
-  @Test
-  public void whenGetTotalReport_thenTotalReportIsReturned() {
-    // given
-    List<IngredientPriceDto> ingredientPriceDtos = givenIngredientPriceDtos();
-    given(ingredientPriceRepository.getIngredientsPrice()).willReturn(ingredientPriceDtos);
-    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantity = givenIngredientsQuantity();
-    given(ingredientQuantityRepository.getIngredientsQuantity(reportPeriod)).willReturn(ingredientsQuantity);
-
-    // when
-    reportService.getTotalReport(reportPeriod);
-
-    // then
-    verify(totalReportGenerator).generateReport(ingredientPriceDtos, ingredientsQuantity);
+    verify(reportGenerator).generateReport(ingredientPriceDtos, ingredientsQuantity);
   }
 
   private List<IngredientPriceDto> givenIngredientPriceDtos() {

@@ -41,9 +41,8 @@ public class IngredientReportInformation {
     }
     IngredientReportInformation ingredientReportInformation = (IngredientReportInformation) o;
     return Objects.equals(ingredientName, ingredientReportInformation.ingredientName)
-           && Objects.equals(quantity, ingredientReportInformation.quantity)
-           && Objects.equals(totalPrice.doubleValue(),
-                             ingredientReportInformation.totalPrice.doubleValue());
+           && quantity.compareTo(ingredientReportInformation.quantity) == 0
+           && totalPrice.compareTo(ingredientReportInformation.totalPrice) == 0;
   }
 
   @Override

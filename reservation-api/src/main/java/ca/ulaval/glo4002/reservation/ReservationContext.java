@@ -6,8 +6,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import ca.ulaval.glo4002.reservation.api.report.ReportPresenterFactory;
 import ca.ulaval.glo4002.reservation.api.report.ReportResource;
 import ca.ulaval.glo4002.reservation.api.report.assembler.*;
+import ca.ulaval.glo4002.reservation.api.report.presenter.total.TotalReportDtoFactory;
+import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitReportDayDtoFactory;
+import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitReportDtoFactory;
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
@@ -16,19 +20,15 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.MenuRepository;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceCalculator;
-import ca.ulaval.glo4002.reservation.domain.report.total.TotalReportGenerator;
-import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReportGenerator;
+import ca.ulaval.glo4002.reservation.domain.report.*;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.*;
-import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.BaseTableValidator;
-import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.CovidValidatorDecorator;
+import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.CovidTableValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.TableValidator;
 import ca.ulaval.glo4002.reservation.infra.inmemory.*;
-import ca.ulaval.glo4002.reservation.infra.report.IngredientHttpClient;
-import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceRepository;
+import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceHttpRepository;
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
 import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
@@ -70,9 +70,8 @@ public class ReservationContext {
   {
     ReservationRepository reservationRepository = new InMemoryReservationRepository();
 
-    TableValidator tableValidator = new CovidValidatorDecorator(new BaseTableValidator(),
-                                                                MAX_NUMBER_OF_CUSTOMERS_PER_TABLE,
-                                                                MAX_NUMBER_OF_CUSTOMERS_PER_RESERVATION);
+    TableValidator tableValidator = new CovidTableValidator(MAX_NUMBER_OF_CUSTOMERS_PER_TABLE,
+                                                            MAX_NUMBER_OF_CUSTOMERS_PER_RESERVATION);
     DinnerDateValidator dinnerDateValidator = new DinnerDateValidator(DATE_FORMAT,
                                                                       OPENING_DINNER_DATE,
                                                                       CLOSING_DINNER_DATE);
@@ -108,13 +107,16 @@ public class ReservationContext {
   }
 
   private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository) {
-    IngredientPriceRepository ingredientPriceRepository = new IngredientPriceRepository(new IngredientHttpClient());
-    UnitReportGenerator unitReportGenerator = new UnitReportGenerator();
-    TotalReportGenerator totalReportGenerator = new TotalReportGenerator(new IngredientPriceCalculator());
+    IngredientPriceRepository ingredientPriceRepository = new IngredientPriceHttpRepository();
+    IngredientPriceCalculatorFactory ingredientPriceCalculatorFactory = new IngredientPriceCalculatorFactory();
+    IngredientReportInformationFactory ingredientReportInformationFactory = new IngredientReportInformationFactory();
+    DailyIngredientReportInformationFactory dailyIngredientReportInformationFactory = new DailyIngredientReportInformationFactory(ingredientReportInformationFactory);
+    ReportFactory reportFactory = new ReportFactory(dailyIngredientReportInformationFactory);
+    ReportGenerator reportGenerator = new ReportGenerator(ingredientPriceCalculatorFactory,
+                                                          reportFactory);
     return new ReportService(ingredientQuantityRepository,
                              ingredientPriceRepository,
-                             unitReportGenerator,
-                             totalReportGenerator);
+                             reportGenerator);
   }
 
   private Object[] createResources(ReservationService reservationService,
@@ -137,20 +139,19 @@ public class ReservationContext {
   private ReportResource createReportResource(ReportService reportService) {
     ReportDateValidator reportDateValidator = new ReportDateValidator(REPORT_DATE_REGEX);
     ReportPeriodAssembler reportPeriodAssembler = new ReportPeriodAssembler();
-    UnitReportDtoAssembler unitReportDtoAssembler = createUnitReportDtoAssembler();
-    TotalReportDtoAssembler totalReportDtoAssembler = createTotalReportDtoAssembler();
+
+    UnitReportDayDtoFactory unitReportDayDtoFactory = new UnitReportDayDtoFactory();
+    UnitReportDtoFactory unitReportDtoFactory = new UnitReportDtoFactory(unitReportDayDtoFactory);
+    TotalReportDtoFactory totalReportDtoFactory = new TotalReportDtoFactory();
+    ReportPresenterFactory reportPresenterFactory = new ReportPresenterFactory(unitReportDtoFactory,
+                                                                               totalReportDtoFactory);
 
     return new ReportResource(reportService,
                               reportDateValidator,
                               reportPeriodAssembler,
-                              unitReportDtoAssembler,
-                              totalReportDtoAssembler);
+                              reportPresenterFactory);
   }
 
-  private TotalReportDtoAssembler createTotalReportDtoAssembler() {
-    IngredientReportInformationDtoAssembler ingredientReportInformationDtoAssembler = new IngredientReportInformationDtoAssembler();
-    return new TotalReportDtoAssembler(ingredientReportInformationDtoAssembler);
-  }
 
   private ReservationServer createServer(Object[] resources) {
     return new ReservationServer(PORT, resources);
@@ -160,12 +161,6 @@ public class ReservationContext {
     FullCourseFactory fullCourseFactory = new FullCourseFactory(new CourseRecipeFactory());
     MenuRepository menuRepository = new InMemoryMenuRepository(fullCourseFactory);
     return new ReservationIngredientCalculator(menuRepository);
-  }
-
-  private UnitReportDtoAssembler createUnitReportDtoAssembler() {
-    IngredientReportInformationDtoAssembler ingredientReportInformationDtoAssembler = new IngredientReportInformationDtoAssembler();
-    UnitReportDayDtoAssembler unitReportDayDtoAssembler = new UnitReportDayDtoAssembler(ingredientReportInformationDtoAssembler);
-    return new UnitReportDtoAssembler(unitReportDayDtoAssembler);
   }
 
   private IngredientAvailabilityValidator createIngredientAvailabilityValidator(ReservationIngredientCalculator reservationIngredientCalculator) {

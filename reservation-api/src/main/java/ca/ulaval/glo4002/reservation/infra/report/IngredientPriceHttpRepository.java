@@ -18,7 +18,7 @@ public class IngredientPriceHttpRepository implements IngredientPriceRepository 
   private static final String INGREDIENTS_URL = "http://localhost:8080/ingredients";
   private static final URI INGREDIENTS_URI = URI.create(INGREDIENTS_URL);
 
-  private final ObjectMapper mapper;
+  private ObjectMapper mapper;
 
   public IngredientPriceHttpRepository() {
     mapper = new ObjectMapper();

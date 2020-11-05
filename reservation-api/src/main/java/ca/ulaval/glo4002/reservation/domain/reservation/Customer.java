@@ -4,14 +4,13 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 public class Customer {
-
-  public static final BigDecimal BASIC_CUSTOMER_FEES = BigDecimal.valueOf(1000);
+  private static final BigDecimal BASIC_CUSTOMER_FEES = BigDecimal.valueOf(1000);
   private final String name;
-  private final CustomerRestriction restriction;
+  private final Set<RestrictionType> restrictions;
 
   public Customer(String name, Set<RestrictionType> restrictions) {
     this.name = name;
-    restriction = new CustomerRestriction(restrictions);
+    this.restrictions = restrictions;
   }
 
   public String getName() {
@@ -19,10 +18,18 @@ public class Customer {
   }
 
   public Set<RestrictionType> getRestrictions() {
-    return restriction.getRestrictions();
+    return restrictions;
   }
 
   public BigDecimal getCustomerFees() {
-    return BASIC_CUSTOMER_FEES.add(restriction.getAdditionalFees());
+    return BASIC_CUSTOMER_FEES.add(getAdditionalFees());
+  }
+
+  private BigDecimal getAdditionalFees() {
+    BigDecimal additionalFees = BigDecimal.ZERO;
+    for (RestrictionType restrictionType : restrictions) {
+      additionalFees = additionalFees.add(restrictionType.getFees());
+    }
+    return additionalFees;
   }
 }

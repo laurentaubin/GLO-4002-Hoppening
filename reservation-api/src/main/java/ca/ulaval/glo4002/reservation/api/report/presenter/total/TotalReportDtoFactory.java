@@ -7,19 +7,18 @@ import java.util.stream.Collectors;
 
 import ca.ulaval.glo4002.reservation.api.report.dto.TotalReportDto;
 import ca.ulaval.glo4002.reservation.api.report.presenter.IngredientReportInformationDto;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientReport;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportInformation;
+import ca.ulaval.glo4002.reservation.domain.report.Report;
 
 public class TotalReportDtoFactory {
-  public TotalReportDto create(IngredientReport ingredientReport) {
-    List<IngredientReportInformationDto> ingredientsInfo = extractIngredientReportInformationDto(ingredientReport);
-    return new TotalReportDto(ingredientsInfo,
-                              ingredientReport.calculateTotalPriceForEntireReport());
+  public TotalReportDto create(Report report) {
+    List<IngredientReportInformationDto> ingredientsInfo = extractIngredientReportInformationDto(report);
+    return new TotalReportDto(ingredientsInfo, report.calculateTotalPriceForEntireReport());
   }
 
-  private List<IngredientReportInformationDto> extractIngredientReportInformationDto(IngredientReport ingredientReport) {
-    List<IngredientReportInformation> ingredientsReportInformation = new ArrayList<>(ingredientReport.generateTotalIngredientReportInformation()
-                                                                                                     .values());
+  private List<IngredientReportInformationDto> extractIngredientReportInformationDto(Report report) {
+    List<IngredientReportInformation> ingredientsReportInformation = new ArrayList<>(report.generateTotalIngredientReportInformation()
+                                                                                           .values());
     return ingredientsReportInformation.stream()
                                        .map(this::assembleIngredientReportInformationDto)
                                        .sorted(Comparator.comparing(IngredientReportInformationDto::getIngredientName))

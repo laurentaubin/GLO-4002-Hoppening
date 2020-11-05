@@ -4,6 +4,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+import ca.ulaval.glo4002.reservation.domain.report.Report;
+import ca.ulaval.glo4002.reservation.domain.report.ReportPresenter;
+import ca.ulaval.glo4002.reservation.domain.report.ReportType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,12 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.report.assembler.ReportPeriodAssembler;
-import ca.ulaval.glo4002.reservation.api.report.assembler.TotalReportDtoAssembler;
-import ca.ulaval.glo4002.reservation.api.report.assembler.UnitReportDtoAssembler;
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
-import ca.ulaval.glo4002.reservation.domain.report.total.TotalReport;
-import ca.ulaval.glo4002.reservation.domain.report.unit.UnitReport;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,7 +23,9 @@ public class ReportResourceTest {
   public static final String START_DATE = "2150-07-23";
   public static final String END_DATE = "2150-07-27";
   public static final String REPORT_TYPE_STRING = "unit";
+  public static final ReportType REPORT_TYPE = ReportType.UNIT;
   public static final String TOTAL_REPORT_TYPE_STRING = "total";
+  public static final ReportType TOTAL_REPORT_TYPE = ReportType.TOTAL;
 
   @Mock
   private ReportService reportService;
@@ -36,19 +37,16 @@ public class ReportResourceTest {
   private ReportPeriodAssembler reportPeriodAssembler;
 
   @Mock
-  private UnitReportDtoAssembler unitReportDtoAssembler;
-
-  @Mock
-  private TotalReportDtoAssembler totalReportDtoAssembler;
-
-  @Mock
-  private UnitReport unitReport;
-
-  @Mock
-  private TotalReport totalReport;
+  private Report report;
 
   @Mock
   private ReportPeriod reportPeriod;
+
+  @Mock
+  private ReportPresenterFactory reportPresenterFactory;
+
+  @Mock
+  private ReportPresenter reportPresenter;
 
   private ReportResource reportResource;
 
@@ -57,8 +55,7 @@ public class ReportResourceTest {
     reportResource = new ReportResource(reportService,
                                         reportDateValidator,
                                         reportPeriodAssembler,
-                                        unitReportDtoAssembler,
-                                        totalReportDtoAssembler);
+                                        reportPresenterFactory);
   }
 
   @Test
@@ -66,16 +63,20 @@ public class ReportResourceTest {
     // given
     given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
                                                      END_DATE)).willReturn(reportPeriod);
+    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
 
     // when
     reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
-    verify(reportService).getUnitReport(reportPeriod);
+    verify(reportService).getReportResponse(reportPeriod);
   }
 
   @Test
   public void whenGetReport_thenDatesAreValidated() {
+    // given
+    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
+
     // when
     reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
@@ -85,6 +86,9 @@ public class ReportResourceTest {
 
   @Test
   public void whenGetReport_thenReportPeriodIsAssembled() {
+    // given
+    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
+
     // when
     reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
@@ -93,26 +97,44 @@ public class ReportResourceTest {
   }
 
   @Test
-  public void whenGetReport_thenUnitReportDtoIsAssembled() {
+  public void whenGetReport_thenReportPresenterFactoryIsCalled() {
     // given
-    given(reportService.getUnitReport(any())).willReturn(unitReport);
+    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
 
     // when
     reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
-    verify(unitReportDtoAssembler).assemble(unitReport);
+    verify(reportPresenterFactory).create(REPORT_TYPE);
+  }
+
+  @Test
+  public void whenGetReport_thenUnitReportDtoIsAssembled() {
+    // given
+    given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
+            END_DATE)).willReturn(reportPeriod);
+    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
+    given(reportService.getReportResponse(reportPeriod)).willReturn(report);
+
+    // when
+    reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
+
+    // then
+    verify(reportPresenter).presentReport(report);
   }
 
   @Test
   public void whenGetReport_thenTotalReportDtoIsAssembled() {
     // given
-    given(reportService.getTotalReport(any())).willReturn(totalReport);
+    given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
+            END_DATE)).willReturn(reportPeriod);
+    given(reportPresenterFactory.create(TOTAL_REPORT_TYPE)).willReturn(reportPresenter);
+    given(reportService.getReportResponse(reportPeriod)).willReturn(report);
 
     // when
     reportResource.getReport(START_DATE, END_DATE, TOTAL_REPORT_TYPE_STRING);
 
     // then
-    verify(totalReportDtoAssembler).assemble(totalReport);
+    verify(reportPresenter).presentReport(report);
   }
 }

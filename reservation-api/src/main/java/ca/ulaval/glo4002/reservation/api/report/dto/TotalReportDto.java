@@ -6,18 +6,20 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import ca.ulaval.glo4002.reservation.api.report.presenter.IngredientReportInformationDto;
+
 @JsonPropertyOrder({ "ingredients", "totalPrice" })
 public class TotalReportDto {
   @JsonProperty("ingredients")
-  private List<IngredientsReportInformationDto> ingredients;
+  private List<IngredientReportInformationDto> ingredients;
   private BigDecimal totalPrice;
 
-  public TotalReportDto(List<IngredientsReportInformationDto> ingredients, BigDecimal totalPrice) {
+  public TotalReportDto(List<IngredientReportInformationDto> ingredients, BigDecimal totalPrice) {
     this.ingredients = ingredients;
     this.totalPrice = totalPrice;
   }
 
-  public List<IngredientsReportInformationDto> getIngredients() {
+  public List<IngredientReportInformationDto> getIngredients() {
     return ingredients;
   }
 
