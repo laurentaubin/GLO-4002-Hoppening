@@ -8,7 +8,9 @@ import java.util.Set;
 
 import ca.ulaval.glo4002.reservation.api.report.ReportPresenterFactory;
 import ca.ulaval.glo4002.reservation.api.report.ReportResource;
-import ca.ulaval.glo4002.reservation.api.report.assembler.*;
+import ca.ulaval.glo4002.reservation.api.report.assembler.ReportPeriodAssembler;
+import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportDtoFactory;
+import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportPresenter;
 import ca.ulaval.glo4002.reservation.api.report.presenter.total.TotalReportDtoFactory;
 import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitReportDayDtoFactory;
 import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitReportDtoFactory;
@@ -20,6 +22,7 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.MenuRepository;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
+import ca.ulaval.glo4002.reservation.domain.material.*;
 import ca.ulaval.glo4002.reservation.domain.report.*;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
@@ -55,9 +58,12 @@ public class ReservationContext {
   public void start() {
     ReservationIngredientCalculator reservationIngredientCalculator = createReservationIngredientCalculator();
     IngredientQuantityRepository ingredientQuantityRepository = new IngredientQuantityRepository(reservationIngredientCalculator);
+    Buffet buffet = new Buffet(new DailyDishesQuantityFactory());
     ReservationService reservationService = createReservationService(ingredientQuantityRepository,
-                                                                     reservationIngredientCalculator);
-    ReportService reportService = createReportService(ingredientQuantityRepository);
+                                                                     reservationIngredientCalculator,
+                                                                     buffet);
+
+    ReportService reportService = createReportService(ingredientQuantityRepository, buffet);
 
     Object[] resources = createResources(reservationService, reportService);
     server = createServer(resources);
@@ -66,7 +72,8 @@ public class ReservationContext {
   }
 
   private ReservationService createReservationService(IngredientQuantityRepository ingredientQuantityRepository,
-                                                      ReservationIngredientCalculator reservationIngredientCalculator)
+                                                      ReservationIngredientCalculator reservationIngredientCalculator,
+                                                      Buffet buffet)
   {
     ReservationRepository reservationRepository = new InMemoryReservationRepository();
 
@@ -103,10 +110,13 @@ public class ReservationContext {
                                   new AllergiesValidator(ingredientQuantityRepository,
                                                          reservationIngredientCalculator,
                                                          reservationRepository),
-                                  ingredientAvailabilityValidator);
+                                  ingredientAvailabilityValidator,
+                                  buffet);
   }
 
-  private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository) {
+  private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository,
+                                            Buffet buffet)
+  {
     IngredientPriceRepository ingredientPriceRepository = new IngredientPriceHttpRepository();
     IngredientPriceCalculatorFactory ingredientPriceCalculatorFactory = new IngredientPriceCalculatorFactory();
     IngredientReportInformationFactory ingredientReportInformationFactory = new IngredientReportInformationFactory();
@@ -114,9 +124,15 @@ public class ReservationContext {
     ReportFactory reportFactory = new ReportFactory(dailyIngredientReportInformationFactory);
     ReportGenerator reportGenerator = new ReportGenerator(ingredientPriceCalculatorFactory,
                                                           reportFactory);
+    MaterialToBuyPriceCalculator materialToBuyPriceCalculator = new MaterialToBuyPriceCalculator();
+    CleanMaterialPriceCalculator cleanMaterialPriceCalculator = new CleanMaterialPriceCalculator();
+    MaterialReportGenerator materialReportGenerator = new MaterialReportGenerator(cleanMaterialPriceCalculator,
+                                                                                  materialToBuyPriceCalculator);
     return new ReportService(ingredientQuantityRepository,
                              ingredientPriceRepository,
-                             reportGenerator);
+                             reportGenerator,
+                             materialReportGenerator,
+                             buffet);
   }
 
   private Object[] createResources(ReservationService reservationService,
@@ -143,15 +159,17 @@ public class ReservationContext {
     UnitReportDayDtoFactory unitReportDayDtoFactory = new UnitReportDayDtoFactory();
     UnitReportDtoFactory unitReportDtoFactory = new UnitReportDtoFactory(unitReportDayDtoFactory);
     TotalReportDtoFactory totalReportDtoFactory = new TotalReportDtoFactory();
+    MaterialReportDtoFactory materialReportDtoFactory = new MaterialReportDtoFactory();
     ReportPresenterFactory reportPresenterFactory = new ReportPresenterFactory(unitReportDtoFactory,
                                                                                totalReportDtoFactory);
+    MaterialReportPresenter materialReportPresenter = new MaterialReportPresenter(materialReportDtoFactory);
 
     return new ReportResource(reportService,
                               reportDateValidator,
                               reportPeriodAssembler,
-                              reportPresenterFactory);
+                              reportPresenterFactory,
+                              materialReportPresenter);
   }
-
 
   private ReservationServer createServer(Object[] resources) {
     return new ReservationServer(PORT, resources);

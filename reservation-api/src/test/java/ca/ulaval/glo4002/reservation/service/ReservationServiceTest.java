@@ -20,6 +20,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
+import ca.ulaval.glo4002.reservation.domain.material.Buffet;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
@@ -63,6 +64,9 @@ public class ReservationServiceTest {
   @Mock
   private AllergiesValidator allergiesValidator;
 
+  @Mock
+  private Buffet buffet;
+
   private ReservationService reservationService;
 
   @BeforeEach
@@ -72,7 +76,8 @@ public class ReservationServiceTest {
                                                 reservationAssembler,
                                                 reservationValidator,
                                                 allergiesValidator,
-                                                ingredientAvailabilityValidator);
+                                                ingredientAvailabilityValidator,
+                                                buffet);
   }
 
   @Test
@@ -164,6 +169,22 @@ public class ReservationServiceTest {
     assertThrows(ForbiddenReservationException.class, creatingReservation);
     verify(ingredientQuantityRepository, never()).updateIngredientsQuantity(aReservation);
     verify(reservationRepository, never()).saveReservation(aReservation);
+  }
+
+  @Test
+  public void givenAReservation_whenCreateReservation_thenNecessaryDishesAmountIsUpdated() {
+    // given
+    CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().build();
+    given(reservationAssembler.assembleFromCreateReservationRequestDto(createReservationRequestDto)).willReturn(aReservation);
+    given(allergiesValidator.isReservationAllergicFriendly(aReservation)).willReturn(true);
+    given(ingredientAvailabilityValidator.areIngredientsAvailableForReservation(any())).willReturn(true);
+
+    // when
+    reservationService.createReservation(createReservationRequestDto);
+
+    // then
+    verify(buffet).updateDailyDishesQuantity(aReservation);
+
   }
 
   private void setUpReservationServiceMocksForIdTests(Reservation reservation,

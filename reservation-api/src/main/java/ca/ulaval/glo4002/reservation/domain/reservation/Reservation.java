@@ -83,6 +83,16 @@ public class Reservation {
     return numberOfCustomers;
   }
 
+  public int getNumberOfRestrictions() {
+    int numberOfRestrictions = 0;
+    Map<RestrictionType, Integer> countPerRestrictionType = getRestrictionTypeCount();
+    for (RestrictionType restrictionType : countPerRestrictionType.keySet()) {
+      if (!restrictionType.equals(RestrictionType.NONE))
+        numberOfRestrictions += countPerRestrictionType.get(restrictionType);
+    }
+    return numberOfRestrictions;
+  }
+
   private Map<RestrictionType, Integer> mergeCurrentCountWithTableRestrictionCount(Map<RestrictionType, Integer> currentCount,
                                                                                    Map<RestrictionType, Integer> tableCount)
   {

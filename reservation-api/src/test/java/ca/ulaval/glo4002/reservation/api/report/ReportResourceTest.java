@@ -1,12 +1,8 @@
 package ca.ulaval.glo4002.reservation.api.report;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import ca.ulaval.glo4002.reservation.domain.report.Report;
-import ca.ulaval.glo4002.reservation.domain.report.ReportPresenter;
-import ca.ulaval.glo4002.reservation.domain.report.ReportType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +10,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.report.assembler.ReportPeriodAssembler;
+import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportPresenter;
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
+import ca.ulaval.glo4002.reservation.domain.material.MaterialReport;
+import ca.ulaval.glo4002.reservation.domain.report.Report;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
+import ca.ulaval.glo4002.reservation.domain.report.ReportPresenter;
+import ca.ulaval.glo4002.reservation.domain.report.ReportType;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,6 +49,12 @@ public class ReportResourceTest {
   @Mock
   private ReportPresenter reportPresenter;
 
+  @Mock
+  private MaterialReportPresenter materialReportPresenter;
+
+  @Mock
+  private MaterialReport materialReport;
+
   private ReportResource reportResource;
 
   @BeforeEach
@@ -55,86 +62,130 @@ public class ReportResourceTest {
     reportResource = new ReportResource(reportService,
                                         reportDateValidator,
                                         reportPeriodAssembler,
-                                        reportPresenterFactory);
+                                        reportPresenterFactory,
+                                        materialReportPresenter);
   }
 
   @Test
-  public void givenStartDateEndDateAndReportType_whenGetReport_thenReportIsReturnedByReportService() {
+  public void givenStartDateEndDateAndReportType_whenGetIngredientReport_thenReportIsReturnedByReportService() {
     // given
     given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
                                                      END_DATE)).willReturn(reportPeriod);
     given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
 
     // when
-    reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
+    reportResource.getIngredientsReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
-    verify(reportService).getReportResponse(reportPeriod);
+    verify(reportService).getIngredientReport(reportPeriod);
   }
 
   @Test
-  public void whenGetReport_thenDatesAreValidated() {
+  public void whenGetIngredientReport_thenDatesAreValidated() {
     // given
     given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
 
     // when
-    reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
+    reportResource.getIngredientsReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
     verify(reportDateValidator).validate(START_DATE, END_DATE);
   }
 
   @Test
-  public void whenGetReport_thenReportPeriodIsAssembled() {
+  public void whenGetIngredientReport_thenReportPeriodIsAssembled() {
     // given
     given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
 
     // when
-    reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
+    reportResource.getIngredientsReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
     verify(reportPeriodAssembler).assembleReportPeriod(START_DATE, END_DATE);
   }
 
   @Test
-  public void whenGetReport_thenReportPresenterFactoryIsCalled() {
+  public void whenGetIngredientReport_thenReportPresenterFactoryIsCalled() {
     // given
     given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
 
     // when
-    reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
+    reportResource.getIngredientsReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
     verify(reportPresenterFactory).create(REPORT_TYPE);
   }
 
   @Test
-  public void whenGetReport_thenUnitReportDtoIsAssembled() {
+  public void whenGetIngredientReport_thenUnitReportDtoIsAssembled() {
     // given
     given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
-            END_DATE)).willReturn(reportPeriod);
+                                                     END_DATE)).willReturn(reportPeriod);
     given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(reportPresenter);
-    given(reportService.getReportResponse(reportPeriod)).willReturn(report);
+    given(reportService.getIngredientReport(reportPeriod)).willReturn(report);
 
     // when
-    reportResource.getReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
+    reportResource.getIngredientsReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
     verify(reportPresenter).presentReport(report);
   }
 
   @Test
-  public void whenGetReport_thenTotalReportDtoIsAssembled() {
+  public void whenGetIngredientReport_thenTotalReportDtoIsAssembled() {
     // given
     given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
-            END_DATE)).willReturn(reportPeriod);
+                                                     END_DATE)).willReturn(reportPeriod);
     given(reportPresenterFactory.create(TOTAL_REPORT_TYPE)).willReturn(reportPresenter);
-    given(reportService.getReportResponse(reportPeriod)).willReturn(report);
+    given(reportService.getIngredientReport(reportPeriod)).willReturn(report);
 
     // when
-    reportResource.getReport(START_DATE, END_DATE, TOTAL_REPORT_TYPE_STRING);
+    reportResource.getIngredientsReport(START_DATE, END_DATE, TOTAL_REPORT_TYPE_STRING);
 
     // then
     verify(reportPresenter).presentReport(report);
   }
+
+  @Test
+  public void whenGetMaterialReport_thenDatesAreValidated() {
+    // given
+    given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
+                                                     END_DATE)).willReturn(reportPeriod);
+    given(reportService.getMaterialReport(reportPeriod)).willReturn(materialReport);
+
+    // when
+    reportResource.getMaterialReport(START_DATE, END_DATE);
+
+    // then
+    verify(reportDateValidator).validate(START_DATE, END_DATE);
+  }
+
+  @Test
+  public void whenGetMaterialReport_thenReportPeriodIsAssembled() {
+    // given
+    given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
+                                                     END_DATE)).willReturn(reportPeriod);
+    given(reportService.getMaterialReport(reportPeriod)).willReturn(materialReport);
+
+    // when
+    reportResource.getMaterialReport(START_DATE, END_DATE);
+
+    // then
+    verify(reportPeriodAssembler).assembleReportPeriod(START_DATE, END_DATE);
+  }
+
+  @Test
+  public void whenGetMaterialReport_thenMaterialReportPresenterFactoryIsCalled() {
+    // given
+    given(reportPeriodAssembler.assembleReportPeriod(START_DATE,
+                                                     END_DATE)).willReturn(reportPeriod);
+    given(reportService.getMaterialReport(reportPeriod)).willReturn(materialReport);
+
+    // when
+    reportResource.getMaterialReport(START_DATE, END_DATE);
+
+    // then
+    verify(materialReportPresenter).presentReport(materialReport);
+  }
+
 }

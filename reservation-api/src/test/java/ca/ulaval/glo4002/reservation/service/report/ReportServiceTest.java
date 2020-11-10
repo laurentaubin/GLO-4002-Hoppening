@@ -17,6 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.material.Buffet;
+import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
+import ca.ulaval.glo4002.reservation.domain.material.MaterialReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceRepository;
 import ca.ulaval.glo4002.reservation.domain.report.ReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
@@ -45,28 +48,63 @@ public class ReportServiceTest {
   @Mock
   private ReportGenerator reportGenerator;
 
+  @Mock
+  private MaterialReportGenerator materialReportGenerator;
+
+  @Mock
+  private Buffet buffet;
+
+  @Mock
+  private Map<LocalDate, DailyDishesQuantity> dailyDishesQuantities;
+
   private ReportService reportService;
 
   @BeforeEach
   public void setUp() {
     reportService = new ReportService(ingredientQuantityRepository,
                                       ingredientPriceRepository,
-                                      reportGenerator);
+                                      reportGenerator,
+                                      materialReportGenerator,
+                                      buffet);
   }
 
   @Test
   public void whenGetReportResponse_thenIngredientsPriceAreRetrieved() {
     // when
-    reportService.getReportResponse(reportPeriod);
+    reportService.getIngredientReport(reportPeriod);
 
     // then
     verify(ingredientPriceRepository).getIngredientsPrice();
   }
 
   @Test
+  public void whenGetMaterialReport_thenMaterialReportIsRetrieved() {
+    // given
+    given(buffet.getDailyDishesQuantities(reportPeriod)).willReturn(dailyDishesQuantities);
+
+    // when
+    reportService.getMaterialReport(reportPeriod);
+
+    // then
+    verify(materialReportGenerator).generateReport(dailyDishesQuantities, reportPeriod);
+  }
+
+  @Test
+  public void whenGetMaterialReport_thenDishesFromBuffetAreRetrieved() {
+    // given
+    given(buffet.getDailyDishesQuantities(reportPeriod)).willReturn(dailyDishesQuantities);
+
+    // when
+    reportService.getMaterialReport(reportPeriod);
+
+    // then
+    verify(buffet).getDailyDishesQuantities(reportPeriod);
+  }
+
+  @Test
   public void whenGetReportResponse_ThenIngredientsQuantityAreRetrieved() {
     // when
-    reportService.getReportResponse(reportPeriod);
+    reportService.getIngredientReport(reportPeriod);
 
     // then
     verify(ingredientQuantityRepository).getIngredientsQuantity(reportPeriod);
@@ -82,7 +120,7 @@ public class ReportServiceTest {
     given(ingredientQuantityRepository.getIngredientsQuantity(reportPeriod)).willReturn(ingredientsQuantity);
 
     // when
-    reportService.getReportResponse(reportPeriod);
+    reportService.getIngredientReport(reportPeriod);
 
     // then
     verify(reportGenerator).generateReport(ingredientPriceDtos, ingredientsQuantity);

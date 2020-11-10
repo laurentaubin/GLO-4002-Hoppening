@@ -136,6 +136,25 @@ public class ReservationTest {
     assertThat(numberOfCustomers).isEqualTo(4);
   }
 
+  @Test
+  public void givenAReservationWithCustomersWithRestrictions_whenGetCountOfRestriction_thenReturnTheTotalCountOfRestrictions() {
+    // given
+    given(aTable.getRestrictionTypeCount()).willReturn(Map.of(ALLERGIES_RESTRICTION,
+                                                              2,
+                                                              NONE_RESTRICTION,
+                                                              1));
+    given(anotherTable.getRestrictionTypeCount()).willReturn(Map.of(ALLERGIES_RESTRICTION, 4));
+    Reservation reservation = new ReservationBuilder().withTable(aTable)
+                                                      .withTable(anotherTable)
+                                                      .build();
+
+    // when
+    int numberOfRestrictions = reservation.getNumberOfRestrictions();
+
+    // then
+    assertThat(numberOfRestrictions).isEqualTo(6);
+  }
+
   private Table givenATableWithTwoCustomers() {
     Customer aCustomer = new CustomerBuilder().build();
     Customer anotherCustomer = new CustomerBuilder().build();

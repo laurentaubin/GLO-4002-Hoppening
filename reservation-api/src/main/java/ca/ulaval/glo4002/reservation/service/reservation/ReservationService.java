@@ -4,6 +4,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationReques
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
+import ca.ulaval.glo4002.reservation.domain.material.Buffet;
 import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
@@ -21,13 +22,15 @@ public class ReservationService {
   private final IngredientQuantityRepository ingredientQuantityRepository;
   private final AllergiesValidator allergiesValidator;
   private final IngredientAvailabilityValidator ingredientAvailabilityValidator;
+  private final Buffet buffet;
 
   public ReservationService(ReservationRepository reservationRepository,
                             IngredientQuantityRepository ingredientQuantityRepository,
                             ReservationAssembler reservationAssembler,
                             ReservationValidator reservationValidator,
                             AllergiesValidator allergiesValidator,
-                            IngredientAvailabilityValidator ingredientAvailabilityValidator)
+                            IngredientAvailabilityValidator ingredientAvailabilityValidator,
+                            Buffet buffet)
   {
     this.reservationRepository = reservationRepository;
     this.reservationAssembler = reservationAssembler;
@@ -35,6 +38,7 @@ public class ReservationService {
     this.ingredientQuantityRepository = ingredientQuantityRepository;
     this.allergiesValidator = allergiesValidator;
     this.ingredientAvailabilityValidator = ingredientAvailabilityValidator;
+    this.buffet = buffet;
   }
 
   public ReservationId createReservation(CreateReservationRequestDto createReservationRequestDto) {
@@ -48,6 +52,7 @@ public class ReservationService {
     }
 
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
+    buffet.updateDailyDishesQuantity(reservation);
     return reservationRepository.saveReservation(reservation);
   }
 

@@ -33,11 +33,8 @@ public class MaterialReportDtoFactory {
 
   private Map<String, BigDecimal> createStringMap(Map<Material, BigDecimal> dishes) {
     TreeMap<String, BigDecimal> materialNameStringifyToQuantity = new TreeMap<>();
-
-    BigDecimal sum = dishes.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-    if (sum.compareTo(BigDecimal.ZERO) > 0) {
-      for (Map.Entry<Material, BigDecimal> materialToQuantity : dishes.entrySet()) {
-
+    for (Map.Entry<Material, BigDecimal> materialToQuantity : dishes.entrySet()) {
+      if (materialToQuantity.getValue().compareTo(BigDecimal.ZERO) > 0) {
         materialNameStringifyToQuantity.put(materialToQuantity.getKey().getName(),
                                             materialToQuantity.getValue());
       }

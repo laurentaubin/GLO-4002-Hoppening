@@ -8,8 +8,8 @@ import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 
 public class MaterialReportGenerator {
   private static final Map<Material, BigDecimal> INITIAL_DISHES_QUANTITIES = new HashMap<>();
-  private final CleanMaterialPriceCalculator cleanMaterialPriceCalculator;
-  private final MaterialToBuyPriceCalculator materialToBuyPriceCalculator;
+  private CleanMaterialPriceCalculator cleanMaterialPriceCalculator;
+  private MaterialToBuyPriceCalculator materialToBuyPriceCalculator;
 
   public MaterialReportGenerator(CleanMaterialPriceCalculator cleanMaterialPriceCalculator,
                                  MaterialToBuyPriceCalculator materialToBuyPriceCalculator)
