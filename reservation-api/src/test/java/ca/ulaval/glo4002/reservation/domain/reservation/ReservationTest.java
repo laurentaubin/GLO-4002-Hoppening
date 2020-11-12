@@ -28,7 +28,6 @@ public class ReservationTest {
                                                                                            2);
   private static final RestrictionType ALLERGIES_RESTRICTION = RestrictionType.ALLERGIES;
   private static final RestrictionType NONE_RESTRICTION = RestrictionType.NONE;
-  private static final int TOTAL_NUMBER_OF_CUSTOMERS = 2;
 
   @Mock
   private Table aTable;
@@ -123,6 +122,7 @@ public class ReservationTest {
 
   @Test
   public void givenTwoTablesWithTwoCustomersEach_whenGetNumberOfCustomers_thenNumberOfCustomersShouldBeTheTotalOfAllTables() {
+    // given
     Table aTable = givenATableWithTwoCustomers();
     Table anotherTable = givenATableWithTwoCustomers();
     Reservation reservation = new ReservationBuilder().withTable(aTable)
@@ -134,6 +134,20 @@ public class ReservationTest {
 
     // then
     assertThat(numberOfCustomers).isEqualTo(4);
+  }
+
+  @Test
+  public void givenAReservation_whenGetCustomers_thenListOfCostumersIsReturn() {
+    // given
+    Table table = givenATableWithTwoCustomers();
+    Reservation reservation = new ReservationBuilder().withTable(table).build();
+
+    // when
+    List<Customer> customers = reservation.getCustomers();
+
+    // then
+    assertThat(customers.get(0)).isEqualTo(table.getCustomers().get(0));
+    assertThat(customers.get(1)).isEqualTo(table.getCustomers().get(1));
   }
 
   @Test

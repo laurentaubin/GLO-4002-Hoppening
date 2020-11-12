@@ -27,9 +27,10 @@ public class ReservationAssembler {
     reservationDto.setDinnerDate(reservation.getDinnerDate().format(dateFormatter));
     reservationDto.setReservationPrice(formatReservationPrice(reservation.getReservationFees()));
 
-    List<CustomerDto> customers = getAllCustomersFromReservation(reservation).stream()
-                                                                             .map(customerAssembler::assembleDtoFromCustomer)
-                                                                             .collect(Collectors.toList());
+    List<CustomerDto> customers = reservation.getCustomers()
+                                             .stream()
+                                             .map(customerAssembler::assembleDtoFromCustomer)
+                                             .collect(Collectors.toList());
 
     reservationDto.setCustomers(customers);
 
@@ -46,7 +47,6 @@ public class ReservationAssembler {
     for (Table table : reservation.getTables()) {
       customerList.addAll(table.getCustomers());
     }
-
     return customerList;
   }
 }

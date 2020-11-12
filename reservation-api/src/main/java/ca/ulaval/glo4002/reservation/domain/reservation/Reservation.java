@@ -60,23 +60,25 @@ public class Reservation {
 
   public Set<RestrictionType> getRestrictionTypes() {
     Set<RestrictionType> restrictionTypes = new HashSet<>();
-    for (Table table : tables) {
-      for (Customer customer : table.getCustomers()) {
-        Set<RestrictionType> restrictions = customer.getRestrictions()
-                                                    .isEmpty() ? Set.of(RestrictionType.NONE)
-                                                               : customer.getRestrictions();
-        restrictionTypes.addAll(restrictions);
-      }
+    for (Customer customer : this.getCustomers()) {
+      Set<RestrictionType> restrictions = customer.getRestrictions()
+                                                  .isEmpty() ? Set.of(RestrictionType.NONE)
+                                                             : customer.getRestrictions();
+      restrictionTypes.addAll(restrictions);
     }
     return restrictionTypes;
   }
 
   public int getNumberOfCustomers() {
-    int numberOfCustomers = 0;
-    for (Table table : tables) {
-      numberOfCustomers += table.getCustomers().size();
+    return this.getCustomers().size();
+  }
+
+  public List<Customer> getCustomers() {
+    List<Customer> customers = new ArrayList<>();
+    for (Table table : this.tables) {
+      customers.addAll(table.getCustomers());
     }
-    return numberOfCustomers;
+    return customers;
   }
 
   public int getNumberOfRestrictions() {
