@@ -7,12 +7,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import ca.ulaval.glo4002.reservation.api.report.assembler.ReportPeriodAssembler;
 import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportPresenter;
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.domain.material.MaterialReport;
 import ca.ulaval.glo4002.reservation.domain.report.Report;
-import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPresenter;
 import ca.ulaval.glo4002.reservation.domain.report.ReportType;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
@@ -22,19 +20,16 @@ public class ReportResource {
 
   private final ReportService reportService;
   private final ReportDateValidator reportDateValidator;
-  private final ReportPeriodAssembler reportPeriodAssembler;
   private final ReportPresenterFactory reportPresenterFactory;
   private final MaterialReportPresenter materialReportPresenter;
 
   public ReportResource(ReportService reportService,
                         ReportDateValidator reportDateValidator,
-                        ReportPeriodAssembler reportPeriodAssembler,
                         ReportPresenterFactory reportPresenterFactory,
                         MaterialReportPresenter materialReportPresenter)
   {
     this.reportService = reportService;
     this.reportDateValidator = reportDateValidator;
-    this.reportPeriodAssembler = reportPeriodAssembler;
     this.reportPresenterFactory = reportPresenterFactory;
     this.materialReportPresenter = materialReportPresenter;
   }
@@ -47,8 +42,8 @@ public class ReportResource {
                                        @QueryParam("type") String type)
   {
     reportDateValidator.validate(startDate, endDate);
-    ReportPeriod reportPeriod = reportPeriodAssembler.assembleReportPeriod(startDate, endDate);
-    Report report = reportService.getIngredientReport(reportPeriod);
+    Report report = reportService.getIngredientReport(startDate, endDate);
+
     ReportPresenter reportPresenter = reportPresenterFactory.create(ReportType.valueOfName(type));
     return reportPresenter.presentReport(report);
   }
@@ -60,8 +55,7 @@ public class ReportResource {
                                     @QueryParam("endDate") String endDate)
   {
     reportDateValidator.validate(startDate, endDate);
-    ReportPeriod reportPeriod = reportPeriodAssembler.assembleReportPeriod(startDate, endDate);
-    MaterialReport materialReport = reportService.getMaterialReport(reportPeriod);
+    MaterialReport materialReport = reportService.getMaterialReport(startDate, endDate);
     return materialReportPresenter.presentReport(materialReport);
   }
 }

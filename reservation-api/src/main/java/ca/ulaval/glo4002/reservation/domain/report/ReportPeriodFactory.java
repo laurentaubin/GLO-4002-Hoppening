@@ -3,16 +3,19 @@ package ca.ulaval.glo4002.reservation.domain.report;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import ca.ulaval.glo4002.reservation.domain.date.Period;
+import ca.ulaval.glo4002.reservation.domain.Period;
 import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportDateException;
 
 public class ReportPeriodFactory {
   private static final String PATTERN_FORMAT = "MMMM dd YYYY";
 
-  public ReportPeriod create(LocalDate reportPeriodStartDate,
-                             LocalDate reportPeriodEndDate,
-                             Period dinnerPeriod)
-  {
+  private final Period dinnerPeriod;
+
+  public ReportPeriodFactory(Period dinnerPeriod) {
+    this.dinnerPeriod = dinnerPeriod;
+  }
+
+  public ReportPeriod create(LocalDate reportPeriodStartDate, LocalDate reportPeriodEndDate) {
     if (areDatesInvalid(reportPeriodStartDate, reportPeriodEndDate, dinnerPeriod)) {
       throw new InvalidReportDateException(dinnerPeriod.getStartDate()
                                                        .format(DateTimeFormatter.ofPattern(PATTERN_FORMAT)),

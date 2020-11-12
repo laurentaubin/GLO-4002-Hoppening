@@ -23,7 +23,7 @@ public enum IngredientName {
   SCALLOPS("Scallops"),
   BUTTERNUT_SQUASH("Butternut squash");
 
-  private String name;
+  private final String name;
 
   IngredientName(String name) {
     this.name = name;
@@ -37,7 +37,6 @@ public enum IngredientName {
     }
     throw new IngredientNameDoesNotExistException();
   }
-
 
   public static boolean contains(String name) {
     for (IngredientName ingredientName : IngredientName.values()) {

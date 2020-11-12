@@ -4,7 +4,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,6 @@ import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository
 @ExtendWith(MockitoExtension.class)
 public class IngredientInventoryTest {
   private static final LocalDateTime A_DINNER_DATE = LocalDateTime.of(2150, 7, 20, 3, 4);
-  private static final LocalDate AN_OPENING_DATE = LocalDate.of(2150, 7, 20);
-
   @Mock
   private IngredientQuantityRepository ingredientQuantityRepository;
 
@@ -56,11 +53,10 @@ public class IngredientInventoryTest {
   @Test
   public void whenAreAllIngredientsAvailable_thenIngredientsAvailabilityIsVerified() {
     // when
-    ingredientInventory.areAllNecessaryIngredientsAvailable(reservation, AN_OPENING_DATE);
+    ingredientInventory.areAllNecessaryIngredientsAvailable(reservation);
 
     // then
-    verify(ingredientAvailabilityValidator).areIngredientsAvailableForReservation(reservation,
-                                                                                  AN_OPENING_DATE);
+    verify(ingredientAvailabilityValidator).areIngredientsAvailableForReservation(reservation);
   }
 
   @Test

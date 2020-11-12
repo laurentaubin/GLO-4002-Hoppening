@@ -27,10 +27,6 @@ public class InMemoryReservationRepository implements ReservationRepository {
     throw new NonExistingReservationException();
   }
 
-  public int getTotalNumberOfCustomersForADay(LocalDateTime date) {
-    return getTotalNumberOfCustomersOfAllReservationsAtDinnerDate(date, reservations);
-  }
-
   public List<Reservation> getReservationsByDate(LocalDateTime date) {
     List<Reservation> reservationsByDate = new ArrayList<>();
 
@@ -45,16 +41,5 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
   private boolean isTheSameDate(LocalDateTime date, LocalDateTime dinnerDate) {
     return LocalDate.from(date).isEqual(LocalDate.from(dinnerDate));
-  }
-
-  private int getTotalNumberOfCustomersOfAllReservationsAtDinnerDate(LocalDateTime date,
-                                                                     List<Reservation> reservations)
-  {
-    int numberOfCustomers = 0;
-    for (Reservation reservation : reservations) {
-      if (isTheSameDate(date, reservation.getDinnerDate()))
-        numberOfCustomers += reservation.getNumberOfCustomers();
-    }
-    return numberOfCustomers;
   }
 }

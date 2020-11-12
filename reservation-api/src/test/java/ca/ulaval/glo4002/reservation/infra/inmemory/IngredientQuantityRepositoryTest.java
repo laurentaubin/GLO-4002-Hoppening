@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ca.ulaval.glo4002.reservation.domain.Period;
 import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
@@ -29,6 +30,8 @@ public class IngredientQuantityRepositoryTest {
   private static final LocalDateTime ANOTHER_DINNER_DATE = LocalDateTime.of(2150, 7, 22, 21, 4);
   private static final LocalDate START_DATE = LocalDate.of(2150, 7, 20);
   private static final LocalDate END_DATE = LocalDate.of(2150, 7, 23);
+  private static final LocalDate DINNER_START_DATE = LocalDate.of(2150, 7, 19);
+  private static final LocalDate DINNER_END_DATE = LocalDate.of(2150, 7, 24);
 
   @Mock
   private ReservationIngredientCalculator reservationIngredientCalculator;
@@ -145,6 +148,7 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenRepoNotEmptyAndAReportPeriod_whenGetIngredientsQuantity_thenReturnIngredientsQuantityForEachDayOfThePeriod() {
     // given
+    Period eventPeriod = new Period(DINNER_START_DATE, DINNER_END_DATE);
     ReportPeriod reportPeriod = new ReportPeriod(START_DATE, END_DATE);
     populateReportRepository(A_DINNER_DATE, ANOTHER_DINNER_DATE);
 
@@ -155,38 +159,6 @@ public class IngredientQuantityRepositoryTest {
     assertThat(ingredientsQuantity.get(LocalDate.from(A_DINNER_DATE))).isEqualTo(ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE)));
     assertThat(ingredientsQuantity.get(LocalDate.from(ANOTHER_DINNER_DATE))).isEqualTo(ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(ANOTHER_DINNER_DATE)));
     assertThat(ingredientsQuantity.get(END_DATE)).isNull();
-  }
-
-  @Test
-  public void givenCarrotsInPersistence_whenCheckingIfContainsCarrots_thenMenuContainsCarrots() {
-    // given
-    Map<IngredientName, BigDecimal> menuWithCarrots = givenMenuWithCarrots();
-    Reservation reservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
-    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(menuWithCarrots);
-    ingredientQuantityRepository.updateIngredientsQuantity(reservation);
-
-    // when
-    boolean doesContainCarrots = ingredientQuantityRepository.containsIngredientAtDate(IngredientName.CARROTS,
-                                                                                       A_DINNER_DATE.toLocalDate());
-
-    // then
-    assertThat(doesContainCarrots).isTrue();
-  }
-
-  @Test
-  public void givenNoCarrotsInPersistence_whenCheckingIfContainsCarrots_thenMenuDoesNotContainCarrots() {
-    // given
-    Map<IngredientName, BigDecimal> veganMenu = givenVeganCourseIngredientsQuantity();
-    Reservation reservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
-    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(veganMenu);
-    ingredientQuantityRepository.updateIngredientsQuantity(reservation);
-
-    // when
-    boolean doesContainCarrots = ingredientQuantityRepository.containsIngredientAtDate(IngredientName.CARROTS,
-                                                                                       A_DINNER_DATE.toLocalDate());
-
-    // then
-    assertThat(doesContainCarrots).isFalse();
   }
 
   private void populateReportRepository(LocalDateTime aDinnerDate,
@@ -250,11 +222,5 @@ public class IngredientQuantityRepositoryTest {
     Customer customer = new CustomerBuilder().withRestriction(restrictionType).build();
     Table table = new TableBuilder().withCustomer(customer).build();
     return new ReservationBuilder().withTable(table).withDinnerDate(dinnerDate).build();
-  }
-
-  private Map<IngredientName, BigDecimal> givenMenuWithCarrots() {
-    Map<IngredientName, BigDecimal> ingredientNameBigDecimalMap = new HashMap<>();
-    ingredientNameBigDecimalMap.put(IngredientName.CARROTS, BigDecimal.valueOf(2.0));
-    return ingredientNameBigDecimalMap;
   }
 }

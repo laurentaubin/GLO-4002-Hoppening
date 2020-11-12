@@ -39,11 +39,8 @@ public class IngredientInventory {
                                                             dailyIngredients);
   }
 
-  public boolean areAllNecessaryIngredientsAvailable(Reservation reservation,
-                                                     LocalDate restaurantOpeningDate)
-  {
-    return ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation,
-                                                                                 restaurantOpeningDate);
+  public boolean areAllNecessaryIngredientsAvailable(Reservation reservation) {
+    return ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation);
   }
 
   public Map<IngredientName, BigDecimal> getIngredientsAtDate(LocalDate date) {

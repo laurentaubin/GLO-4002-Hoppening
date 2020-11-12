@@ -7,6 +7,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
+import java.time.LocalDate;
+
 import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +27,7 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatException;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
+import ca.ulaval.glo4002.reservation.service.reservation.RestaurantService;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinnerDateException;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationDateException;
 
@@ -38,9 +40,11 @@ public class ReservationResourceTest {
   private static final String INVALID_FORMAT_DATE = "30-21-08";
   private static final String A_OUT_OF_BOUND_DINNER_DATE = "2190-07-30T23:59:59.999Z";
   private static final String A_OUT_OF_BOUND_RESERVATION_DATE = "2149-09-08T23:59:59.999Z";
+  private static final LocalDate START_DATE = LocalDate.of(2150, 7, 20);
+  private static final LocalDate END_DATE = LocalDate.of(2150, 7, 30);
 
   @Mock
-  private ReservationService reservationService;
+  private RestaurantService restaurantService;
 
   @Mock
   private DateFormatValidator dateFormatValidator;
@@ -52,7 +56,7 @@ public class ReservationResourceTest {
 
   @BeforeEach
   public void setUp() {
-    reservationResource = new ReservationResource(reservationService, dateFormatValidator);
+    reservationResource = new ReservationResource(restaurantService, dateFormatValidator);
   }
 
   @Test
@@ -61,13 +65,13 @@ public class ReservationResourceTest {
     given(reservationId.getLongId()).willReturn(AN_ID);
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withAnyTable()
                                                                                                       .build();
-    given(reservationService.createReservation(createReservationRequestDto)).willReturn(reservationId);
+    given(restaurantService.makeReservation(createReservationRequestDto)).willReturn(reservationId);
 
     // when
     reservationResource.createReservation(createReservationRequestDto);
 
     // then
-    verify(reservationService).createReservation(createReservationRequestDto);
+    verify(restaurantService).makeReservation(createReservationRequestDto);
   }
 
   @Test
@@ -75,7 +79,7 @@ public class ReservationResourceTest {
     // given
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withAnyTable()
                                                                                                       .build();
-    given(reservationService.createReservation(createReservationRequestDto)).willReturn(reservationId);
+    given(restaurantService.makeReservation(createReservationRequestDto)).willReturn(reservationId);
     given(reservationId.getLongId()).willReturn(AN_ID);
 
     // when
@@ -93,7 +97,7 @@ public class ReservationResourceTest {
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withDinnerDate(null)
                                                                                                       .build();
     InvalidFormatException invalidDinnerDateException = new InvalidFormatException();
-    given(reservationService.createReservation(createReservationRequestDto)).willThrow(invalidDinnerDateException);
+    given(restaurantService.makeReservation(createReservationRequestDto)).willThrow(invalidDinnerDateException);
 
     // when
     Executable creatingReservation = () -> reservationResource.createReservation(createReservationRequestDto);
@@ -122,8 +126,9 @@ public class ReservationResourceTest {
     // given
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withDinnerDate(A_OUT_OF_BOUND_DINNER_DATE)
                                                                                                       .build();
-    InvalidDinnerDateException invalidDinnerDateException = new InvalidDinnerDateException();
-    given(reservationService.createReservation(createReservationRequestDto)).willThrow(invalidDinnerDateException);
+    InvalidDinnerDateException invalidDinnerDateException = new InvalidDinnerDateException(START_DATE,
+                                                                                           END_DATE);
+    given(restaurantService.makeReservation(createReservationRequestDto)).willThrow(invalidDinnerDateException);
 
     // when
     Executable creatingReservation = () -> reservationResource.createReservation(createReservationRequestDto);
@@ -140,7 +145,7 @@ public class ReservationResourceTest {
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withReservationDetails(reservationDetailsDto)
                                                                                                       .build();
     InvalidFormatException invalidReservationDateFormatException = new InvalidFormatException();
-    given(reservationService.createReservation(createReservationRequestDto)).willThrow(invalidReservationDateFormatException);
+    given(restaurantService.makeReservation(createReservationRequestDto)).willThrow(invalidReservationDateFormatException);
 
     // when
     Executable creatingReservation = () -> reservationResource.createReservation(createReservationRequestDto);
@@ -157,7 +162,7 @@ public class ReservationResourceTest {
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withReservationDetails(reservationDetailsDto)
                                                                                                       .build();
     InvalidFormatException invalidReservationDateFormatException = new InvalidFormatException();
-    given(reservationService.createReservation(createReservationRequestDto)).willThrow(invalidReservationDateFormatException);
+    given(restaurantService.makeReservation(createReservationRequestDto)).willThrow(invalidReservationDateFormatException);
 
     // when
     Executable creatingReservation = () -> reservationResource.createReservation(createReservationRequestDto);
@@ -173,8 +178,9 @@ public class ReservationResourceTest {
                                                                                     .build();
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withReservationDetails(reservationDetailsDto)
                                                                                                       .build();
-    InvalidReservationDateException invalidReservationDateException = new InvalidReservationDateException();
-    given(reservationService.createReservation(createReservationRequestDto)).willThrow(invalidReservationDateException);
+    InvalidReservationDateException invalidReservationDateException = new InvalidReservationDateException(START_DATE,
+                                                                                                          END_DATE);
+    given(restaurantService.makeReservation(createReservationRequestDto)).willThrow(invalidReservationDateException);
 
     // when
     Executable creatingReservation = () -> reservationResource.createReservation(createReservationRequestDto);
@@ -187,7 +193,7 @@ public class ReservationResourceTest {
   public void whenGetReservation_thenReturnReservationResponse() {
     // given
     ReservationDto expectedReservationDto = new ReservationDtoBuilder().withAnyCustomers().build();
-    given(reservationService.getReservationDtoById(any())).willReturn(expectedReservationDto);
+    given(restaurantService.getReservationFromRestaurant(any())).willReturn(expectedReservationDto);
 
     // when
     Response response = reservationResource.getReservation(AN_ID);

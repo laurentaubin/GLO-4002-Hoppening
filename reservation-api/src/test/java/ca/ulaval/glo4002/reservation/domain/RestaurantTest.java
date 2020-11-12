@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,19 +17,13 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.domain.chef.ChefManager;
-import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
-import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequest;
-import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
 import ca.ulaval.glo4002.reservation.domain.material.Buffet;
 import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
-import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
 @ExtendWith(MockitoExtension.class)
 public class RestaurantTest {
@@ -38,12 +31,10 @@ public class RestaurantTest {
   private static final boolean DOES_NOT_CAUSE_ALLERGIC_CONFLICT = false;
   private static final boolean ALL_INGREDIENTS_AVAILABLE = true;
   private static final boolean NOT_ALL_INGREDIENTS_AVAILABLE = false;
-  private static final LocalDateTime A_DATE = LocalDateTime.of(2020, 7, 22, 23, 23);
+  private static final LocalDateTime A_DATE = LocalDateTime.of(2020, 7, 20, 23, 23);
   private static final int FORTY_ONE_CUSTOMERS = 41;
   private static final int TWO_CUSTOMERS = 2;
   private static final int ONE_CUSTOMER = 1;
-  private static final LocalDate AN_OPENING_DATE = LocalDate.of(2020, 7, 20);
-  private static final BigDecimal A_RESERVATION_FEE = BigDecimal.TEN;
 
   @Mock
   private ReservationFactory reservationFactory;
@@ -82,13 +73,7 @@ public class RestaurantTest {
   private ReportPeriod reportPeriod;
 
   @Mock
-  private Period dinnerPeriod;
-
-  @Mock
   private Map<LocalDate, DailyDishesQuantity> dailyDishesQuantity;
-
-  @Mock
-  private ChefManager chefManager;
 
   private Restaurant restaurant;
 
@@ -98,8 +83,7 @@ public class RestaurantTest {
                                 reservationBook,
                                 ingredientInventory,
                                 hoppeningEvent,
-                                buffet,
-                                chefManager);
+                                buffet);
   }
 
   @Test
@@ -281,68 +265,15 @@ public class RestaurantTest {
 
     // then
     verify(buffet).updateDailyDishesQuantity(aReservation);
-  }
 
-  @Test
-  public void whenMakeReservation_thenChefsAreHired() {
-    // given
-    givenValidReservationRequest();
-
-    // when
-    restaurant.makeReservation(reservationRequest);
-
-    // then
-    verify(chefManager).hireChefsForReservations(reservations);
-  }
-
-  @Test
-  public void givenTooPickyForChefs_whenMakeReservation_thenThrowForbiddenReservationException() {
-    // given
-    givenValidReservationRequest();
-    doThrow(NoChefsAvailableException.class).when(chefManager)
-                                            .hireChefsForReservations(reservations);
-
-    // when
-    Executable makingReservation = () -> restaurant.makeReservation(reservationRequest);
-
-    // then
-    assertThrows(ForbiddenReservationException.class, makingReservation);
-  }
-
-  @Test
-  public void whenMakeReservation_thenVerifyIfThereIsAConflictCausedByAllergies() {
-    // given
-    givenValidReservationRequest();
-
-    // when
-    restaurant.makeReservation(reservationRequest);
-
-    // then
-    verify(ingredientInventory).doesReservationCauseAllergicConflict(aReservation, reservations);
-  }
-
-  @Test
-  public void givenSomeReservations_whenCalculatingTotalIncome_thenReturnSumOfAllReservationIncomes() {
-    // given
-    given(reservationBook.getAllReservations()).willReturn(List.of(aReservation, aReservation));
-    given(aReservation.getReservationFees()).willReturn(A_RESERVATION_FEE);
-
-    // when
-    BigDecimal totalFee = restaurant.calculateTotalReservationFee();
-
-    // then
-    assertThat(totalFee).isEqualTo(A_RESERVATION_FEE.add(A_RESERVATION_FEE));
   }
 
   private void givenValidReservationRequest() {
-    given(dinnerPeriod.getStartDate()).willReturn(AN_OPENING_DATE);
-    given(hoppeningEvent.getDinnerPeriod()).willReturn(dinnerPeriod);
     given(reservationBook.getReservationsByDate(any())).willReturn(reservations);
     given(reservationFactory.create(reservationRequest, hoppeningEvent)).willReturn(aReservation);
     given(ingredientInventory.doesReservationCauseAllergicConflict(aReservation,
                                                                    reservations)).willReturn(DOES_NOT_CAUSE_ALLERGIC_CONFLICT);
-    given(ingredientInventory.areAllNecessaryIngredientsAvailable(aReservation,
-                                                                  AN_OPENING_DATE)).willReturn(ALL_INGREDIENTS_AVAILABLE);
+    given(ingredientInventory.areAllNecessaryIngredientsAvailable(aReservation)).willReturn(ALL_INGREDIENTS_AVAILABLE);
   }
 
   private void givenReservationRequestCausingAllergicConflict() {
@@ -353,13 +284,22 @@ public class RestaurantTest {
   }
 
   private void givenNotAllIngredientsAreAvailable() {
-    given(dinnerPeriod.getStartDate()).willReturn(AN_OPENING_DATE);
-    given(hoppeningEvent.getDinnerPeriod()).willReturn(dinnerPeriod);
     given(reservationBook.getReservationsByDate(any())).willReturn(reservations);
     given(reservationFactory.create(reservationRequest, hoppeningEvent)).willReturn(aReservation);
     given(ingredientInventory.doesReservationCauseAllergicConflict(aReservation,
                                                                    reservations)).willReturn(DOES_NOT_CAUSE_ALLERGIC_CONFLICT);
-    given(ingredientInventory.areAllNecessaryIngredientsAvailable(aReservation,
-                                                                  AN_OPENING_DATE)).willReturn(NOT_ALL_INGREDIENTS_AVAILABLE);
+    given(ingredientInventory.areAllNecessaryIngredientsAvailable(aReservation)).willReturn(NOT_ALL_INGREDIENTS_AVAILABLE);
+  }
+
+  private void givenDinnerPeriod(LocalDate dinnerStartDate, LocalDate dinnerEndDate) {
+    Period dinnerPeriod = new Period(dinnerStartDate, dinnerEndDate);
+    given(hoppeningConfigurationRequest.getDinnerPeriod()).willReturn(dinnerPeriod);
+  }
+
+  private void givenReservationPeriod(LocalDate reservationStartDate,
+                                      LocalDate reservationEndDate)
+  {
+    Period reservationPeriod = new Period(reservationStartDate, reservationEndDate);
+    given(hoppeningConfigurationRequest.getReservationPeriod()).willReturn(reservationPeriod);
   }
 }

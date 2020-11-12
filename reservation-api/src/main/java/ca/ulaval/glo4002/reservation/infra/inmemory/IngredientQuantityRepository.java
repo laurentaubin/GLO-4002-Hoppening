@@ -52,8 +52,4 @@ public class IngredientQuantityRepository {
     }
     return ingredientsQuantity;
   }
-
-  public boolean containsIngredientAtDate(IngredientName ingredientName, LocalDate date) {
-    return getIngredientsQuantity(date).containsKey(ingredientName);
-  }
 }

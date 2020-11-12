@@ -3,8 +3,8 @@ package ca.ulaval.glo4002.reservation.infra.report;
 import java.math.BigDecimal;
 
 public class IngredientPriceDto {
-  private String name;
-  private BigDecimal pricePerKg;
+  private final String name;
+  private final BigDecimal pricePerKg;
 
   public IngredientPriceDto(String name, BigDecimal pricePerKg) {
     this.name = name;

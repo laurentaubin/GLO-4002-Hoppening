@@ -11,18 +11,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CreateConfigurationRequestDto {
   @Valid
   @NotNull
-  private PeriodApiDto reservationPeriod;
+  private PeriodDto reservationPeriod;
 
   @Valid
   @NotNull
   @JsonProperty("hoppening")
-  private PeriodApiDto dinnerPeriod;
+  private PeriodDto dinnerPeriod;
 
-  public PeriodApiDto getReservationPeriod() {
+  public PeriodDto getReservationPeriod() {
     return reservationPeriod;
   }
 
-  public void setReservationPeriod(PeriodApiDto reservationPeriod) {
+  public void setReservationPeriod(PeriodDto reservationPeriod) {
     this.reservationPeriod = reservationPeriod;
   }
 
@@ -33,11 +33,11 @@ public class CreateConfigurationRequestDto {
     return dates;
   }
 
-  public PeriodApiDto getDinnerPeriod() {
+  public PeriodDto getDinnerPeriod() {
     return dinnerPeriod;
   }
 
-  public void setDinnerPeriod(PeriodApiDto dinnerPeriod) {
+  public void setDinnerPeriod(PeriodDto dinnerPeriod) {
     this.dinnerPeriod = dinnerPeriod;
   }
 }

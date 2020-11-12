@@ -16,18 +16,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ca.ulaval.glo4002.reservation.domain.Restaurant;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
-import ca.ulaval.glo4002.reservation.domain.material.Buffet;
 import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.material.MaterialReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceRepository;
 import ca.ulaval.glo4002.reservation.domain.report.ReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
+import ca.ulaval.glo4002.reservation.domain.report.ReportPeriodFactory;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceTest {
+  private static final LocalDate START_LOCAL_DATE = LocalDate.of(2150, 7, 21);
+  private static final LocalDate END_LOCAL_DATE = LocalDate.of(2150, 7, 29);
+
+  private static final String REPORT_START_DATE = "2150-07-21";
+  private static final String REPORT_END_DATE = "2150-07-29";
 
   private static final LocalDate A_DATE = LocalDate.of(2150, 7, 20);
   private static final IngredientName AN_INGREDIENT_NAME = IngredientName.BUTTERNUT_SQUASH;
@@ -49,70 +55,70 @@ public class ReportServiceTest {
   private ReportGenerator reportGenerator;
 
   @Mock
+  private Restaurant restaurant;
+
+  @Mock
   private MaterialReportGenerator materialReportGenerator;
 
   @Mock
-  private Buffet buffet;
+  private DailyDishesQuantity dailyDishesQuantity;
 
   @Mock
   private Map<LocalDate, DailyDishesQuantity> dailyDishesQuantities;
+
+  @Mock
+  private ReportPeriodFactory reportPeriodFactory;
 
   private ReportService reportService;
 
   @BeforeEach
   public void setUp() {
+    dailyDishesQuantities.put(START_LOCAL_DATE, dailyDishesQuantity);
     reportService = new ReportService(ingredientQuantityRepository,
                                       ingredientPriceRepository,
                                       reportGenerator,
+                                      restaurant,
                                       materialReportGenerator,
-                                      buffet);
+                                      reportPeriodFactory);
   }
 
   @Test
-  public void whenGetReportResponse_thenIngredientsPriceAreRetrieved() {
+  public void whenGetIngredientReport_thenIngredientsPriceAreRetrieved() {
     // when
-    reportService.getIngredientReport(reportPeriod);
+    reportService.getIngredientReport(REPORT_START_DATE, REPORT_END_DATE);
 
     // then
     verify(ingredientPriceRepository).getIngredientsPrice();
   }
 
   @Test
-  public void whenGetMaterialReport_thenMaterialReportIsRetrieved() {
+  public void whenGetIngredientReport_ThenIngredientsQuantityAreRetrieved() {
     // given
-    given(buffet.getDailyDishesQuantities(reportPeriod)).willReturn(dailyDishesQuantities);
+    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
 
     // when
-    reportService.getMaterialReport(reportPeriod);
-
-    // then
-    verify(materialReportGenerator).generateReport(dailyDishesQuantities, reportPeriod);
-  }
-
-  @Test
-  public void whenGetMaterialReport_thenDishesFromBuffetAreRetrieved() {
-    // given
-    given(buffet.getDailyDishesQuantities(reportPeriod)).willReturn(dailyDishesQuantities);
-
-    // when
-    reportService.getMaterialReport(reportPeriod);
-
-    // then
-    verify(buffet).getDailyDishesQuantities(reportPeriod);
-  }
-
-  @Test
-  public void whenGetReportResponse_ThenIngredientsQuantityAreRetrieved() {
-    // when
-    reportService.getIngredientReport(reportPeriod);
+    reportService.getIngredientReport(REPORT_START_DATE, REPORT_END_DATE);
 
     // then
     verify(ingredientQuantityRepository).getIngredientsQuantity(reportPeriod);
   }
 
   @Test
-  public void givenIngredientPriceDtosAndIngredientsQuantity_whenGetReportResponse_thenReportIsGenerated() {
+  public void whenGetIngredientReport_thenReportPeriodFactoryCreateIsCalled() {
     // given
+    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+
+    // when
+    reportService.getIngredientReport(REPORT_START_DATE, REPORT_END_DATE);
+
+    // then
+    verify(reportPeriodFactory).create(START_LOCAL_DATE, END_LOCAL_DATE);
+  }
+
+  @Test
+  public void givenIngredientPriceDtosAndIngredientsQuantity_whenGetIngredientReport_thenReportIsGenerated() {
+    // given
+    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
     List<IngredientPriceDto> ingredientPriceDtos = givenIngredientPriceDtos();
     given(ingredientPriceRepository.getIngredientsPrice()).willReturn(ingredientPriceDtos);
 
@@ -120,10 +126,47 @@ public class ReportServiceTest {
     given(ingredientQuantityRepository.getIngredientsQuantity(reportPeriod)).willReturn(ingredientsQuantity);
 
     // when
-    reportService.getIngredientReport(reportPeriod);
+    reportService.getIngredientReport(REPORT_START_DATE, REPORT_END_DATE);
 
     // then
     verify(reportGenerator).generateReport(ingredientPriceDtos, ingredientsQuantity);
+  }
+
+  @Test
+  public void whenGetMaterialReport_thenMaterialReportIsRetrieved() {
+    // given
+    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+    given(restaurant.getDailyDishesQuantity(reportPeriod)).willReturn(dailyDishesQuantities);
+
+    // when
+    reportService.getMaterialReport(REPORT_START_DATE, REPORT_END_DATE);
+
+    // then
+    verify(materialReportGenerator).generateReport(dailyDishesQuantities, reportPeriod);
+  }
+
+  @Test
+  public void whenGetMaterialReport_thenDailyDishesQuantityIsRetrieved() {
+    // given
+    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+
+    // when
+    reportService.getMaterialReport(REPORT_START_DATE, REPORT_END_DATE);
+
+    // then
+    verify(restaurant).getDailyDishesQuantity(reportPeriod);
+  }
+
+  @Test
+  public void whenGetMaterialReport_thenReportPeriodFactoryCreateIsCalled() {
+    // given
+    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+
+    // when
+    reportService.getMaterialReport(REPORT_START_DATE, REPORT_END_DATE);
+
+    // then
+    verify(reportPeriodFactory).create(START_LOCAL_DATE, END_LOCAL_DATE);
   }
 
   private List<IngredientPriceDto> givenIngredientPriceDtos() {

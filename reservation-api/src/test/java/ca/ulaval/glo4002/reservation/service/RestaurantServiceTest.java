@@ -13,9 +13,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ca.ulaval.glo4002.reservation.api.configuration.dto.CreateConfigurationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
+import ca.ulaval.glo4002.reservation.domain.HoppeningConfigurationRequest;
 import ca.ulaval.glo4002.reservation.domain.ReservationRequest;
 import ca.ulaval.glo4002.reservation.domain.Restaurant;
-import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequest;
+import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
+import ca.ulaval.glo4002.reservation.domain.material.Buffet;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.service.reservation.RestaurantService;
@@ -48,6 +50,9 @@ public class RestaurantServiceTest {
   private Reservation reservation;
 
   @Mock
+  private IngredientAvailabilityValidator ingredientAvailabilityValidator;
+
+  @Mock
   private ReservationDto expectedReservationDto;
 
   @Mock
@@ -59,10 +64,13 @@ public class RestaurantServiceTest {
   @Mock
   private CreateConfigurationRequestDto createConfigurationRequestDto;
 
+  @Mock
+  private Buffet buffet;
+
   private RestaurantService restaurantService;
 
   @BeforeEach
-  public void setUpRestaurantService() {
+  public void setUpReservationService() {
 
     restaurantService = new RestaurantService(reservationAssembler,
                                               reservationRequestAssembler,

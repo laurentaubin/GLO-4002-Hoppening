@@ -6,9 +6,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import ca.ulaval.glo4002.reservation.api.configuration.ConfigurationResource;
+import ca.ulaval.glo4002.reservation.api.configuration.validator.ConfigurationDateFormatValidator;
 import ca.ulaval.glo4002.reservation.api.report.ReportPresenterFactory;
 import ca.ulaval.glo4002.reservation.api.report.ReportResource;
-import ca.ulaval.glo4002.reservation.api.report.assembler.ReportPeriodAssembler;
 import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportDtoFactory;
 import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportPresenter;
 import ca.ulaval.glo4002.reservation.api.report.presenter.total.TotalReportDtoFactory;
@@ -17,6 +18,7 @@ import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitReportDtoFact
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
+import ca.ulaval.glo4002.reservation.domain.*;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.MenuRepository;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
@@ -24,32 +26,25 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabil
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
 import ca.ulaval.glo4002.reservation.domain.material.*;
 import ca.ulaval.glo4002.reservation.domain.report.*;
-import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesValidator;
+import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesDetector;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
-import ca.ulaval.glo4002.reservation.domain.reservation.validator.*;
-import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.CovidTableValidator;
-import ca.ulaval.glo4002.reservation.domain.reservation.validator.table.TableValidator;
 import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceHttpRepository;
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationService;
+import ca.ulaval.glo4002.reservation.service.reservation.RestaurantService;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.*;
 
 public class ReservationContext {
   private static final int PORT = 8181;
-  private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-  private static final int MAX_NUMBER_OF_CUSTOMERS_PER_TABLE = 4;
-  private static final int MAX_NUMBER_OF_CUSTOMERS_PER_RESERVATION = 6;
-  private static final String DATE_REGEX = "[0-9]{4}[-][0-9]{2}[-][0-9]{2}[T][0-9]{2}[:][0-9]{2}[:][0-9]{2}[.][0-9]{3}[Z]";
-  private static final String REPORT_DATE_REGEX = "[0-9]{4}[-][0-9]{2}[-][0-9]{2}";
-  private static final String OPENING_DINNER_DATE = "2150-07-20T00:00:00.000Z";
-  private static final String CLOSING_DINNER_DATE = "2150-07-30T23:59:59.999Z";
-  private static final String OPENING_RESERVATION_DATE = "2150-01-01T00:00:00.000Z";
-  private static final String CLOSING_RESERVATION_DATE = "2150-07-16T23:59:59.999Z";
-  private static final int MAX_NUMBER_OF_CUSTOMERS_PER_DAY = 42;
-  private static final LocalDate OPENING_DAY = LocalDate.of(2150, 7, 20);
+  private static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+  private static final String DATE_REGEX = "[0-9]{4}[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])";
+  private static final String DATE_TIME_REGEX = "[0-9]{4}[-][0-9]{2}[-][0-9]{2}[T][0-9]{2}[:][0-9]{2}[:][0-9]{2}[.][0-9]{3}[Z]";
+  private static final LocalDate OPENING_DINNER_LOCAL_DATE = LocalDate.of(2150, 7, 20);
+  private static final LocalDate CLOSING_DINNER_LOCAL_DATE = LocalDate.of(2150, 7, 30);
+  private static final LocalDate OPENING_RESERVATION_LOCAL_DATE = LocalDate.of(2150, 1, 1);
+  private static final LocalDate CLOSING_RESERVATION_LOCAL_DATE = LocalDate.of(2150, 7, 16);
   private static final IngredientName TOMATO = IngredientName.TOMATO;
   private static final int DAY_BEFORE_TOMATO_BECOME_AVAILABLE = 5;
 
@@ -58,64 +53,42 @@ public class ReservationContext {
   public void start() {
     ReservationIngredientCalculator reservationIngredientCalculator = createReservationIngredientCalculator();
     IngredientQuantityRepository ingredientQuantityRepository = new IngredientQuantityRepository(reservationIngredientCalculator);
+    ReservationRepository reservationRepository = new InMemoryReservationRepository();
+    IngredientAvailabilityValidator ingredientAvailabilityValidator = createIngredientAvailabilityValidator(reservationIngredientCalculator);
+    AllergiesDetector allergiesDetector = new AllergiesDetector(reservationIngredientCalculator);
     Buffet buffet = new Buffet(new DailyDishesQuantityFactory());
-    ReservationService reservationService = createReservationService(ingredientQuantityRepository,
-                                                                     reservationIngredientCalculator,
-                                                                     buffet);
+    Restaurant restaurant = createRestaurant(ingredientQuantityRepository,
+                                             reservationRepository,
+                                             ingredientAvailabilityValidator,
+                                             allergiesDetector,
+                                             buffet);
 
-    ReportService reportService = createReportService(ingredientQuantityRepository, buffet);
-
-    Object[] resources = createResources(reservationService, reportService);
+    RestaurantService restaurantService = createReservationService(restaurant);
+    ReportService reportService = createReportService(ingredientQuantityRepository, restaurant);
+    Object[] resources = createResources(restaurantService, reportService);
     server = createServer(resources);
 
     server.start();
   }
 
-  private ReservationService createReservationService(IngredientQuantityRepository ingredientQuantityRepository,
-                                                      ReservationIngredientCalculator reservationIngredientCalculator,
-                                                      Buffet buffet)
-  {
-    ReservationRepository reservationRepository = new InMemoryReservationRepository();
-
-    TableValidator tableValidator = new CovidTableValidator(MAX_NUMBER_OF_CUSTOMERS_PER_TABLE,
-                                                            MAX_NUMBER_OF_CUSTOMERS_PER_RESERVATION);
-    DinnerDateValidator dinnerDateValidator = new DinnerDateValidator(DATE_FORMAT,
-                                                                      OPENING_DINNER_DATE,
-                                                                      CLOSING_DINNER_DATE);
-    ReservationDateValidator reservationDateValidator = new ReservationDateValidator(DATE_FORMAT,
-                                                                                     OPENING_RESERVATION_DATE,
-                                                                                     CLOSING_RESERVATION_DATE);
-    RestrictionValidator restrictionValidator = new RestrictionValidator();
-
-    MaximumCustomerCapacityPerDayValidator maximumCustomerCapacityPerDayValidator = new MaximumCustomerCapacityPerDayValidator(MAX_NUMBER_OF_CUSTOMERS_PER_DAY,
-                                                                                                                               reservationRepository,
-                                                                                                                               DATE_FORMAT);
+  private RestaurantService createReservationService(Restaurant restaurant) {
     CustomerAssembler customerAssembler = new CustomerAssembler();
+    CustomerObjectAssembler customerObjectAssembler = new CustomerObjectAssembler();
+    TableObjectAssembler tableObjectAssembler = new TableObjectAssembler(customerObjectAssembler);
+    ReservationRequestAssembler reservationRequestAssembler = new ReservationRequestAssembler(tableObjectAssembler);
+    PeriodObjectAssembler eventPeriodObjectAssembler = new PeriodObjectAssembler();
+    HoppeningConfigurationRequestFactory hoppeningConfigurationRequestFactory = new HoppeningConfigurationRequestFactory();
+    ConfigurationRequestAssembler configurationRequestAssembler = new ConfigurationRequestAssembler(eventPeriodObjectAssembler,
+                                                                                                    hoppeningConfigurationRequestFactory);
 
-    IngredientAvailabilityValidator ingredientAvailabilityValidator = createIngredientAvailabilityValidator(reservationIngredientCalculator);
-
-    return new ReservationService(reservationRepository,
-                                  ingredientQuantityRepository,
-                                  new ReservationAssembler(DATE_FORMAT,
-                                                           new TableAssembler(customerAssembler),
-                                                           customerAssembler,
-                                                           new ReservationDetailsAssembler(DATE_FORMAT,
-                                                                                           new CountryAssembler())),
-                                  new ReservationValidator(dinnerDateValidator,
-                                                           reservationDateValidator,
-                                                           tableValidator,
-                                                           restrictionValidator,
-                                                           maximumCustomerCapacityPerDayValidator),
-
-                                  new AllergiesValidator(ingredientQuantityRepository,
-                                                         reservationIngredientCalculator,
-                                                         reservationRepository),
-                                  ingredientAvailabilityValidator,
-                                  buffet);
+    return new RestaurantService(new ReservationAssembler(DATE_TIME_FORMAT, customerAssembler),
+                                 reservationRequestAssembler,
+                                 configurationRequestAssembler,
+                                 restaurant);
   }
 
   private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository,
-                                            Buffet buffet)
+                                            Restaurant restaurant)
   {
     IngredientPriceRepository ingredientPriceRepository = new IngredientPriceHttpRepository();
     IngredientPriceCalculatorFactory ingredientPriceCalculatorFactory = new IngredientPriceCalculatorFactory();
@@ -128,33 +101,39 @@ public class ReservationContext {
     CleanMaterialPriceCalculator cleanMaterialPriceCalculator = new CleanMaterialPriceCalculator();
     MaterialReportGenerator materialReportGenerator = new MaterialReportGenerator(cleanMaterialPriceCalculator,
                                                                                   materialToBuyPriceCalculator);
+    ReportPeriodFactory reportPeriodFactory = new ReportPeriodFactory(restaurant.getHoppeningEvent()
+                                                                                .getDinnerPeriod());
+
     return new ReportService(ingredientQuantityRepository,
                              ingredientPriceRepository,
                              reportGenerator,
+                             restaurant,
                              materialReportGenerator,
-                             buffet);
+                             reportPeriodFactory);
   }
 
-  private Object[] createResources(ReservationService reservationService,
+  private Object[] createResources(RestaurantService restaurantService,
                                    ReportService reportService)
   {
-    ReservationResource reservationResource = createReservationResource(reservationService);
+    ReservationResource reservationResource = createReservationResource(restaurantService);
     ReportResource reportResource = createReportResource(reportService);
+    ConfigurationResource configurationResource = new ConfigurationResource(restaurantService,
+                                                                            new ConfigurationDateFormatValidator(DATE_REGEX));
 
     Collection<Object> resources = new ArrayList<>();
     resources.add(reservationResource);
     resources.add(reportResource);
+    resources.add(configurationResource);
     return resources.toArray();
   }
 
-  private ReservationResource createReservationResource(ReservationService reservationService) {
-    DateFormatValidator dateFormatValidator = new DateFormatValidator(DATE_REGEX);
-    return new ReservationResource(reservationService, dateFormatValidator);
+  private ReservationResource createReservationResource(RestaurantService restaurantService) {
+    DateFormatValidator dateFormatValidator = new DateFormatValidator(DATE_TIME_REGEX);
+    return new ReservationResource(restaurantService, dateFormatValidator);
   }
 
   private ReportResource createReportResource(ReportService reportService) {
-    ReportDateValidator reportDateValidator = new ReportDateValidator(REPORT_DATE_REGEX);
-    ReportPeriodAssembler reportPeriodAssembler = new ReportPeriodAssembler();
+    ReportDateValidator reportDateValidator = new ReportDateValidator(DATE_REGEX, reportService);
 
     UnitReportDayDtoFactory unitReportDayDtoFactory = new UnitReportDayDtoFactory();
     UnitReportDtoFactory unitReportDtoFactory = new UnitReportDtoFactory(unitReportDayDtoFactory);
@@ -166,7 +145,6 @@ public class ReservationContext {
 
     return new ReportResource(reportService,
                               reportDateValidator,
-                              reportPeriodAssembler,
                               reportPresenterFactory,
                               materialReportPresenter);
   }
@@ -183,7 +161,43 @@ public class ReservationContext {
 
   private IngredientAvailabilityValidator createIngredientAvailabilityValidator(ReservationIngredientCalculator reservationIngredientCalculator) {
     Set<Available> availables = new HashSet<>();
-    availables.add(new TomatoStock(OPENING_DAY, TOMATO, DAY_BEFORE_TOMATO_BECOME_AVAILABLE));
+    availables.add(new TomatoStock(OPENING_DINNER_LOCAL_DATE,
+                                   TOMATO,
+                                   DAY_BEFORE_TOMATO_BECOME_AVAILABLE));
     return new IngredientAvailabilityValidator(reservationIngredientCalculator, availables);
+  }
+
+  private Restaurant createRestaurant(IngredientQuantityRepository ingredientQuantityRepository,
+                                      ReservationRepository reservationRepository,
+                                      IngredientAvailabilityValidator ingredientAvailabilityValidator,
+                                      AllergiesDetector allergiesDetector,
+                                      Buffet buffet)
+  {
+    ReservationFactory reservationFactory = createReservationFactory();
+    ReservationBook reservationBook = new ReservationBook(reservationRepository);
+    IngredientInventory ingredientInventory = new IngredientInventory(ingredientQuantityRepository,
+                                                                      ingredientAvailabilityValidator,
+                                                                      allergiesDetector);
+    HoppeningEvent hoppeningEvent = createInitialHoppeningEvent();
+    return new Restaurant(reservationFactory,
+                          reservationBook,
+                          ingredientInventory,
+                          hoppeningEvent,
+                          buffet);
+  }
+
+  private ReservationFactory createReservationFactory() {
+    DinnerDateFactory dinnerDateFactory = new DinnerDateFactory();
+    ReservationDateFactory reservationDateFactory = new ReservationDateFactory();
+    CustomerFactory customerFactory = new CustomerFactory();
+    TableFactory tableFactory = new TableFactory(customerFactory);
+    return new ReservationFactory(dinnerDateFactory, reservationDateFactory, tableFactory);
+  }
+
+  private HoppeningEvent createInitialHoppeningEvent() {
+    Period dinnerPeriod = new Period(OPENING_DINNER_LOCAL_DATE, CLOSING_DINNER_LOCAL_DATE);
+    Period reservationPeriod = new Period(OPENING_RESERVATION_LOCAL_DATE,
+                                          CLOSING_RESERVATION_LOCAL_DATE);
+    return new HoppeningEvent(dinnerPeriod, reservationPeriod);
   }
 }

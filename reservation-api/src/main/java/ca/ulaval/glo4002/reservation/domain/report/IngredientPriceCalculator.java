@@ -10,7 +10,7 @@ import ca.ulaval.glo4002.reservation.domain.report.exception.IngredientNotFoundE
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
 
 public class IngredientPriceCalculator {
-  private Map<IngredientName, BigDecimal> ingredientNameToPrice;
+  private final Map<IngredientName, BigDecimal> ingredientNameToPrice;
 
   public IngredientPriceCalculator() {
     this.ingredientNameToPrice = new HashMap<>();

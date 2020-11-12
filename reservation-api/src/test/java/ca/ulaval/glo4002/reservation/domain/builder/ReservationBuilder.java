@@ -4,27 +4,26 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.ulaval.glo4002.reservation.domain.DinnerDate;
+import ca.ulaval.glo4002.reservation.domain.ReservationDate;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationDetails;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 public class ReservationBuilder {
-  private static final String A_VENDOR_CODE = "vendor code";
   private static final LocalDateTime A_DINNER_DATE = LocalDateTime.now();
+  private static final LocalDateTime A_RESERVATION_DATE = LocalDateTime.now();
 
   private ReservationId id;
-  private String vendorCode;
-  private LocalDateTime dinnerDate;
+  private DinnerDate dinnerDate;
   private final List<Table> tables;
-  private ReservationDetails reservationDetails;
+  private ReservationDate reservationDate;
 
   public ReservationBuilder() {
     id = new ReservationId();
-    vendorCode = A_VENDOR_CODE;
-    dinnerDate = A_DINNER_DATE;
+    dinnerDate = new DinnerDate(A_DINNER_DATE);
     tables = new ArrayList<>();
-    reservationDetails = new ReservationDetailsBuilder().build();
+    reservationDate = new ReservationDate(A_RESERVATION_DATE);
   }
 
   public ReservationBuilder withId(ReservationId id) {
@@ -32,23 +31,13 @@ public class ReservationBuilder {
     return this;
   }
 
-  public ReservationBuilder withVendorCode(String vendorCode) {
-    this.vendorCode = vendorCode;
-    return this;
-  }
-
   public ReservationBuilder withDinnerDate(LocalDateTime dinnerDate) {
-    this.dinnerDate = dinnerDate;
+    this.dinnerDate = new DinnerDate(dinnerDate);
     return this;
   }
 
   public ReservationBuilder withTable(Table table) {
     tables.add(table);
-    return this;
-  }
-
-  public ReservationBuilder withReservationDetails(ReservationDetails reservationDetails) {
-    this.reservationDetails = reservationDetails;
     return this;
   }
 
@@ -59,6 +48,6 @@ public class ReservationBuilder {
   }
 
   public Reservation build() {
-    return new Reservation(id, vendorCode, dinnerDate, tables, reservationDetails);
+    return new Reservation(id, dinnerDate, tables, reservationDate);
   }
 }

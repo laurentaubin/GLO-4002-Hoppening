@@ -12,11 +12,10 @@ public class CatchInvalidConfigurationRequestMapper
   implements
     ExceptionMapper<ConfigurationException>
 {
-  private static final int STATUS_CODE = Response.Status.BAD_REQUEST.getStatusCode();
 
   @Override
   public Response toResponse(ConfigurationException exception) {
-    return Response.status(STATUS_CODE)
+    return Response.status(exception.getStatusCode())
                    .entity(new ExceptionResponse(exception.getError(), exception.getDescription()))
                    .build();
   }

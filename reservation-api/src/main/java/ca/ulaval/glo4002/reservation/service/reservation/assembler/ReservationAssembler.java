@@ -2,46 +2,24 @@ package ca.ulaval.glo4002.reservation.service.reservation.assembler;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
-import ca.ulaval.glo4002.reservation.domain.reservation.*;
+import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
+import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 
 public class ReservationAssembler {
   private final DateTimeFormatter dateFormatter;
-  private final TableAssembler tableAssembler;
   private final CustomerAssembler customerAssembler;
-  private final ReservationDetailsAssembler reservationDetailsAssembler;
 
-  public ReservationAssembler(String dateFormat,
-                              TableAssembler tableAssembler,
-                              CustomerAssembler customerAssembler,
-                              ReservationDetailsAssembler reservationDetailsAssembler)
-  {
+  public ReservationAssembler(String dateFormat, CustomerAssembler customerAssembler) {
     this.dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
-    this.tableAssembler = tableAssembler;
     this.customerAssembler = customerAssembler;
-    this.reservationDetailsAssembler = reservationDetailsAssembler;
-  }
-
-  public Reservation assembleFromCreateReservationRequestDto(CreateReservationRequestDto createReservationRequestDto) {
-    LocalDateTime dinnerDate = assembleDinnerDateFromString(createReservationRequestDto.getDinnerDate());
-    List<Table> tables = createReservationRequestDto.getTables()
-                                                    .stream()
-                                                    .map(tableAssembler::assembleFromTableDto)
-                                                    .collect(Collectors.toList());
-    ReservationDetails reservationDetails = reservationDetailsAssembler.assembleFromReservationDetailsDto(createReservationRequestDto.getReservationDetails());
-    return new Reservation(new ReservationId(),
-                           createReservationRequestDto.getVendorCode(),
-                           dinnerDate,
-                           tables,
-                           reservationDetails);
   }
 
   public ReservationDto assembleDtoFromReservation(Reservation reservation) {
@@ -60,10 +38,6 @@ public class ReservationAssembler {
 
   private BigDecimal formatReservationPrice(BigDecimal reservationFees) {
     return reservationFees.setScale(2, RoundingMode.HALF_UP);
-  }
-
-  private LocalDateTime assembleDinnerDateFromString(String dinnerDate) {
-    return LocalDateTime.parse(dinnerDate, dateFormatter);
   }
 
   private List<Customer> getAllCustomersFromReservation(Reservation reservation) {

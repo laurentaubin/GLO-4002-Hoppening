@@ -22,9 +22,6 @@ import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationExcep
 public class InMemoryReservationRepositoryTest {
   private static final LocalDateTime A_DATE = LocalDateTime.of(2020, 7, 20, 23, 23);
   private static final LocalDateTime ANOTHER_DATE = LocalDateTime.of(2050, 1, 14, 1, 4);
-  private static final int FOUR_CUSTOMERS = 4;
-  private static final int EIGHT_CUSTOMERS = 8;
-  private static final int ONE_CUSTOMER = 1;
 
   @Mock
   private Reservation aReservation;
@@ -65,37 +62,6 @@ public class InMemoryReservationRepositoryTest {
 
     // then
     assertThat(actualReservation).isEqualTo(aReservation);
-  }
-
-  @Test
-  public void givenAReservationWithOneCustomer_whenGetTotalNumberOfCustomerForADay_thenReturnOneCustomer() {
-    // given
-    given(aReservation.getDinnerDate()).willReturn(A_DATE);
-    given(aReservation.getNumberOfCustomers()).willReturn(ONE_CUSTOMER);
-    reservationRepository.saveReservation(aReservation);
-
-    // when
-    int totalNumberOfReservationForADay = reservationRepository.getTotalNumberOfCustomersForADay(A_DATE);
-
-    // then
-    assertThat(totalNumberOfReservationForADay).isEqualTo(ONE_CUSTOMER);
-  }
-
-  @Test
-  public void givenTwoReservationsWithATotalOfEightCustomers_whenGetTotalNumberOfCustomersForADay_thenReturnEightCustomers() {
-    // given
-    given(aReservation.getNumberOfCustomers()).willReturn(FOUR_CUSTOMERS);
-    given(aReservation.getDinnerDate()).willReturn(A_DATE);
-    given(anotherReservation.getNumberOfCustomers()).willReturn(FOUR_CUSTOMERS);
-    given(anotherReservation.getDinnerDate()).willReturn(A_DATE);
-    reservationRepository.saveReservation(aReservation);
-    reservationRepository.saveReservation(anotherReservation);
-
-    // when
-    int totalNumberOfReservationForADay = reservationRepository.getTotalNumberOfCustomersForADay(A_DATE);
-
-    // then
-    assertThat(totalNumberOfReservationForADay).isEqualTo(EIGHT_CUSTOMERS);
   }
 
   @Test

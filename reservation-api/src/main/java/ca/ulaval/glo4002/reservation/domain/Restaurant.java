@@ -1,22 +1,16 @@
 package ca.ulaval.glo4002.reservation.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import ca.ulaval.glo4002.reservation.domain.chef.ChefManager;
 import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
-import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequest;
-import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
 import ca.ulaval.glo4002.reservation.domain.material.Buffet;
 import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
-import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
 public class Restaurant {
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_DAY = 42;
@@ -26,31 +20,23 @@ public class Restaurant {
   private final ReservationBook reservationBook;
   private final IngredientInventory ingredientInventory;
   private final Buffet buffet;
-  private final ChefManager chefManager;
 
   public Restaurant(ReservationFactory reservationFactory,
                     ReservationBook reservationBook,
                     IngredientInventory ingredientInventory,
                     HoppeningEvent hoppeningEvent,
-                    Buffet buffet,
-                    ChefManager chefManager)
+                    Buffet buffet)
   {
     this.reservationFactory = reservationFactory;
     this.reservationBook = reservationBook;
     this.ingredientInventory = ingredientInventory;
     this.hoppeningEvent = hoppeningEvent;
     this.buffet = buffet;
-    this.chefManager = chefManager;
   }
 
   public ReservationId makeReservation(ReservationRequest reservationRequest) {
     Reservation reservation = reservationFactory.create(reservationRequest, hoppeningEvent);
     verifyReservation(reservation);
-    try {
-      hireChefsForNewReservation(reservation);
-    } catch (NoChefsAvailableException noChefsAvailableException) {
-      throw new ForbiddenReservationException();
-    }
     buffet.updateDailyDishesQuantity(reservation);
     return registerReservation(reservation);
   }
@@ -92,10 +78,7 @@ public class Restaurant {
   }
 
   private void verifyIngredientAvailability(Reservation reservation) {
-    if (!ingredientInventory.areAllNecessaryIngredientsAvailable(reservation,
-                                                                 hoppeningEvent.getDinnerPeriod()
-                                                                               .getStartDate()))
-    {
+    if (!ingredientInventory.areAllNecessaryIngredientsAvailable(reservation)) {
       throw new ForbiddenReservationException();
     }
   }
@@ -112,18 +95,4 @@ public class Restaurant {
                                                                     existingReservationAtDinnerDate);
   }
 
-  private void hireChefsForNewReservation(Reservation reservation) {
-    List<Reservation> currentReservations = reservationBook.getReservationsByDate(reservation.getDinnerDate());
-    currentReservations.add(reservation);
-    chefManager.hireChefsForReservations(currentReservations);
-  }
-
-  public BigDecimal calculateTotalReservationFee() {
-    BigDecimal totalFee = BigDecimal.ZERO;
-    for (Reservation reservation : reservationBook.getAllReservations()) {
-      totalFee = totalFee.add(reservation.getReservationFees());
-    }
-
-    return totalFee;
-  }
 }

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import ca.ulaval.glo4002.reservation.domain.date.Period;
+import ca.ulaval.glo4002.reservation.domain.Period;
 import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportDateException;
 
 public class ReportPeriodFactoryTest {
@@ -20,21 +20,20 @@ public class ReportPeriodFactoryTest {
   private static final LocalDate A_START_REPORT_DATE = LocalDate.of(2150, 7, 21);
   private static final LocalDate A_END_REPORT_DATE = LocalDate.of(2150, 7, 29);
 
-  private final Period dinnerPeriod = new Period(A_DINNER_BEGIN_DATE, A_DINNER_END_DATE);
+  private Period dinnerPeriod = new Period(A_DINNER_BEGIN_DATE, A_DINNER_END_DATE);
 
   private ReportPeriodFactory reportPeriodFactory;
 
   @BeforeEach
   public void setUpReportPeriodFactory() {
-    reportPeriodFactory = new ReportPeriodFactory();
+    reportPeriodFactory = new ReportPeriodFactory(dinnerPeriod);
   }
 
   @Test
   public void givenStartDateBeingBeforeDinnerPeriod_whenCreate_thenThrowInvalidReportDateException() {
     // when
     Executable initializingReportPeriod = () -> reportPeriodFactory.create(A_REPORT_DATE_BEFORE_DINNER_DATE,
-                                                                           A_END_REPORT_DATE,
-                                                                           dinnerPeriod);
+                                                                           A_END_REPORT_DATE);
 
     // then
     assertThrows(InvalidReportDateException.class, initializingReportPeriod);
@@ -44,8 +43,7 @@ public class ReportPeriodFactoryTest {
   public void givenEndDateBeingAfterDinnerPeriod_whenCreate_thenThrowInvalidReportDateException() {
     // when
     Executable initializingReportPeriod = () -> reportPeriodFactory.create(A_START_REPORT_DATE,
-                                                                           A_REPORT_DATE_AFTER_DINNER_DATE,
-                                                                           dinnerPeriod);
+                                                                           A_REPORT_DATE_AFTER_DINNER_DATE);
 
     // then
     assertThrows(InvalidReportDateException.class, initializingReportPeriod);
@@ -54,9 +52,7 @@ public class ReportPeriodFactoryTest {
   @Test
   public void givenAValidReportPeriod_whenCreate_thenTheReportPeriodIsCreated() {
     // when
-    ReportPeriod reportPeriod = reportPeriodFactory.create(A_START_REPORT_DATE,
-                                                           A_END_REPORT_DATE,
-                                                           dinnerPeriod);
+    ReportPeriod reportPeriod = reportPeriodFactory.create(A_START_REPORT_DATE, A_END_REPORT_DATE);
 
     assertThat(reportPeriod.getStartDate()).isEqualTo(A_START_REPORT_DATE);
     assertThat(reportPeriod.getEndDate()).isEqualTo(A_END_REPORT_DATE);

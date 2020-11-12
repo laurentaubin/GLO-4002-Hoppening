@@ -4,37 +4,33 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import ca.ulaval.glo4002.reservation.domain.DinnerDate;
+import ca.ulaval.glo4002.reservation.domain.ReservationDate;
+
 public class Reservation {
 
   private final ReservationId reservationId;
-  private final String vendorCode;
-  private final LocalDateTime dinnerDate;
+  private final DinnerDate dinnerDate;
   private final List<Table> tables;
-  private final ReservationDetails reservationDetails;
+  private final ReservationDate reservationDate;
 
   public Reservation(ReservationId reservationId,
-                     String vendorCode,
-                     LocalDateTime dinnerDate,
+                     DinnerDate dinnerDate,
                      List<Table> tables,
-                     ReservationDetails reservationDetails)
+                     ReservationDate reservationDate)
   {
     this.reservationId = reservationId;
-    this.vendorCode = vendorCode;
     this.dinnerDate = dinnerDate;
     this.tables = tables;
-    this.reservationDetails = reservationDetails;
+    this.reservationDate = reservationDate;
   }
 
   public ReservationId getReservationId() {
     return reservationId;
   }
 
-  public String getVendorCode() {
-    return vendorCode;
-  }
-
   public LocalDateTime getDinnerDate() {
-    return dinnerDate;
+    return dinnerDate.getLocalDateTime();
   }
 
   public List<Table> getTables() {
@@ -49,8 +45,8 @@ public class Reservation {
     return reservationFees;
   }
 
-  public ReservationDetails getReservationDetails() {
-    return reservationDetails;
+  public LocalDateTime getReservationDate() {
+    return reservationDate.getLocalDateTime();
   }
 
   public Map<RestrictionType, Integer> getRestrictionTypeCount() {

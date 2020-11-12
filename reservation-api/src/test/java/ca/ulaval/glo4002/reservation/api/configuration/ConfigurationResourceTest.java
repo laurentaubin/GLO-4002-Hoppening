@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.configuration.dto.CreateConfigurationRequestDto;
-import ca.ulaval.glo4002.reservation.api.configuration.dto.PeriodApiDto;
+import ca.ulaval.glo4002.reservation.api.configuration.dto.PeriodDto;
 import ca.ulaval.glo4002.reservation.api.configuration.validator.ConfigurationDateFormatValidator;
 import ca.ulaval.glo4002.reservation.service.reservation.RestaurantService;
 
@@ -49,23 +49,23 @@ public class ConfigurationResourceTest {
   }
 
   private CreateConfigurationRequestDto buildConfigurationDto() {
-    PeriodApiDto hoppeningDto = buildPeriodDto(ConfigurationResourceTest.A_HOPPENING_BEGIN_DATE,
-                                               ConfigurationResourceTest.A_HOPPENING_END_DATE);
-    PeriodApiDto reservationPeriodApiDto = buildPeriodDto(ConfigurationResourceTest.A_RESERVATION_BEGIN_DATE,
-                                                          ConfigurationResourceTest.A_RESERVATION_END_DATE);
+    PeriodDto hoppeningDto = buildPeriodDto(ConfigurationResourceTest.A_HOPPENING_BEGIN_DATE,
+                                            ConfigurationResourceTest.A_HOPPENING_END_DATE);
+    PeriodDto reservationPeriodDto = buildPeriodDto(ConfigurationResourceTest.A_RESERVATION_BEGIN_DATE,
+                                                    ConfigurationResourceTest.A_RESERVATION_END_DATE);
 
     CreateConfigurationRequestDto createConfigurationRequestDto = new CreateConfigurationRequestDto();
     createConfigurationRequestDto.setDinnerPeriod(hoppeningDto);
-    createConfigurationRequestDto.setReservationPeriod(reservationPeriodApiDto);
+    createConfigurationRequestDto.setReservationPeriod(reservationPeriodDto);
 
     return createConfigurationRequestDto;
   }
 
-  private PeriodApiDto buildPeriodDto(String beginDate, String endDate) {
-    PeriodApiDto periodApiDto = new PeriodApiDto();
-    periodApiDto.setBeginDate(beginDate);
-    periodApiDto.setEndDate(endDate);
+  private PeriodDto buildPeriodDto(String beginDate, String endDate) {
+    PeriodDto periodDto = new PeriodDto();
+    periodDto.setBeginDate(beginDate);
+    periodDto.setEndDate(endDate);
 
-    return periodApiDto;
+    return periodDto;
   }
 }

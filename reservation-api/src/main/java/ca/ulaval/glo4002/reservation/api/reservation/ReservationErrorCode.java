@@ -4,9 +4,9 @@ import javax.ws.rs.core.Response;
 
 public enum ReservationErrorCode {
   INVALID_FORMAT("Invalid Format", Response.Status.BAD_REQUEST.getStatusCode()),
-  INVALID_DINNER_DATE("Dinner date should be between July 20 2150 and July 30 2150",
+  INVALID_DINNER_DATE("Dinner date should be between %s and %s",
                       Response.Status.BAD_REQUEST.getStatusCode()),
-  INVALID_RESERVATION_DATE("Reservation date should be between January 1 2150 and July 16 2150",
+  INVALID_RESERVATION_DATE("Reservation date should be between %s and %s",
                            Response.Status.BAD_REQUEST.getStatusCode()),
   INVALID_RESERVATION_QUANTITY("Reservations must include tables and customers",
                                Response.Status.BAD_REQUEST.getStatusCode()),

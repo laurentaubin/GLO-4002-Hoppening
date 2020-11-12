@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -17,6 +18,7 @@ import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
 
 @ExtendWith(MockitoExtension.class)
 class AllergiesDetectorTest {
@@ -24,7 +26,11 @@ class AllergiesDetectorTest {
   private static final RestrictionType VEGAN_RESTRICTION = RestrictionType.VEGAN;
   private static final RestrictionType NONE_RESTRICTION = RestrictionType.NONE;
   private static final IngredientName CARROTS_INGREDIENT = IngredientName.CARROTS;
+  private static final LocalDate A_DATE = LocalDate.of(2050, 7, 20);
   private static final LocalDateTime A_DATE_TIME = LocalDateTime.of(2050, 7, 20, 9, 33, 20, 0);
+
+  @Mock
+  private IngredientQuantityRepository ingredientQuantityRepository;
 
   @Mock
   private ReservationIngredientCalculator reservationIngredientCalculator;
@@ -56,12 +62,12 @@ class AllergiesDetectorTest {
   public void givenAllergiesAndCarrotsInReservationDayMenu_whenCheckingIfAllergicFriendly_thenReservationIsForbidden() {
     // given
     Reservation reservation = givenReservationWithAllergicCustomer();
-    List<Reservation> existingReservations = Collections.singletonList(reservation);
+    List<Reservation> reservations = Collections.singletonList(reservation);
     Map<IngredientName, BigDecimal> dailyIngredients = givenCarrotInReservationDayMenu();
 
     // when
     boolean isReservationAllowed = allergiesDetector.isReservationAllergicFriendly(reservation,
-                                                                                   existingReservations,
+                                                                                   reservations,
                                                                                    dailyIngredients);
 
     // then
@@ -72,12 +78,12 @@ class AllergiesDetectorTest {
   public void givenAllergiesAndNoCarrotsInReservationDayMenu_whenCheckingIfAllergicFriendly_thenReservationIsAllowed() {
     // given
     Reservation reservation = givenReservationWithAllergicCustomer();
-    List<Reservation> existingReservations = Collections.singletonList(reservation);
+    List<Reservation> reservations = Collections.singletonList(reservation);
     Map<IngredientName, BigDecimal> dailyIngredients = givenNoCarrotsInReservationDayMenu();
 
     // when
     boolean isReservationAllowed = allergiesDetector.isReservationAllergicFriendly(reservation,
-                                                                                   existingReservations,
+                                                                                   reservations,
                                                                                    dailyIngredients);
 
     // then
@@ -90,12 +96,12 @@ class AllergiesDetectorTest {
     Reservation reservation = givenReservationWithoutAllergicCustomer();
     Map<IngredientName, BigDecimal> ingredientQuantity = givenIngredientQuantity(IngredientName.BACON);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(ingredientQuantity);
-    List<Reservation> existingReservations = Collections.singletonList(reservation);
+    List<Reservation> reservations = Collections.singletonList(reservation);
     Map<IngredientName, BigDecimal> dailyIngredients = givenNoCarrotsInReservationDayMenu();
 
     // when
     boolean isReservationAllowed = allergiesDetector.isReservationAllergicFriendly(reservation,
-                                                                                   existingReservations,
+                                                                                   reservations,
                                                                                    dailyIngredients);
 
     // then
@@ -108,12 +114,12 @@ class AllergiesDetectorTest {
     Reservation reservation = givenReservationWithCarrots();
     Map<IngredientName, BigDecimal> ingredientQuantity = givenIngredientQuantity(CARROTS_INGREDIENT);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(ingredientQuantity);
-    List<Reservation> existingReservations = Collections.singletonList(reservation);
+    List<Reservation> reservations = Collections.singletonList(reservation);
     Map<IngredientName, BigDecimal> dailyIngredients = givenNoCarrotsInReservationDayMenu();
 
     // when
     boolean isReservationAllowed = allergiesDetector.isReservationAllergicFriendly(reservation,
-                                                                                   existingReservations,
+                                                                                   reservations,
                                                                                    dailyIngredients);
 
     // then
@@ -126,11 +132,11 @@ class AllergiesDetectorTest {
     Reservation reservation = givenReservationWithCarrots();
     Map<IngredientName, BigDecimal> ingredientQuantity = givenIngredientQuantity(CARROTS_INGREDIENT);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(ingredientQuantity);
-    List<Reservation> existingReservations = createReservationRepositoryWithAllergies(A_DATE_TIME);
+    List<Reservation> reservations = createReservationRepositoryWithAllergies(A_DATE_TIME);
 
     // when
     boolean isReservationAllowed = allergiesDetector.isReservationAllergicFriendly(reservation,
-                                                                                   existingReservations,
+                                                                                   reservations,
                                                                                    ingredientQuantity);
 
     // then
@@ -143,11 +149,11 @@ class AllergiesDetectorTest {
     Reservation reservation = givenReservationWithAllergicCustomerAndCarrots();
     Map<IngredientName, BigDecimal> menuWithCarrots = Collections.singletonMap(CARROTS_INGREDIENT,
                                                                                BigDecimal.valueOf(1.0));
-    List<Reservation> existingReservations = givenNoPriorReservations();
+    List<Reservation> reservations = givenNoPriorReservations();
 
     // when
     boolean isReservationAllowed = allergiesDetector.isReservationAllergicFriendly(reservation,
-                                                                                   existingReservations,
+                                                                                   reservations,
                                                                                    menuWithCarrots);
 
     // then

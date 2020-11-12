@@ -11,8 +11,8 @@ import ca.ulaval.glo4002.reservation.api.report.presenter.IngredientReportInform
 @JsonPropertyOrder({ "ingredients", "totalPrice" })
 public class TotalReportDto {
   @JsonProperty("ingredients")
-  private List<IngredientReportInformationDto> ingredients;
-  private BigDecimal totalPrice;
+  private final List<IngredientReportInformationDto> ingredients;
+  private final BigDecimal totalPrice;
 
   public TotalReportDto(List<IngredientReportInformationDto> ingredients, BigDecimal totalPrice) {
     this.ingredients = ingredients;
