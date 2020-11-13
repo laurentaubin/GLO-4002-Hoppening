@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import ca.ulaval.glo4002.reservation.exception.InvalidRestrictionException;
 import ca.ulaval.glo4002.reservation.service.reservation.dto.CustomerDto;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidRestrictionException;
 
 public class CustomerFactoryTest {
   private static final String A_NAME = "name";

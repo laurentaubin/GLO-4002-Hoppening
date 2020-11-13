@@ -1,8 +1,8 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
-import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidRestrictionException;
-
 import java.math.BigDecimal;
+
+import ca.ulaval.glo4002.reservation.exception.InvalidRestrictionException;
 
 public enum RestrictionType {
   VEGETARIAN("vegetarian", BigDecimal.valueOf(500)),

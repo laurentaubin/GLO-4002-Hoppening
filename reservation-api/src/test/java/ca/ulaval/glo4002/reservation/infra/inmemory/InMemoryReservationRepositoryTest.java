@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class InMemoryReservationRepositoryTest {
@@ -111,6 +111,6 @@ public class InMemoryReservationRepositoryTest {
     Executable gettingReservationById = () -> reservationRepository.getReservationById(reservationId);
 
     // then
-    assertThrows(NonExistingReservationException.class, gettingReservationById);
+    assertThrows(ReservationNotFoundException.class, gettingReservationById);
   }
 }

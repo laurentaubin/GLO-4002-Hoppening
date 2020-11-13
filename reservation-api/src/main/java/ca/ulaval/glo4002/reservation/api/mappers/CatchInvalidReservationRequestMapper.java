@@ -10,9 +10,11 @@ import ca.ulaval.glo4002.reservation.exception.ReservationException;
 @Provider
 public class CatchInvalidReservationRequestMapper implements ExceptionMapper<ReservationException> {
 
+  private static final int STATUS_CODE = Response.Status.BAD_REQUEST.getStatusCode();
+
   @Override
   public Response toResponse(ReservationException exception) {
-    return Response.status(exception.getStatusCode())
+    return Response.status(STATUS_CODE)
                    .entity(new ExceptionResponse(exception.getError(), exception.getDescription()))
                    .build();
   }

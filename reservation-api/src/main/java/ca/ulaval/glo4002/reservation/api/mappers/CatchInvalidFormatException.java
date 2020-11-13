@@ -6,17 +6,13 @@ import javax.ws.rs.ext.Provider;
 
 import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
 import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatException;
-import ca.ulaval.glo4002.reservation.exception.InvalidRestrictionException;
 
 @Provider
-public class CatchInvalidRestrictionTypeExceptionMapper
-  implements
-    ExceptionMapper<InvalidRestrictionException>
-{
+public class CatchInvalidFormatException implements ExceptionMapper<InvalidFormatException> {
   private static final int STATUS_CODE = Response.Status.BAD_REQUEST.getStatusCode();
 
   @Override
-  public Response toResponse(InvalidRestrictionException exception) {
+  public Response toResponse(InvalidFormatException exception) {
     return Response.status(STATUS_CODE)
                    .entity(new ExceptionResponse(InvalidFormatException.getError(),
                                                  InvalidFormatException.getDescription()))

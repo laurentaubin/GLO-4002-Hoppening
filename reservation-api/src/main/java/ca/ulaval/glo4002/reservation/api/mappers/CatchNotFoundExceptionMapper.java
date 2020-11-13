@@ -5,17 +5,16 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
-import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
+import ca.ulaval.glo4002.reservation.exception.NotFoundException;
 
 @Provider
-public class CatchNotFoundExceptionMapper implements ExceptionMapper<ReservationNotFoundException> {
-  private static final ReservationErrorCode ERROR_CODE = ReservationErrorCode.RESERVATION_NOT_FOUND;
+public class CatchNotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
+  private static final int ERROR_STATUS = Response.Status.NOT_FOUND.getStatusCode();
 
   @Override
-  public Response toResponse(ReservationNotFoundException exception) {
-    return Response.status(ERROR_CODE.getCode())
-                   .entity(new ExceptionResponse(ERROR_CODE.toString(), exception.getDescription()))
+  public Response toResponse(NotFoundException exception) {
+    return Response.status(ERROR_STATUS)
+                   .entity(new ExceptionResponse(exception.getError(), exception.getDescription()))
                    .build();
   }
 }

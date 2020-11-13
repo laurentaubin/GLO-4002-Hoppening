@@ -1,16 +1,14 @@
 package ca.ulaval.glo4002.reservation.service.reservation.exception;
 
-import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.exception.ReservationException;
+import ca.ulaval.glo4002.reservation.exception.NotFoundException;
 
-public class ReservationNotFoundException extends ReservationException {
-  public static final ReservationErrorCode ERROR_CODE = ReservationErrorCode.RESERVATION_NOT_FOUND;
+public class ReservationNotFoundException extends NotFoundException {
+  private static final String ERROR_CODE = "RESERVATION_NOT_FOUND";
+  private static final String ERROR_MESSAGE = "Reservation with number RESERVATION_NUMBER not found";
 
   public ReservationNotFoundException(ReservationId reservationId) {
-    super(ERROR_CODE.toString(),
-          ERROR_CODE.getMessage()
-                    .replace("RESERVATION_NUMBER", String.valueOf(reservationId.getLongId())),
-          ERROR_CODE.getCode());
+    super(ERROR_CODE,
+          ERROR_MESSAGE.replace("RESERVATION_NUMBER", String.valueOf(reservationId.getLongId())));
   }
 }

@@ -4,11 +4,11 @@ public class InvalidRestrictionException extends RuntimeException {
   private static final String error = "INVALID_FORMAT";
   private static final String description = "Invalid Format";
 
-  public String getError() {
+  public static String getError() {
     return error;
   }
 
-  public String getDescription() {
+  public static String getDescription() {
     return description;
   }
 }

@@ -1,12 +1,12 @@
 package ca.ulaval.glo4002.reservation.service.reservation.exception;
 
-import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
 import ca.ulaval.glo4002.reservation.exception.ReservationException;
 
 public class InvalidReservationQuantityException extends ReservationException {
-  public static final ReservationErrorCode ERROR_CODE = ReservationErrorCode.INVALID_RESERVATION_QUANTITY;
+  private static final String ERROR_CODE = "INVALID_RESERVATION_QUANTITY";
+  private static final String ERROR_MESSAGE = "Reservations must include tables and customers";
 
   public InvalidReservationQuantityException() {
-    super(ERROR_CODE.toString(), ERROR_CODE.getMessage(), ERROR_CODE.getCode());
+    super(ERROR_CODE, ERROR_MESSAGE);
   }
 }

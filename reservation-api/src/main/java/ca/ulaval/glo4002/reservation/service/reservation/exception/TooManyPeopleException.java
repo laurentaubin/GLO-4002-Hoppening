@@ -1,12 +1,12 @@
 package ca.ulaval.glo4002.reservation.service.reservation.exception;
 
-import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
 import ca.ulaval.glo4002.reservation.exception.ReservationException;
 
 public class TooManyPeopleException extends ReservationException {
-  public static final ReservationErrorCode ERROR_CODE = ReservationErrorCode.TOO_MANY_PEOPLE;
+  private static final String ERROR_CODE = "TOO_MANY_PEOPLE";
+  private static final String ERROR_MESSAGE = "The reservation tries to bring a number of people which does not comply with recent government laws.";
 
   public TooManyPeopleException() {
-    super(ERROR_CODE.toString(), ERROR_CODE.getMessage(), ERROR_CODE.getCode());
+    super(ERROR_CODE, ERROR_MESSAGE);
   }
 }

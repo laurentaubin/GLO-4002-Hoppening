@@ -3,18 +3,17 @@ package ca.ulaval.glo4002.reservation.service.reservation.exception;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import ca.ulaval.glo4002.reservation.api.reservation.ReservationErrorCode;
 import ca.ulaval.glo4002.reservation.exception.ReservationException;
 
 public class InvalidDinnerDateException extends ReservationException {
   private static final String PATTERN_FORMAT = "MMMM dd YYYY";
-  public static final ReservationErrorCode ERROR_CODE = ReservationErrorCode.INVALID_DINNER_DATE;
+  private static final String ERROR_CODE = "INVALID_DINNER_DATE";
+  private static final String ERROR_MESSAGE = "Dinner date should be between %s and %s";
 
   public InvalidDinnerDateException(LocalDate startDate, LocalDate endDate) {
-    super(ERROR_CODE.toString(),
-          String.format(ERROR_CODE.getMessage(),
+    super(ERROR_CODE,
+          String.format(ERROR_MESSAGE,
                         startDate.format(DateTimeFormatter.ofPattern(PATTERN_FORMAT)),
-                        endDate.format(DateTimeFormatter.ofPattern(PATTERN_FORMAT))),
-          ERROR_CODE.getCode());
+                        endDate.format(DateTimeFormatter.ofPattern(PATTERN_FORMAT))));
   }
 }

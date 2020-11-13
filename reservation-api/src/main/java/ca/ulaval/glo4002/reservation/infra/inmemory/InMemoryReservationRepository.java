@@ -8,7 +8,7 @@ import java.util.List;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
-import ca.ulaval.glo4002.reservation.infra.exception.NonExistingReservationException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
 
 public class InMemoryReservationRepository implements ReservationRepository {
   private final List<Reservation> reservations = new ArrayList<>();
@@ -24,7 +24,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
         return reservation;
       }
     }
-    throw new NonExistingReservationException();
+    throw new ReservationNotFoundException(reservationId);
   }
 
   public List<Reservation> getReservationsByDate(LocalDateTime date) {

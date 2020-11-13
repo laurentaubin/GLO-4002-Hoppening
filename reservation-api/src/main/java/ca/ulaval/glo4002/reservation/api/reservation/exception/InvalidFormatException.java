@@ -1,15 +1,14 @@
 package ca.ulaval.glo4002.reservation.api.reservation.exception;
 
-import javax.ws.rs.core.Response;
+public class InvalidFormatException extends RuntimeException {
+  private static final String error = "INVALID_FORMAT";
+  private static final String description = "Invalid Format";
 
-import ca.ulaval.glo4002.reservation.exception.ReservationException;
+  public static String getError() {
+    return error;
+  }
 
-public class InvalidFormatException extends ReservationException {
-  private static final String ERROR = "INVALID_FORMAT";
-  private static final String DESCRIPTION = "Invalid Format";
-  private static final int STATUS_CODE = Response.Status.BAD_REQUEST.getStatusCode();
-
-  public InvalidFormatException() {
-    super(ERROR, DESCRIPTION, STATUS_CODE);
+  public static String getDescription() {
+    return description;
   }
 }
