@@ -6,7 +6,7 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 
 public interface Available {
 
-  boolean isAvailable(LocalDate dinnerDate);
+  boolean isAvailable(LocalDate dinnerDate, LocalDate openingDay);
 
   IngredientName getIngredientName();
 }

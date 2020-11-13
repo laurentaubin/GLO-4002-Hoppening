@@ -29,6 +29,8 @@ public class IngredientAvailabilityValidatorTest {
                                                                                         7,
                                                                                         23);
 
+  private static final LocalDate OPENING_DATE = LocalDate.of(2150, 7, 20);
+
   private static final BigDecimal QUANTITY = BigDecimal.valueOf(20);
 
   @Mock
@@ -55,13 +57,14 @@ public class IngredientAvailabilityValidatorTest {
     // given
     given(reservation.getDinnerDate()).willReturn(DATE_OUTSIDE_TOMATO_AVAILABILITY_PERIOD.atStartOfDay());
     given(anIngredientStock.getIngredientName()).willReturn(TOMATO);
-    given(anIngredientStock.isAvailable(reservation.getDinnerDate()
-                                                   .toLocalDate())).willReturn(false);
+    given(anIngredientStock.isAvailable(reservation.getDinnerDate().toLocalDate(),
+                                        OPENING_DATE)).willReturn(false);
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(Map.of(TOMATO,
                                                                                                             QUANTITY));
 
     // when
-    boolean isReservationAllowed = this.ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation);
+    boolean isReservationAllowed = this.ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation,
+                                                                                                              OPENING_DATE);
 
     // then
     assertThat(isReservationAllowed).isFalse();
@@ -73,7 +76,8 @@ public class IngredientAvailabilityValidatorTest {
     given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(Collections.emptyMap());
 
     // when
-    boolean isReservationAllowed = ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation);
+    boolean isReservationAllowed = ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation,
+                                                                                                         OPENING_DATE);
 
     // then
     assertThat(isReservationAllowed).isTrue();

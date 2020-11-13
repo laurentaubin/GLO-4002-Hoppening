@@ -91,7 +91,10 @@ public class Restaurant {
   }
 
   private void verifyIngredientAvailability(Reservation reservation) {
-    if (!ingredientInventory.areAllNecessaryIngredientsAvailable(reservation)) {
+    if (!ingredientInventory.areAllNecessaryIngredientsAvailable(reservation,
+                                                                 hoppeningEvent.getDinnerPeriod()
+                                                                               .getStartDate()))
+    {
       throw new ForbiddenReservationException();
     }
   }

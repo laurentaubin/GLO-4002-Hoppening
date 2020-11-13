@@ -23,15 +23,14 @@ class TomatoStockTest {
 
   @BeforeEach
   public void setUp() {
-    tomatoStock = new TomatoStock(OPENING_DAY,
-                                  IngredientName.TOMATO,
-                                  DAYS_BEFORE_TOMATOES_ARE_AVAILABLE);
+    tomatoStock = new TomatoStock(IngredientName.TOMATO, DAYS_BEFORE_TOMATOES_ARE_AVAILABLE);
   }
 
   @Test
   public void givenADateBeforeTomatoAvailability_whenIsAvailable_thenShouldNotBeAvailable() {
     // when
-    boolean isTomatoAvailable = tomatoStock.isAvailable(DATE_BEFORE_TOMATOES_AVAILABILITY);
+    boolean isTomatoAvailable = tomatoStock.isAvailable(DATE_BEFORE_TOMATOES_AVAILABILITY,
+                                                        OPENING_DAY);
 
     // then
     assertThat(isTomatoAvailable).isFalse();
@@ -40,7 +39,8 @@ class TomatoStockTest {
   @Test
   public void givenReservationWhenIngredientIsAvailable_whenIsAvailable_thenShouldBeAvailable() {
     // when
-    boolean isTomatoAvailable = tomatoStock.isAvailable(DATE_AFTER_TOMATOES_AVAILABILITY);
+    boolean isTomatoAvailable = tomatoStock.isAvailable(DATE_AFTER_TOMATOES_AVAILABILITY,
+                                                        OPENING_DAY);
 
     // then
     assertThat(isTomatoAvailable).isTrue();
@@ -49,7 +49,7 @@ class TomatoStockTest {
   @Test
   public void givenReservationMadeTheDayTomatoesAreAvailable_whenIsAvailable_thenShouldBeAvailable() {
     // when
-    boolean isTomatoAvailable = tomatoStock.isAvailable(DATE_TOMATOES_ARE_AVAILABLE);
+    boolean isTomatoAvailable = tomatoStock.isAvailable(DATE_TOMATOES_ARE_AVAILABLE, OPENING_DAY);
 
     // then
     assertThat(isTomatoAvailable).isTrue();

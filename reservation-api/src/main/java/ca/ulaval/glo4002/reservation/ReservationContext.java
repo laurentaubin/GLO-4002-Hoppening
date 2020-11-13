@@ -189,9 +189,7 @@ public class ReservationContext {
 
   private IngredientAvailabilityValidator createIngredientAvailabilityValidator(ReservationIngredientCalculator reservationIngredientCalculator) {
     Set<Available> availables = new HashSet<>();
-    availables.add(new TomatoStock(OPENING_DINNER_LOCAL_DATE,
-                                   TOMATO,
-                                   DAY_BEFORE_TOMATO_BECOME_AVAILABLE));
+    availables.add(new TomatoStock(TOMATO, DAY_BEFORE_TOMATO_BECOME_AVAILABLE));
     return new IngredientAvailabilityValidator(reservationIngredientCalculator, availables);
   }
 

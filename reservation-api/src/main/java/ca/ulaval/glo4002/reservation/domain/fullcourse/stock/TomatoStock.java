@@ -8,17 +8,15 @@ public class TomatoStock implements Available {
 
   private final IngredientName ingredient;
 
-  private final LocalDate tomatoAvailabilityDate;
+  private int ingredientPreparationDays;
 
-  public TomatoStock(LocalDate openingDay,
-                     IngredientName ingredient,
-                     int ingredientPreparationDays)
-  {
+  public TomatoStock(IngredientName ingredient, int ingredientPreparationDays) {
     this.ingredient = ingredient;
-    this.tomatoAvailabilityDate = openingDay.plusDays(ingredientPreparationDays);
+    this.ingredientPreparationDays = ingredientPreparationDays;
   }
 
-  public boolean isAvailable(LocalDate dinnerDate) {
+  public boolean isAvailable(LocalDate dinnerDate, LocalDate openingDate) {
+    LocalDate tomatoAvailabilityDate = openingDate.plusDays(ingredientPreparationDays);
     return tomatoAvailabilityDate.isBefore(dinnerDate)
            || tomatoAvailabilityDate.isEqual(dinnerDate);
   }
