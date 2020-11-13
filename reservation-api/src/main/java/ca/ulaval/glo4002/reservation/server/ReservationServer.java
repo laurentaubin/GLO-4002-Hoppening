@@ -38,6 +38,8 @@ public class ReservationServer {
     packageConfig.register(new CatchJsonMappingExceptionMapper());
     packageConfig.register(new CatchNotFoundExceptionMapper());
     packageConfig.register(new CatchInvalidConfigurationRequestMapper());
+    packageConfig.register(new CatchInvalidFormatExceptionMapper());
+    packageConfig.register(new CatchInvalidRestrictionTypeExceptionMapper());
     packageConfig.property(ServerProperties.LOCATION_HEADER_RELATIVE_URI_RESOLUTION_DISABLED, true);
     return packageConfig;
   }

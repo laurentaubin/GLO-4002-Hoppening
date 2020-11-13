@@ -5,7 +5,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
-import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatException;
 import ca.ulaval.glo4002.reservation.exception.InvalidRestrictionException;
 
 @Provider
@@ -18,8 +17,7 @@ public class CatchInvalidRestrictionTypeExceptionMapper
   @Override
   public Response toResponse(InvalidRestrictionException exception) {
     return Response.status(STATUS_CODE)
-                   .entity(new ExceptionResponse(InvalidFormatException.getError(),
-                                                 InvalidFormatException.getDescription()))
+                   .entity(new ExceptionResponse(exception.getError(), exception.getDescription()))
                    .build();
   }
 }
