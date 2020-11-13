@@ -18,7 +18,7 @@ import ca.ulaval.glo4002.reservation.domain.report.IngredientReportPresenter;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportType;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.service.report.ChefReportService;
-import ca.ulaval.glo4002.reservation.service.report.IngredientReportService;
+import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @ExtendWith(MockitoExtension.class)
 public class IngredientReportResourceTest {
@@ -30,7 +30,7 @@ public class IngredientReportResourceTest {
   public static final IngredientReportType TOTAL_REPORT_TYPE = IngredientReportType.TOTAL;
 
   @Mock
-  private IngredientReportService ingredientReportService;
+  private ReportService reportService;
 
   @Mock
   private ChefReportService chefReportService;
@@ -48,7 +48,7 @@ public class IngredientReportResourceTest {
   private ReportPeriod reportPeriod;
 
   @Mock
-  private ReportPresenterFactory reportPresenterFactory;
+  private IngredientReportPresenterFactory ingredientReportPresenterFactory;
 
   @Mock
   private IngredientReportPresenter ingredientReportPresenter;
@@ -63,27 +63,28 @@ public class IngredientReportResourceTest {
 
   @BeforeEach
   public void setUp() {
-    reportResource =
-        new ReportResource(ingredientReportService, chefReportService, reportDateValidator,
-            reportPresenterFactory, chefReportDtoAssembler, materialReportPresenter);
+    reportResource = new ReportResource(reportService, chefReportService, reportDateValidator,
+        ingredientReportPresenterFactory, chefReportDtoAssembler, materialReportPresenter);
   }
 
   @Test
   public void whenGetIngredientReport_thenReportIsReturnedByReportService() {
     // given
-    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(ingredientReportPresenter);
+    given(ingredientReportPresenterFactory.create(REPORT_TYPE))
+        .willReturn(ingredientReportPresenter);
 
     // when
     reportResource.getIngredientReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
-    verify(ingredientReportService).getIngredientReport(START_DATE, END_DATE);
+    verify(reportService).getIngredientReport(START_DATE, END_DATE);
   }
 
   @Test
   public void whenGetIngredientReport_thenDatesAreValidated() {
     // given
-    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(ingredientReportPresenter);
+    given(ingredientReportPresenterFactory.create(REPORT_TYPE))
+        .willReturn(ingredientReportPresenter);
 
     // when
     reportResource.getIngredientReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
@@ -95,21 +96,22 @@ public class IngredientReportResourceTest {
   @Test
   public void whenGetIngredientReport_thenReportPresenterFactoryIsCalled() {
     // given
-    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(ingredientReportPresenter);
+    given(ingredientReportPresenterFactory.create(REPORT_TYPE))
+        .willReturn(ingredientReportPresenter);
 
     // when
     reportResource.getIngredientReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
 
     // then
-    verify(reportPresenterFactory).create(REPORT_TYPE);
+    verify(ingredientReportPresenterFactory).create(REPORT_TYPE);
   }
 
   @Test
   public void whenGetIngredientReport_thenUnitReportDtoIsAssembled() {
     // given
-    given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(ingredientReportPresenter);
-    given(ingredientReportService.getIngredientReport(START_DATE, END_DATE))
-        .willReturn(ingredientReport);
+    given(ingredientReportPresenterFactory.create(REPORT_TYPE))
+        .willReturn(ingredientReportPresenter);
+    given(reportService.getIngredientReport(START_DATE, END_DATE)).willReturn(ingredientReport);
 
     // when
     reportResource.getIngredientReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
@@ -121,9 +123,9 @@ public class IngredientReportResourceTest {
   @Test
   public void whenGetIngredientReport_thenTotalReportDtoIsAssembled() {
     // given
-    given(reportPresenterFactory.create(TOTAL_REPORT_TYPE)).willReturn(ingredientReportPresenter);
-    given(ingredientReportService.getIngredientReport(START_DATE, END_DATE))
-        .willReturn(ingredientReport);
+    given(ingredientReportPresenterFactory.create(TOTAL_REPORT_TYPE))
+        .willReturn(ingredientReportPresenter);
+    given(reportService.getIngredientReport(START_DATE, END_DATE)).willReturn(ingredientReport);
 
     // when
     reportResource.getIngredientReport(START_DATE, END_DATE, TOTAL_REPORT_TYPE_STRING);
@@ -135,8 +137,7 @@ public class IngredientReportResourceTest {
   @Test
   public void whenGetMaterialReport_thenMaterialReportPresenterFactoryIsCalled() {
     // given
-    given(ingredientReportService.getMaterialReport(START_DATE, END_DATE))
-        .willReturn(materialReport);
+    given(reportService.getMaterialReport(START_DATE, END_DATE)).willReturn(materialReport);
 
     // when
     reportResource.getMaterialReport(START_DATE, END_DATE);
@@ -157,8 +158,7 @@ public class IngredientReportResourceTest {
   @Test
   public void whenGetMaterialReport_thenMaterialReportDtoIsAssembled() {
     // given
-    given(ingredientReportService.getMaterialReport(START_DATE, END_DATE))
-        .willReturn(materialReport);
+    given(reportService.getMaterialReport(START_DATE, END_DATE)).willReturn(materialReport);
 
     // when
     reportResource.getMaterialReport(START_DATE, END_DATE);

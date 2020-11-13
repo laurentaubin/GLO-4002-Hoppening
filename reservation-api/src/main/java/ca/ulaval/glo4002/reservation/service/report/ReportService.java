@@ -14,7 +14,7 @@ import ca.ulaval.glo4002.reservation.domain.report.*;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
 
-public class IngredientReportService {
+public class ReportService {
 
   private final IngredientQuantityRepository ingredientQuantityRepository;
   private final IngredientPriceRepository ingredientPriceRepository;
@@ -23,7 +23,7 @@ public class IngredientReportService {
   private final MaterialReportGenerator materialReportGenerator;
   private final ReportPeriodFactory reportPeriodFactory;
 
-  public IngredientReportService(IngredientQuantityRepository ingredientQuantityRepository,
+  public ReportService(IngredientQuantityRepository ingredientQuantityRepository,
       IngredientPriceRepository ingredientPriceRepository,
       IngredientReportGenerator ingredientReportGenerator, Restaurant restaurant,
       MaterialReportGenerator materialReportGenerator, ReportPeriodFactory reportPeriodFactory) {

@@ -17,29 +17,27 @@ import ca.ulaval.glo4002.reservation.domain.report.IngredientReportPresenter;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportType;
 import ca.ulaval.glo4002.reservation.domain.report.chef.ChefReport;
 import ca.ulaval.glo4002.reservation.service.report.ChefReportService;
-import ca.ulaval.glo4002.reservation.service.report.IngredientReportService;
+import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @Path("/reports")
 public class ReportResource {
 
-  private final IngredientReportService ingredientReportService;
+  private final ReportService reportService;
   private final ChefReportService chefReportService;
   private final ReportDateValidator reportDateValidator;
-  private final ReportPresenterFactory reportPresenterFactory;
+  private final IngredientReportPresenterFactory ingredientReportPresenterFactory;
   private final ChefReportDtoAssembler chefReportDtoAssembler;
   private final MaterialReportPresenter materialReportPresenter;
 
-  public ReportResource(IngredientReportService ingredientReportService,
-                        ChefReportService chefReportService,
-                        ReportDateValidator reportDateValidator,
-                        ReportPresenterFactory reportPresenterFactory,
-                        ChefReportDtoAssembler chefReportDtoAssembler,
-                        MaterialReportPresenter materialReportPresenter)
-  {
-    this.ingredientReportService = ingredientReportService;
+  public ReportResource(ReportService reportService, ChefReportService chefReportService,
+      ReportDateValidator reportDateValidator,
+      IngredientReportPresenterFactory ingredientReportPresenterFactory,
+      ChefReportDtoAssembler chefReportDtoAssembler,
+      MaterialReportPresenter materialReportPresenter) {
+    this.reportService = reportService;
     this.chefReportService = chefReportService;
     this.reportDateValidator = reportDateValidator;
-    this.reportPresenterFactory = reportPresenterFactory;
+    this.ingredientReportPresenterFactory = ingredientReportPresenterFactory;
     this.chefReportDtoAssembler = chefReportDtoAssembler;
     this.materialReportPresenter = materialReportPresenter;
   }
@@ -48,13 +46,11 @@ public class ReportResource {
   @Path("/ingredients")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getIngredientReport(@QueryParam("startDate") String startDate,
-                                      @QueryParam("endDate") String endDate,
-                                      @QueryParam("type") String type)
-  {
+      @QueryParam("endDate") String endDate, @QueryParam("type") String type) {
     reportDateValidator.validate(startDate, endDate);
-    IngredientReport ingredientReport = ingredientReportService.getIngredientReport(startDate,
-                                                                                    endDate);
-    IngredientReportPresenter ingredientReportPresenter = reportPresenterFactory.create(IngredientReportType.valueOfName(type));
+    IngredientReport ingredientReport = reportService.getIngredientReport(startDate, endDate);
+    IngredientReportPresenter ingredientReportPresenter =
+        ingredientReportPresenterFactory.create(IngredientReportType.valueOfName(type));
     return ingredientReportPresenter.presentReport(ingredientReport);
   }
 
@@ -71,10 +67,9 @@ public class ReportResource {
   @Path("/material")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getMaterialReport(@QueryParam("startDate") String startDate,
-                                    @QueryParam("endDate") String endDate)
-  {
+      @QueryParam("endDate") String endDate) {
     reportDateValidator.validate(startDate, endDate);
-    MaterialReport materialReport = ingredientReportService.getMaterialReport(startDate, endDate);
+    MaterialReport materialReport = reportService.getMaterialReport(startDate, endDate);
     return materialReportPresenter.presentReport(materialReport);
   }
 }

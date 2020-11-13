@@ -8,7 +8,7 @@ import java.util.Set;
 
 import ca.ulaval.glo4002.reservation.api.configuration.ConfigurationResource;
 import ca.ulaval.glo4002.reservation.api.configuration.validator.ConfigurationDateFormatValidator;
-import ca.ulaval.glo4002.reservation.api.report.ReportPresenterFactory;
+import ca.ulaval.glo4002.reservation.api.report.IngredientReportPresenterFactory;
 import ca.ulaval.glo4002.reservation.api.report.ReportResource;
 import ca.ulaval.glo4002.reservation.api.report.assembler.ChefReportDtoAssembler;
 import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportDtoFactory;
@@ -42,7 +42,7 @@ import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceHttpRepository;
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
 import ca.ulaval.glo4002.reservation.service.report.ChefReportService;
-import ca.ulaval.glo4002.reservation.service.report.IngredientReportService;
+import ca.ulaval.glo4002.reservation.service.report.ReportService;
 import ca.ulaval.glo4002.reservation.service.reservation.RestaurantService;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.*;
 
@@ -78,8 +78,7 @@ public class ReservationContext {
         ingredientAvailabilityValidator, allergiesDetector, buffet, chefManager);
 
     RestaurantService restaurantService = createReservationService(restaurant);
-    IngredientReportService reportService =
-        createReportService(ingredientQuantityRepository, restaurant);
+    ReportService reportService = createReportService(ingredientQuantityRepository, restaurant);
     Object[] resources = createResources(restaurantService, reportService, chefReportService);
     server = createServer(resources);
 
@@ -108,7 +107,7 @@ public class ReservationContext {
         reservationRequestAssembler, configurationRequestAssembler, restaurant);
   }
 
-  private IngredientReportService createReportService(
+  private ReportService createReportService(
       IngredientQuantityRepository ingredientQuantityRepository, Restaurant restaurant) {
     IngredientPriceRepository ingredientPriceRepository = new IngredientPriceHttpRepository();
     IngredientPriceCalculatorFactory ingredientPriceCalculatorFactory =
@@ -127,15 +126,14 @@ public class ReservationContext {
         new MaterialReportGenerator(cleanMaterialPriceCalculator, materialToBuyPriceCalculator);
     ReportPeriodFactory reportPeriodFactory = new ReportPeriodFactory();
 
-    return new IngredientReportService(ingredientQuantityRepository, ingredientPriceRepository,
+    return new ReportService(ingredientQuantityRepository, ingredientPriceRepository,
         ingredientReportGenerator, restaurant, materialReportGenerator, reportPeriodFactory);
   }
 
-  private Object[] createResources(RestaurantService restaurantService,
-      IngredientReportService ingredientReportService, ChefReportService chefReportService) {
+  private Object[] createResources(RestaurantService restaurantService, ReportService reportService,
+      ChefReportService chefReportService) {
     ReservationResource reservationResource = createReservationResource(restaurantService);
-    ReportResource reportResource =
-        createReportResource(ingredientReportService, chefReportService);
+    ReportResource reportResource = createReportResource(reportService, chefReportService);
     ConfigurationResource configurationResource = new ConfigurationResource(restaurantService,
         new ConfigurationDateFormatValidator(DATE_REGEX));
 
@@ -151,23 +149,22 @@ public class ReservationContext {
     return new ReservationResource(restaurantService, dateFormatValidator);
   }
 
-  private ReportResource createReportResource(IngredientReportService ingredientReportService,
+  private ReportResource createReportResource(ReportService reportService,
       ChefReportService chefReportService) {
-    ReportDateValidator reportDateValidator =
-        new ReportDateValidator(DATE_REGEX, ingredientReportService);
+    ReportDateValidator reportDateValidator = new ReportDateValidator(DATE_REGEX, reportService);
 
     UnitReportDayDtoFactory unitReportDayDtoFactory = new UnitReportDayDtoFactory();
     UnitReportDtoFactory unitReportDtoFactory = new UnitReportDtoFactory(unitReportDayDtoFactory);
     TotalReportDtoFactory totalReportDtoFactory = new TotalReportDtoFactory();
     MaterialReportDtoFactory materialReportDtoFactory = new MaterialReportDtoFactory();
-    ReportPresenterFactory reportPresenterFactory =
-        new ReportPresenterFactory(unitReportDtoFactory, totalReportDtoFactory);
+    IngredientReportPresenterFactory ingredientReportPresenterFactory =
+        new IngredientReportPresenterFactory(unitReportDtoFactory, totalReportDtoFactory);
     ChefReportDtoAssembler chefReportDtoAssembler = new ChefReportDtoAssembler();
     MaterialReportPresenter materialReportPresenter =
         new MaterialReportPresenter(materialReportDtoFactory);
 
-    return new ReportResource(ingredientReportService, chefReportService, reportDateValidator,
-        reportPresenterFactory, chefReportDtoAssembler, materialReportPresenter);
+    return new ReportResource(reportService, chefReportService, reportDateValidator,
+        ingredientReportPresenterFactory, chefReportDtoAssembler, materialReportPresenter);
   }
 
   private ReservationServer createServer(Object[] resources) {

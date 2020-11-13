@@ -12,8 +12,7 @@ public class IngredientReportPresenterFactory {
   private final TotalReportDtoFactory totalReportDtoFactory;
 
   public IngredientReportPresenterFactory(UnitReportDtoFactory unitReportDtoFactory,
-                                          TotalReportDtoFactory totalReportDtoFactory)
-  {
+      TotalReportDtoFactory totalReportDtoFactory) {
     this.unitReportDtoFactory = unitReportDtoFactory;
     this.totalReportDtoFactory = totalReportDtoFactory;
   }
