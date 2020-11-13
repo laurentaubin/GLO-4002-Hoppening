@@ -122,8 +122,7 @@ public class ReservationContext {
     CleanMaterialPriceCalculator cleanMaterialPriceCalculator = new CleanMaterialPriceCalculator();
     MaterialReportGenerator materialReportGenerator = new MaterialReportGenerator(cleanMaterialPriceCalculator,
                                                                                   materialToBuyPriceCalculator);
-    ReportPeriodFactory reportPeriodFactory = new ReportPeriodFactory(restaurant.getHoppeningEvent()
-                                                                                .getDinnerPeriod());
+    ReportPeriodFactory reportPeriodFactory = new ReportPeriodFactory();
 
     return new IngredientReportService(ingredientQuantityRepository,
                                        ingredientPriceRepository,

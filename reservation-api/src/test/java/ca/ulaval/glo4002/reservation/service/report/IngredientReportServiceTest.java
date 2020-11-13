@@ -17,7 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.domain.Restaurant;
+import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
 import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.material.MaterialReportGenerator;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceRepository;
@@ -69,10 +71,16 @@ public class IngredientReportServiceTest {
   @Mock
   private ReportPeriodFactory reportPeriodFactory;
 
+  @Mock
+  private Period dinnerPeriod;
+
+  @Mock
+  private HoppeningEvent hoppeningEvent;
+
   private IngredientReportService ingredientReportService;
 
   @BeforeEach
-  public void setUp() {
+  public void setUpIngredientReportService() {
     dailyDishesQuantities.put(START_LOCAL_DATE, dailyDishesQuantity);
     ingredientReportService = new IngredientReportService(ingredientQuantityRepository,
                                                           ingredientPriceRepository,
@@ -80,6 +88,12 @@ public class IngredientReportServiceTest {
                                                           restaurant,
                                                           materialReportGenerator,
                                                           reportPeriodFactory);
+  }
+
+  @BeforeEach
+  public void setUpHoppeningEvent() {
+    given(hoppeningEvent.getDinnerPeriod()).willReturn(dinnerPeriod);
+    given(restaurant.getHoppeningEvent()).willReturn(hoppeningEvent);
   }
 
   @Test
@@ -94,7 +108,9 @@ public class IngredientReportServiceTest {
   @Test
   public void whenGetIngredientReport_ThenIngredientsQuantityAreRetrieved() {
     // given
-    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+    given(reportPeriodFactory.create(START_LOCAL_DATE,
+                                     END_LOCAL_DATE,
+                                     dinnerPeriod)).willReturn(reportPeriod);
 
     // when
     ingredientReportService.getIngredientReport(REPORT_START_DATE, REPORT_END_DATE);
@@ -106,19 +122,23 @@ public class IngredientReportServiceTest {
   @Test
   public void whenGetIngredientReport_thenReportPeriodFactoryCreateIsCalled() {
     // given
-    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+    given(reportPeriodFactory.create(START_LOCAL_DATE,
+                                     END_LOCAL_DATE,
+                                     dinnerPeriod)).willReturn(reportPeriod);
 
     // when
     ingredientReportService.getIngredientReport(REPORT_START_DATE, REPORT_END_DATE);
 
     // then
-    verify(reportPeriodFactory).create(START_LOCAL_DATE, END_LOCAL_DATE);
+    verify(reportPeriodFactory).create(START_LOCAL_DATE, END_LOCAL_DATE, dinnerPeriod);
   }
 
   @Test
   public void givenIngredientPriceDtosAndIngredientsQuantity_whenGetIngredientReport_thenReportIsGenerated() {
     // given
-    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+    given(reportPeriodFactory.create(START_LOCAL_DATE,
+                                     END_LOCAL_DATE,
+                                     dinnerPeriod)).willReturn(reportPeriod);
     List<IngredientPriceDto> ingredientPriceDtos = givenIngredientPriceDtos();
     given(ingredientPriceRepository.getIngredientsPrice()).willReturn(ingredientPriceDtos);
 
@@ -135,7 +155,9 @@ public class IngredientReportServiceTest {
   @Test
   public void whenGetMaterialReport_thenMaterialReportIsRetrieved() {
     // given
-    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+    given(reportPeriodFactory.create(START_LOCAL_DATE,
+                                     END_LOCAL_DATE,
+                                     dinnerPeriod)).willReturn(reportPeriod);
     given(restaurant.getDailyDishesQuantity(reportPeriod)).willReturn(dailyDishesQuantities);
 
     // when
@@ -148,7 +170,9 @@ public class IngredientReportServiceTest {
   @Test
   public void whenGetMaterialReport_thenDailyDishesQuantityIsRetrieved() {
     // given
-    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+    given(reportPeriodFactory.create(START_LOCAL_DATE,
+                                     END_LOCAL_DATE,
+                                     dinnerPeriod)).willReturn(reportPeriod);
 
     // when
     ingredientReportService.getMaterialReport(REPORT_START_DATE, REPORT_END_DATE);
@@ -160,13 +184,15 @@ public class IngredientReportServiceTest {
   @Test
   public void whenGetMaterialReport_thenReportPeriodFactoryCreateIsCalled() {
     // given
-    given(reportPeriodFactory.create(START_LOCAL_DATE, END_LOCAL_DATE)).willReturn(reportPeriod);
+    given(reportPeriodFactory.create(START_LOCAL_DATE,
+                                     END_LOCAL_DATE,
+                                     dinnerPeriod)).willReturn(reportPeriod);
 
     // when
     ingredientReportService.getMaterialReport(REPORT_START_DATE, REPORT_END_DATE);
 
     // then
-    verify(reportPeriodFactory).create(START_LOCAL_DATE, END_LOCAL_DATE);
+    verify(reportPeriodFactory).create(START_LOCAL_DATE, END_LOCAL_DATE, dinnerPeriod);
   }
 
   private List<IngredientPriceDto> givenIngredientPriceDtos() {

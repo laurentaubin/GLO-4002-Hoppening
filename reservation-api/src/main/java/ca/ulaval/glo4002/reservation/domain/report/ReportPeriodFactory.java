@@ -9,13 +9,10 @@ import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportDateEx
 public class ReportPeriodFactory {
   private static final String PATTERN_FORMAT = "MMMM dd YYYY";
 
-  private final Period dinnerPeriod;
-
-  public ReportPeriodFactory(Period dinnerPeriod) {
-    this.dinnerPeriod = dinnerPeriod;
-  }
-
-  public ReportPeriod create(LocalDate reportPeriodStartDate, LocalDate reportPeriodEndDate) {
+  public ReportPeriod create(LocalDate reportPeriodStartDate,
+                             LocalDate reportPeriodEndDate,
+                             Period dinnerPeriod)
+  {
     if (areDatesInvalid(reportPeriodStartDate, reportPeriodEndDate, dinnerPeriod)) {
       throw new InvalidReportDateException(dinnerPeriod.getStartDate()
                                                        .format(DateTimeFormatter.ofPattern(PATTERN_FORMAT)),
