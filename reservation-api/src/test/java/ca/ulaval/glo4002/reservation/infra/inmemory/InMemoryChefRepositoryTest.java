@@ -49,7 +49,7 @@ public class InMemoryChefRepositoryTest {
 
     // then
     assertThat(inMemoryChefRepository.getAllChefsWorkSchedule()).containsEntry(dinnerDate,
-                                                                               newChefs);
+        newChefs);
   }
 
   @Test

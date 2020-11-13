@@ -13,8 +13,8 @@ public class Chef {
   private final String name;
   private final ChefPriority priority;
   private final Set<RestrictionType> specialties;
-  private int numberOfCustomers;
   private final BigDecimal price = BigDecimal.valueOf(6000);
+  private int numberOfCustomers;
 
   public Chef(String name, ChefPriority chefPriority, Set<RestrictionType> specialties) {
     this.name = name;

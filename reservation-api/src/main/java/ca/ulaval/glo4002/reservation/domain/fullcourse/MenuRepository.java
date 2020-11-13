@@ -7,7 +7,8 @@ import java.util.Map;
 import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 public interface MenuRepository {
-  Map<IngredientName, BigDecimal> getIngredientsQuantityByRestrictionType(RestrictionType restrictionType);
+  Map<IngredientName, BigDecimal> getIngredientsQuantityByRestrictionType(
+      RestrictionType restrictionType);
 
   List<RestrictionType> getRestrictionTypesByIngredient(IngredientName ingredientName);
 }

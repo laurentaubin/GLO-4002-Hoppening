@@ -32,9 +32,8 @@ public class ReportPeriodFactoryTest {
   @Test
   public void givenStartDateBeingBeforeDinnerPeriod_whenCreate_thenThrowInvalidReportDateException() {
     // when
-    Executable initializingReportPeriod = () -> reportPeriodFactory.create(A_REPORT_DATE_BEFORE_DINNER_DATE,
-                                                                           A_END_REPORT_DATE,
-                                                                           dinnerPeriod);
+    Executable initializingReportPeriod = () -> reportPeriodFactory
+        .create(A_REPORT_DATE_BEFORE_DINNER_DATE, A_END_REPORT_DATE, dinnerPeriod);
 
     // then
     assertThrows(InvalidReportDateException.class, initializingReportPeriod);
@@ -44,8 +43,7 @@ public class ReportPeriodFactoryTest {
   public void givenEndDateBeingAfterDinnerPeriod_whenCreate_thenThrowInvalidReportDateException() {
     // when
     Executable initializingReportPeriod = () -> reportPeriodFactory.create(A_START_REPORT_DATE,
-                                                                           A_REPORT_DATE_AFTER_DINNER_DATE,
-                                                                           dinnerPeriod);
+        A_REPORT_DATE_AFTER_DINNER_DATE, dinnerPeriod);
 
     // then
     assertThrows(InvalidReportDateException.class, initializingReportPeriod);
@@ -54,9 +52,8 @@ public class ReportPeriodFactoryTest {
   @Test
   public void givenAValidReportPeriod_whenCreate_thenTheReportPeriodIsCreated() {
     // when
-    ReportPeriod reportPeriod = reportPeriodFactory.create(A_START_REPORT_DATE,
-                                                           A_END_REPORT_DATE,
-                                                           dinnerPeriod);
+    ReportPeriod reportPeriod =
+        reportPeriodFactory.create(A_START_REPORT_DATE, A_END_REPORT_DATE, dinnerPeriod);
 
     assertThat(reportPeriod.getStartDate()).isEqualTo(A_START_REPORT_DATE);
     assertThat(reportPeriod.getEndDate()).isEqualTo(A_END_REPORT_DATE);

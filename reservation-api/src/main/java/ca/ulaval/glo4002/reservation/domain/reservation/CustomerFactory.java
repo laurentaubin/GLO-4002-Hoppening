@@ -9,12 +9,11 @@ import ca.ulaval.glo4002.reservation.service.reservation.dto.CustomerDto;
 public class CustomerFactory {
   public Customer create(CustomerDto customerDto) {
     return new Customer(customerDto.getName(),
-                        createCustomerRestrictions(customerDto.getRestrictions()));
+        createCustomerRestrictions(customerDto.getRestrictions()));
   }
 
   private Set<RestrictionType> createCustomerRestrictions(List<String> customerRestrictionsNames) {
-    return customerRestrictionsNames.stream()
-                                    .map(RestrictionType::valueOfName)
-                                    .collect(Collectors.toSet());
+    return customerRestrictionsNames.stream().map(RestrictionType::valueOfName)
+        .collect(Collectors.toSet());
   }
 }

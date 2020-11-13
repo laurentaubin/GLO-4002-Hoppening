@@ -17,7 +17,8 @@ public class InMemoryMenuRepositoryTest {
   private static final RestrictionType NONE_RESTRICTION = RestrictionType.NONE;
   private static final IngredientName CARROTS_INGREDIENT = IngredientName.CARROTS;
 
-  private final FullCourseFactory fullCourseFactory = new FullCourseFactory(new CourseRecipeFactory());
+  private final FullCourseFactory fullCourseFactory =
+      new FullCourseFactory(new CourseRecipeFactory());
 
   private InMemoryMenuRepository menuRepository;
 
@@ -29,7 +30,8 @@ public class InMemoryMenuRepositoryTest {
   @Test
   public void whenGetIngredientsQuantity_thenReturnReturnCorrespondingIngredientInformation() {
     // when
-    Map<IngredientName, BigDecimal> ingredientsQuantity = menuRepository.getIngredientsQuantityByRestrictionType(ALLERGIES_RESTRICTION);
+    Map<IngredientName, BigDecimal> ingredientsQuantity =
+        menuRepository.getIngredientsQuantityByRestrictionType(ALLERGIES_RESTRICTION);
 
     // then
     assertThat(ingredientsQuantity).isNotEmpty();
@@ -38,7 +40,8 @@ public class InMemoryMenuRepositoryTest {
   @Test
   public void givenCarrotsIngredient_whenGetRestrictionTypesByIngredient_thenReturnRestrictionTypeNone() {
     // when
-    List<RestrictionType> restrictionTypes = menuRepository.getRestrictionTypesByIngredient(CARROTS_INGREDIENT);
+    List<RestrictionType> restrictionTypes =
+        menuRepository.getRestrictionTypesByIngredient(CARROTS_INGREDIENT);
 
     // then
     assertThat(restrictionTypes).contains(NONE_RESTRICTION);

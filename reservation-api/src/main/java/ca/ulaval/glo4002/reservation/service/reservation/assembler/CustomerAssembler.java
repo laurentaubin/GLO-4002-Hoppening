@@ -11,18 +11,14 @@ import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 public class CustomerAssembler {
   public Customer assembleFromCustomerDto(CustomerApiDto customerApiDto) {
-    Set<RestrictionType> restrictions = customerApiDto.getRestrictions()
-                                                      .stream()
-                                                      .map(RestrictionType::valueOfName)
-                                                      .collect(Collectors.toSet());
+    Set<RestrictionType> restrictions = customerApiDto.getRestrictions().stream()
+        .map(RestrictionType::valueOfName).collect(Collectors.toSet());
     return new Customer(customerApiDto.getName(), restrictions);
   }
 
   public CustomerApiDto assembleDtoFromCustomer(Customer customer) {
-    List<String> restrictions = customer.getRestrictions()
-                                        .stream()
-                                        .map(RestrictionType::toString)
-                                        .collect(Collectors.toList());
+    List<String> restrictions = customer.getRestrictions().stream().map(RestrictionType::toString)
+        .collect(Collectors.toList());
     Collections.sort(restrictions);
     CustomerApiDto customerApiDto = new CustomerApiDto();
     customerApiDto.setName(customer.getName());

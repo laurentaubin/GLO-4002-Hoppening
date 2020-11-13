@@ -53,39 +53,41 @@ public class UnitIngredientReportDayDtoFactoryTest {
   @Test
   public void givenADateAndDailyIngredientReportInformation_whenCreate_thenCorrespondingUnitReportDayDtoIsCreated() {
     // given
-    DailyIngredientReportInformation dailyIngredientReportInformation = givenADailyIngredientReportInformation();
-    List<IngredientReportInformationDto> expectedIngredientReportInformationDtos = givenExpectedIngredientReportInformationDto();
+    DailyIngredientReportInformation dailyIngredientReportInformation =
+        givenADailyIngredientReportInformation();
+    List<IngredientReportInformationDto> expectedIngredientReportInformationDtos =
+        givenExpectedIngredientReportInformationDto();
 
     // when
-    UnitReportDayDto unitReportDayDto = unitReportDayDtoFactory.create(A_DATE,
-                                                                       dailyIngredientReportInformation);
+    UnitReportDayDto unitReportDayDto =
+        unitReportDayDtoFactory.create(A_DATE, dailyIngredientReportInformation);
 
     // then
     assertThat(unitReportDayDto.getDate()).isEqualTo(A_DATE.toString());
-    assertThat(unitReportDayDto.getIngredients()).containsExactlyElementsIn(expectedIngredientReportInformationDtos);
-    assertThat(unitReportDayDto.getTotalPrice()).isEquivalentAccordingToCompareTo(EXPECTED_DAILY_TOTAL_PRICE);
+    assertThat(unitReportDayDto.getIngredients())
+        .containsExactlyElementsIn(expectedIngredientReportInformationDtos);
+    assertThat(unitReportDayDto.getTotalPrice())
+        .isEquivalentAccordingToCompareTo(EXPECTED_DAILY_TOTAL_PRICE);
   }
 
   private DailyIngredientReportInformation givenADailyIngredientReportInformation() {
     Set<IngredientReportInformation> ingredientReportInformation = new HashSet<>();
-    IngredientReportInformation anIngredientReportInformation = new IngredientReportInformation(IngredientName.PEPPERONI,
-                                                                                                PEPPERONI_QUANTITY,
-                                                                                                PEPPERONI_PRICE);
-    IngredientReportInformation anotherIngredientReportInformation = new IngredientReportInformation(IngredientName.KIMCHI,
-                                                                                                     KIMCHI_QUANTITY,
-                                                                                                     KIMCHI_PRICE);
+    IngredientReportInformation anIngredientReportInformation = new IngredientReportInformation(
+        IngredientName.PEPPERONI, PEPPERONI_QUANTITY, PEPPERONI_PRICE);
+    IngredientReportInformation anotherIngredientReportInformation =
+        new IngredientReportInformation(IngredientName.KIMCHI, KIMCHI_QUANTITY, KIMCHI_PRICE);
     ingredientReportInformation.add(anIngredientReportInformation);
     ingredientReportInformation.add(anotherIngredientReportInformation);
     return new DailyIngredientReportInformation(ingredientReportInformation);
   }
 
   private List<IngredientReportInformationDto> givenExpectedIngredientReportInformationDto() {
-    IngredientReportInformationDto ingredientReportInformationDto = new IngredientReportInformationDto(IngredientName.PEPPERONI.toString(),
-                                                                                                       PEPPERONI_QUANTITY,
-                                                                                                       PEPPERONI_PRICE);
-    IngredientReportInformationDto anotherIngredientReportInformationDto = new IngredientReportInformationDto(IngredientName.KIMCHI.toString(),
-                                                                                                              KIMCHI_QUANTITY,
-                                                                                                              KIMCHI_PRICE);
+    IngredientReportInformationDto ingredientReportInformationDto =
+        new IngredientReportInformationDto(IngredientName.PEPPERONI.toString(), PEPPERONI_QUANTITY,
+            PEPPERONI_PRICE);
+    IngredientReportInformationDto anotherIngredientReportInformationDto =
+        new IngredientReportInformationDto(IngredientName.KIMCHI.toString(), KIMCHI_QUANTITY,
+            KIMCHI_PRICE);
     return Arrays.asList(ingredientReportInformationDto, anotherIngredientReportInformationDto);
   }
 }

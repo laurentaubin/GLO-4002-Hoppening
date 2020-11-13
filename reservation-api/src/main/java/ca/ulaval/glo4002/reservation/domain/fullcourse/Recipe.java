@@ -10,12 +10,12 @@ public class Recipe {
     ingredients = new ArrayList<>();
   }
 
-  protected void setIngredients(List<Ingredient> ingredients) {
-    this.ingredients = ingredients;
-  }
-
   public List<Ingredient> getIngredients() {
     return ingredients;
+  }
+
+  protected void setIngredients(List<Ingredient> ingredients) {
+    this.ingredients = ingredients;
   }
 
   public boolean containsIngredient(IngredientName ingredientName) {

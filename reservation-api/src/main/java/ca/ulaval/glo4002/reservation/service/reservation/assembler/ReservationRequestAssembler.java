@@ -16,12 +16,10 @@ public class ReservationRequestAssembler {
 
   public ReservationRequest assemble(CreateReservationRequestDto createReservationRequestDto) {
     String dinnerDate = createReservationRequestDto.getDinnerDate();
-    String reservationDate = createReservationRequestDto.getReservationDetails()
-                                                        .getReservationDate();
-    List<TableDto> tableDtos = createReservationRequestDto.getTables()
-                                                          .stream()
-                                                          .map(tableDtoAssembler::assemble)
-                                                          .collect(Collectors.toList());
+    String reservationDate =
+        createReservationRequestDto.getReservationDetails().getReservationDate();
+    List<TableDto> tableDtos = createReservationRequestDto.getTables().stream()
+        .map(tableDtoAssembler::assemble).collect(Collectors.toList());
     return new ReservationRequest(dinnerDate, reservationDate, tableDtos);
   }
 }

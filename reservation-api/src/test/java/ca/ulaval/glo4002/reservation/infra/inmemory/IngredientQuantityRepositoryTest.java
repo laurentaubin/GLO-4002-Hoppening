@@ -40,13 +40,15 @@ public class IngredientQuantityRepositoryTest {
 
   @BeforeEach
   public void setUp() {
-    ingredientQuantityRepository = new IngredientQuantityRepository(reservationIngredientCalculator);
+    ingredientQuantityRepository =
+        new IngredientQuantityRepository(reservationIngredientCalculator);
   }
 
   @Test
   public void whenInitialized_thenRepositoryIsEmpty() {
     // when
-    IngredientQuantityRepository ingredientQuantityRepository = new IngredientQuantityRepository(reservationIngredientCalculator);
+    IngredientQuantityRepository ingredientQuantityRepository =
+        new IngredientQuantityRepository(reservationIngredientCalculator);
 
     // then
     assertThat(ingredientQuantityRepository.isEmpty()).isTrue();
@@ -67,7 +69,8 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenEmptyRepository_whenGetIngredientInformation_thenReturnEmptyMap() {
     // when
-    Map<IngredientName, BigDecimal> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
+    Map<IngredientName, BigDecimal> ingredientsQuantity =
+        ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
 
     // then
     assertThat(ingredientsQuantity).isEmpty();
@@ -77,14 +80,15 @@ public class IngredientQuantityRepositoryTest {
   public void givenExistingIngredientInformationAtDate_whenGetIngredientInformation_thenReturnIngredientInformationForDesiredDay() {
     // given
     Map<IngredientName, BigDecimal> expectedIngredientsQuantity = givenIngredientsQuantity();
-    Reservation reservation = new ReservationBuilder().withAnyTable()
-                                                      .withDinnerDate(A_DINNER_DATE)
-                                                      .build();
-    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(expectedIngredientsQuantity);
+    Reservation reservation =
+        new ReservationBuilder().withAnyTable().withDinnerDate(A_DINNER_DATE).build();
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation))
+        .willReturn(expectedIngredientsQuantity);
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
     // when
-    Map<IngredientName, BigDecimal> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
+    Map<IngredientName, BigDecimal> ingredientsQuantity =
+        ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
 
     // then
     assertThat(ingredientsQuantity).isEqualTo(expectedIngredientsQuantity);
@@ -93,38 +97,42 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenTwoOfTheSameReservation_whenGetIngredientInformation_thenReturnIngredientInformationEquivalentToTwoReservation() {
     // given
-    Reservation reservation = new ReservationBuilder().withAnyTable()
-                                                      .withDinnerDate(A_DINNER_DATE)
-                                                      .build();
-    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(givenIngredientsQuantity());
+    Reservation reservation =
+        new ReservationBuilder().withAnyTable().withDinnerDate(A_DINNER_DATE).build();
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation))
+        .willReturn(givenIngredientsQuantity());
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
     // when
-    Map<IngredientName, BigDecimal> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
+    Map<IngredientName, BigDecimal> ingredientsQuantity =
+        ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
 
     // then
-    assertThat(ingredientsQuantity).isEqualTo(givenIngredientsQuantityEquivalentToTwoOfTheSameReservation());
+    assertThat(ingredientsQuantity)
+        .isEqualTo(givenIngredientsQuantityEquivalentToTwoOfTheSameReservation());
   }
 
   @Test
   public void givenAReservationWithCustomers_whenUpdateIngredientInformation_thenIngredientAreCalculatedForAllCustomers() {
     // given
     Customer aCustomer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN).build();
-    Customer anotherCustomer = new CustomerBuilder().withRestriction(RestrictionType.ILLNESS)
-                                                    .build();
-    Table table = new TableBuilder().withCustomers(Arrays.asList(aCustomer, anotherCustomer))
-                                    .build();
-    Reservation reservation = new ReservationBuilder().withTable(table)
-                                                      .withDinnerDate(A_DINNER_DATE)
-                                                      .build();
-    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation)).willReturn(givenIllnessAndVeganIngredientsQuantity());
+    Customer anotherCustomer =
+        new CustomerBuilder().withRestriction(RestrictionType.ILLNESS).build();
+    Table table =
+        new TableBuilder().withCustomers(Arrays.asList(aCustomer, anotherCustomer)).build();
+    Reservation reservation =
+        new ReservationBuilder().withTable(table).withDinnerDate(A_DINNER_DATE).build();
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(reservation))
+        .willReturn(givenIllnessAndVeganIngredientsQuantity());
 
     // when
     ingredientQuantityRepository.updateIngredientsQuantity(reservation);
 
     // then
-    assertThat(ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(reservation.getDinnerDate()))).isEqualTo(givenIllnessAndVeganIngredientsQuantity());
+    assertThat(ingredientQuantityRepository
+        .getIngredientsQuantity(LocalDate.from(reservation.getDinnerDate())))
+            .isEqualTo(givenIllnessAndVeganIngredientsQuantity());
 
   }
 
@@ -133,13 +141,16 @@ public class IngredientQuantityRepositoryTest {
     // given
     Reservation aReservation = givenAReservation(RestrictionType.VEGAN, A_DINNER_DATE);
     Reservation anotherReservation = givenAReservation(RestrictionType.ILLNESS, A_DINNER_DATE);
-    given(reservationIngredientCalculator.getReservationIngredientsQuantity(aReservation)).willReturn(givenVeganCourseIngredientsQuantity());
-    given(reservationIngredientCalculator.getReservationIngredientsQuantity(anotherReservation)).willReturn(givenIllnessCourseIngredientsQuantity());
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(aReservation))
+        .willReturn(givenVeganCourseIngredientsQuantity());
+    given(reservationIngredientCalculator.getReservationIngredientsQuantity(anotherReservation))
+        .willReturn(givenIllnessCourseIngredientsQuantity());
     ingredientQuantityRepository.updateIngredientsQuantity(aReservation);
     ingredientQuantityRepository.updateIngredientsQuantity(anotherReservation);
 
     // when
-    Map<IngredientName, BigDecimal> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
+    Map<IngredientName, BigDecimal> ingredientsQuantity =
+        ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE));
 
     // then
     assertThat(ingredientsQuantity).isEqualTo(givenIllnessAndVeganIngredientsQuantity());
@@ -153,17 +164,19 @@ public class IngredientQuantityRepositoryTest {
     populateReportRepository(A_DINNER_DATE, ANOTHER_DINNER_DATE);
 
     // when
-    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantity = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
+    Map<LocalDate, Map<IngredientName, BigDecimal>> ingredientsQuantity =
+        ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
 
     // then
-    assertThat(ingredientsQuantity.get(LocalDate.from(A_DINNER_DATE))).isEqualTo(ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE)));
-    assertThat(ingredientsQuantity.get(LocalDate.from(ANOTHER_DINNER_DATE))).isEqualTo(ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(ANOTHER_DINNER_DATE)));
+    assertThat(ingredientsQuantity.get(LocalDate.from(A_DINNER_DATE))).isEqualTo(
+        ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(A_DINNER_DATE)));
+    assertThat(ingredientsQuantity.get(LocalDate.from(ANOTHER_DINNER_DATE))).isEqualTo(
+        ingredientQuantityRepository.getIngredientsQuantity(LocalDate.from(ANOTHER_DINNER_DATE)));
     assertThat(ingredientsQuantity.get(END_DATE)).isNull();
   }
 
   private void populateReportRepository(LocalDateTime aDinnerDate,
-                                        LocalDateTime anotherDinnerDate)
-  {
+      LocalDateTime anotherDinnerDate) {
     Reservation aReservation = givenAReservation(RestrictionType.VEGAN, aDinnerDate);
     Reservation anotherReservation = givenAReservation(RestrictionType.ILLNESS, anotherDinnerDate);
     ingredientQuantityRepository.updateIngredientsQuantity(aReservation);

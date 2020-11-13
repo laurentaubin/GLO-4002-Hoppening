@@ -19,13 +19,8 @@ import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinner
 @ExtendWith(MockitoExtension.class)
 public class DinnerDateFactoryTest {
   private static final String A_DATE = "2150-07-30T22:59:59.000Z";
-  private static final LocalDateTime A_DATE_TO_LOCAL_DATE_TIME = LocalDateTime.of(2150,
-                                                                                  7,
-                                                                                  30,
-                                                                                  22,
-                                                                                  59,
-                                                                                  59,
-                                                                                  0);
+  private static final LocalDateTime A_DATE_TO_LOCAL_DATE_TIME =
+      LocalDateTime.of(2150, 7, 30, 22, 59, 59, 0);
   private static final LocalDate START_DATE = LocalDate.of(2150, 7, 20);
   private static final LocalDate END_DATE = LocalDate.of(2150, 7, 30);
 

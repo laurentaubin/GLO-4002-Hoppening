@@ -5,12 +5,12 @@ import java.util.List;
 public class MaterialReport {
   private List<MaterialReportInformation> allMaterialReportInformation;
 
-  public List<MaterialReportInformation> getMaterialReportInformation() {
-    return allMaterialReportInformation;
-  }
-
   public MaterialReport(List<MaterialReportInformation> materialReportInformation) {
     allMaterialReportInformation = materialReportInformation;
+  }
+
+  public List<MaterialReportInformation> getMaterialReportInformation() {
+    return allMaterialReportInformation;
   }
 
 }

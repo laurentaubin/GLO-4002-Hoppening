@@ -46,8 +46,10 @@ class ChefReportInformationComparatorTest {
     // given
     String earlierDate = "2020-12-12";
     String laterDate = "2021-12-12";
-    ChefReportInformation earlierChefReportInformation = givenAChefReportInformationWithDate(earlierDate);
-    ChefReportInformation laterChefReportInformation = givenAChefReportInformationWithDate(laterDate);
+    ChefReportInformation earlierChefReportInformation =
+        givenAChefReportInformationWithDate(earlierDate);
+    ChefReportInformation laterChefReportInformation =
+        givenAChefReportInformationWithDate(laterDate);
 
     // when
     int result = comparator.compare(earlierChefReportInformation, laterChefReportInformation);
@@ -61,8 +63,10 @@ class ChefReportInformationComparatorTest {
     // given
     String earlierDate = "2020-12-12";
     String laterDate = "2021-12-12";
-    ChefReportInformation earlierChefReportInformation = givenAChefReportInformationWithDate(earlierDate);
-    ChefReportInformation laterChefReportInformation = givenAChefReportInformationWithDate(laterDate);
+    ChefReportInformation earlierChefReportInformation =
+        givenAChefReportInformationWithDate(earlierDate);
+    ChefReportInformation laterChefReportInformation =
+        givenAChefReportInformationWithDate(laterDate);
 
     // when
     int result = comparator.compare(laterChefReportInformation, earlierChefReportInformation);

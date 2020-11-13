@@ -45,10 +45,11 @@ public class ChefIngredientReportTest {
     chefReport.addChefReportInformation(A_DATE, chefs, A_PRICE);
 
     // when
-    List<ChefReportInformation> multipleChefReportInformation = chefReport.getChefReportInformation();
+    List<ChefReportInformation> multipleChefReportInformation =
+        chefReport.getChefReportInformation();
 
     // then
-    assertThat(multipleChefReportInformation.get(0)
-                                            .getChefs()).isEqualTo(chefReportInformation.getChefs());
+    assertThat(multipleChefReportInformation.get(0).getChefs())
+        .isEqualTo(chefReportInformation.getChefs());
   }
 }

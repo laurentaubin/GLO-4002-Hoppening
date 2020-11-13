@@ -26,8 +26,8 @@ public class ChefReportDtoAssemblerTest {
 
   private static final ChefPriority ANOTHER_CHEF_TYPE = ChefPriority.VERY_LOW;
   private static final String ANOTHER_CHEF_NAME = "Amélie Mélo";
-  private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES = Set.of(RestrictionType.ALLERGIES,
-                                                                            RestrictionType.VEGAN);
+  private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES =
+      Set.of(RestrictionType.ALLERGIES, RestrictionType.VEGAN);
 
   private ChefReportDtoAssembler chefReportDtoAssembler;
   private Chef aChef;
@@ -49,8 +49,8 @@ public class ChefReportDtoAssemblerTest {
     ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
 
     // then
-    assertThat(chefReportDto.getChefsReportInformationDto()
-                            .size()).isEqualTo(chefReport.getChefReportInformation().size());
+    assertThat(chefReportDto.getChefsReportInformationDto().size())
+        .isEqualTo(chefReport.getChefReportInformation().size());
   }
 
   @Test
@@ -63,9 +63,8 @@ public class ChefReportDtoAssemblerTest {
     ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
 
     // then
-    assertThat(chefReportDto.getChefsReportInformationDto()
-                            .get(0)
-                            .getDate()).isEqualTo(expectedDate);
+    assertThat(chefReportDto.getChefsReportInformationDto().get(0).getDate())
+        .isEqualTo(expectedDate);
   }
 
   @Test
@@ -78,9 +77,8 @@ public class ChefReportDtoAssemblerTest {
     ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
 
     // then
-    assertThat(chefReportDto.getChefsReportInformationDto()
-                            .get(0)
-                            .getTotalPrice()).isEqualTo(expectedTotalPrice);
+    assertThat(chefReportDto.getChefsReportInformationDto().get(0).getTotalPrice())
+        .isEqualTo(expectedTotalPrice);
   }
 
   @Test

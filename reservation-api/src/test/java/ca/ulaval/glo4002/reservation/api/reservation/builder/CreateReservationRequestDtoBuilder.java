@@ -10,10 +10,9 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.TableApiDto;
 public class CreateReservationRequestDtoBuilder {
   private static final String A_VENDOR_CODE = "vendor code";
   private static final String A_DINNER_DATE = "2150-07-21T15:23:20.142Z";
-
+  private final List<TableApiDto> tables;
   private String vendorCode;
   private String dinnerDate;
-  private final List<TableApiDto> tables;
   private ReservationDetailsDto reservationDetails;
 
   public CreateReservationRequestDtoBuilder() {
@@ -43,7 +42,8 @@ public class CreateReservationRequestDtoBuilder {
     return this;
   }
 
-  public CreateReservationRequestDtoBuilder withReservationDetails(ReservationDetailsDto reservationDetailsDto) {
+  public CreateReservationRequestDtoBuilder withReservationDetails(
+      ReservationDetailsDto reservationDetailsDto) {
     this.reservationDetails = reservationDetailsDto;
     return this;
   }

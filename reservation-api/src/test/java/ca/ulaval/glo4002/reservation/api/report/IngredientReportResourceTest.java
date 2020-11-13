@@ -63,12 +63,9 @@ public class IngredientReportResourceTest {
 
   @BeforeEach
   public void setUp() {
-    reportResource = new ReportResource(ingredientReportService,
-                                        chefReportService,
-                                        reportDateValidator,
-                                        reportPresenterFactory,
-                                        chefReportDtoAssembler,
-                                        materialReportPresenter);
+    reportResource =
+        new ReportResource(ingredientReportService, chefReportService, reportDateValidator,
+            reportPresenterFactory, chefReportDtoAssembler, materialReportPresenter);
   }
 
   @Test
@@ -111,8 +108,8 @@ public class IngredientReportResourceTest {
   public void whenGetIngredientReport_thenUnitReportDtoIsAssembled() {
     // given
     given(reportPresenterFactory.create(REPORT_TYPE)).willReturn(ingredientReportPresenter);
-    given(ingredientReportService.getIngredientReport(START_DATE,
-                                                      END_DATE)).willReturn(ingredientReport);
+    given(ingredientReportService.getIngredientReport(START_DATE, END_DATE))
+        .willReturn(ingredientReport);
 
     // when
     reportResource.getIngredientReport(START_DATE, END_DATE, REPORT_TYPE_STRING);
@@ -125,8 +122,8 @@ public class IngredientReportResourceTest {
   public void whenGetIngredientReport_thenTotalReportDtoIsAssembled() {
     // given
     given(reportPresenterFactory.create(TOTAL_REPORT_TYPE)).willReturn(ingredientReportPresenter);
-    given(ingredientReportService.getIngredientReport(START_DATE,
-                                                      END_DATE)).willReturn(ingredientReport);
+    given(ingredientReportService.getIngredientReport(START_DATE, END_DATE))
+        .willReturn(ingredientReport);
 
     // when
     reportResource.getIngredientReport(START_DATE, END_DATE, TOTAL_REPORT_TYPE_STRING);
@@ -138,8 +135,8 @@ public class IngredientReportResourceTest {
   @Test
   public void whenGetMaterialReport_thenMaterialReportPresenterFactoryIsCalled() {
     // given
-    given(ingredientReportService.getMaterialReport(START_DATE,
-                                                    END_DATE)).willReturn(materialReport);
+    given(ingredientReportService.getMaterialReport(START_DATE, END_DATE))
+        .willReturn(materialReport);
 
     // when
     reportResource.getMaterialReport(START_DATE, END_DATE);
@@ -160,8 +157,8 @@ public class IngredientReportResourceTest {
   @Test
   public void whenGetMaterialReport_thenMaterialReportDtoIsAssembled() {
     // given
-    given(ingredientReportService.getMaterialReport(START_DATE,
-                                                    END_DATE)).willReturn(materialReport);
+    given(ingredientReportService.getMaterialReport(START_DATE, END_DATE))
+        .willReturn(materialReport);
 
     // when
     reportResource.getMaterialReport(START_DATE, END_DATE);

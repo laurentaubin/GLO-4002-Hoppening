@@ -5,11 +5,9 @@ import java.math.BigDecimal;
 import ca.ulaval.glo4002.reservation.exception.InvalidRestrictionException;
 
 public enum RestrictionType {
-  VEGETARIAN("vegetarian", BigDecimal.valueOf(500)),
-  VEGAN("vegan", BigDecimal.valueOf(1000)),
-  ALLERGIES("allergies", BigDecimal.ZERO),
-  ILLNESS("illness", BigDecimal.ZERO),
-  NONE("none", BigDecimal.ZERO);
+  VEGETARIAN("vegetarian", BigDecimal.valueOf(500)), VEGAN("vegan",
+      BigDecimal.valueOf(1000)), ALLERGIES("allergies",
+          BigDecimal.ZERO), ILLNESS("illness", BigDecimal.ZERO), NONE("none", BigDecimal.ZERO);
 
   private final String name;
 
@@ -20,15 +18,6 @@ public enum RestrictionType {
     this.fees = fees;
   }
 
-  @Override
-  public String toString() {
-    return name;
-  }
-
-  public BigDecimal getFees() {
-    return fees;
-  }
-
   public static RestrictionType valueOfName(String value) {
     for (RestrictionType restriction : RestrictionType.values()) {
       if (restriction.toString().equals(value)) {
@@ -36,5 +25,14 @@ public enum RestrictionType {
       }
     }
     throw new InvalidRestrictionException();
+  }
+
+  @Override
+  public String toString() {
+    return name;
+  }
+
+  public BigDecimal getFees() {
+    return fees;
   }
 }

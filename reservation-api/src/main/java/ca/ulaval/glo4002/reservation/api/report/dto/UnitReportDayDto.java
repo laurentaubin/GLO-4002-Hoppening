@@ -28,12 +28,12 @@ public class UnitReportDayDto {
     return date;
   }
 
-  public void setIngredients(List<IngredientReportInformationDto> ingredients) {
-    this.ingredients = ingredients;
-  }
-
   public List<IngredientReportInformationDto> getIngredients() {
     return ingredients;
+  }
+
+  public void setIngredients(List<IngredientReportInformationDto> ingredients) {
+    this.ingredients = ingredients;
   }
 
   public BigDecimal getTotalPrice() {

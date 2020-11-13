@@ -10,7 +10,7 @@ public class VeganDessert extends Recipe {
   private static final BigDecimal WORCESTERSHIRE_SAUCE_QUANTITY = BigDecimal.valueOf(5);
 
   public VeganDessert() {
-    ingredients.add(new Ingredient(IngredientName.WORCESTERSHIRE_SAUCE,
-                                   WORCESTERSHIRE_SAUCE_QUANTITY));
+    ingredients
+        .add(new Ingredient(IngredientName.WORCESTERSHIRE_SAUCE, WORCESTERSHIRE_SAUCE_QUANTITY));
   }
 }

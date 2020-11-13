@@ -27,12 +27,11 @@ public class ChefReportGeneratorTest {
 
   private static final ChefPriority ANOTHER_CHEF_TYPE = ChefPriority.VERY_LOW;
   private static final String ANOTHER_CHEF_NAME = "Amélie Mélo";
-  private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES = Set.of(RestrictionType.ALLERGIES,
-                                                                            RestrictionType.VEGAN);
+  private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES =
+      Set.of(RestrictionType.ALLERGIES, RestrictionType.VEGAN);
 
-  private static final LocalDate A_DATE = LocalDate.of(Integer.parseInt("2020"),
-                                                       Integer.parseInt("12"),
-                                                       Integer.parseInt("10"));
+  private static final LocalDate A_DATE =
+      LocalDate.of(Integer.parseInt("2020"), Integer.parseInt("12"), Integer.parseInt("10"));
   private static final BigDecimal EXPECTED_PRICE_FOR_TWO_CHEF = BigDecimal.valueOf(12000);
   private static final BigDecimal EXPECTED_PRICE_FOR_NO_CHEF = BigDecimal.ZERO;
 

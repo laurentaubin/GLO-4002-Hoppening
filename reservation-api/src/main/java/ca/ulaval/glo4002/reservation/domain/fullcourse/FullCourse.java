@@ -20,18 +20,18 @@ public class FullCourse {
     return ingredientsQuantity;
   }
 
-  private Map<IngredientName, BigDecimal> updateIngredientsQuantity(Map<IngredientName, BigDecimal> ingredientsQuantity,
-                                                                    List<Ingredient> ingredients)
-  {
-    Map<IngredientName, BigDecimal> updatedTotalIngredientsQuantity = new HashMap<>(ingredientsQuantity);
+  private Map<IngredientName, BigDecimal> updateIngredientsQuantity(
+      Map<IngredientName, BigDecimal> ingredientsQuantity, List<Ingredient> ingredients) {
+    Map<IngredientName, BigDecimal> updatedTotalIngredientsQuantity =
+        new HashMap<>(ingredientsQuantity);
     for (Ingredient ingredient : ingredients) {
       if (updatedTotalIngredientsQuantity.containsKey(ingredient.getIngredientName())) {
         updatedTotalIngredientsQuantity.replace(ingredient.getIngredientName(),
-                                                updatedTotalIngredientsQuantity.get(ingredient.getIngredientName())
-                                                                               .add(ingredient.getQuantity()));
+            updatedTotalIngredientsQuantity.get(ingredient.getIngredientName())
+                .add(ingredient.getQuantity()));
       } else {
         updatedTotalIngredientsQuantity.put(ingredient.getIngredientName(),
-                                            ingredient.getQuantity());
+            ingredient.getQuantity());
       }
     }
     return updatedTotalIngredientsQuantity;

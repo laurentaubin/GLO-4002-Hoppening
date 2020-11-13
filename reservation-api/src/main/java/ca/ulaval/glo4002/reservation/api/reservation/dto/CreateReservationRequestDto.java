@@ -42,12 +42,12 @@ public class CreateReservationRequestDto {
     this.dinnerDate = dinnerDate;
   }
 
-  public void setTables(List<TableApiDto> tables) {
-    this.tables = tables;
-  }
-
   public List<TableApiDto> getTables() {
     return tables;
+  }
+
+  public void setTables(List<TableApiDto> tables) {
+    this.tables = tables;
   }
 
   public ReservationDetailsDto getReservationDetails() {

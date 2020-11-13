@@ -10,11 +10,11 @@ public class TableApiDto {
   @NotNull
   private List<CustomerApiDto> customers;
 
-  public void setCustomers(List<CustomerApiDto> customerApiDtos) {
-    customers = customerApiDtos;
-  }
-
   public List<CustomerApiDto> getCustomers() {
     return customers;
+  }
+
+  public void setCustomers(List<CustomerApiDto> customerApiDtos) {
+    customers = customerApiDtos;
   }
 }

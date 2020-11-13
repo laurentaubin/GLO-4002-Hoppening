@@ -28,10 +28,8 @@ public class TableFactory {
   }
 
   private Table createTable(TableDto tableDto) {
-    List<Customer> customers = tableDto.getCustomerObjects()
-                                       .stream()
-                                       .map(customerFactory::create)
-                                       .collect(Collectors.toList());
+    List<Customer> customers = tableDto.getCustomerObjects().stream().map(customerFactory::create)
+        .collect(Collectors.toList());
     return new Table(customers);
   }
 

@@ -10,15 +10,17 @@ public class ConfigurationRequestAssembler {
   private final HoppeningConfigurationRequestFactory hoppeningConfigurationRequestFactory;
 
   public ConfigurationRequestAssembler(PeriodDtoAssembler eventPeriodDtoAssembler,
-                                       HoppeningConfigurationRequestFactory hoppeningConfigurationRequestFactory)
-  {
+      HoppeningConfigurationRequestFactory hoppeningConfigurationRequestFactory) {
     this.hoppeningConfigurationRequestFactory = hoppeningConfigurationRequestFactory;
     this.periodDtoAssembler = eventPeriodDtoAssembler;
   }
 
-  public HoppeningConfigurationRequest assemble(CreateConfigurationRequestDto createConfigurationRequestDto) {
-    PeriodDto dinnerPeriod = periodDtoAssembler.assemble(createConfigurationRequestDto.getDinnerPeriod());
-    PeriodDto reservationPeriod = periodDtoAssembler.assemble(createConfigurationRequestDto.getReservationPeriod());
+  public HoppeningConfigurationRequest assemble(
+      CreateConfigurationRequestDto createConfigurationRequestDto) {
+    PeriodDto dinnerPeriod =
+        periodDtoAssembler.assemble(createConfigurationRequestDto.getDinnerPeriod());
+    PeriodDto reservationPeriod =
+        periodDtoAssembler.assemble(createConfigurationRequestDto.getReservationPeriod());
 
     return hoppeningConfigurationRequestFactory.create(dinnerPeriod, reservationPeriod);
   }

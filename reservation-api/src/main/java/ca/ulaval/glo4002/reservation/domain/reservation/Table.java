@@ -20,7 +20,7 @@ public class Table {
   public BigDecimal getTableReservationFees() {
     BigDecimal tableReservationFees = BigDecimal.ZERO;
     for (Customer customer : customers) {
-     tableReservationFees = tableReservationFees.add(customer.getCustomerFees());
+      tableReservationFees = tableReservationFees.add(customer.getCustomerFees());
     }
     return tableReservationFees;
   }
@@ -39,19 +39,18 @@ public class Table {
   private void incrementNoReservationCount(Map<RestrictionType, Integer> restrictionTypeCount) {
     if (restrictionTypeCount.containsKey(RestrictionType.NONE)) {
       restrictionTypeCount.replace(RestrictionType.NONE,
-                                   restrictionTypeCount.get(RestrictionType.NONE) + 1);
+          restrictionTypeCount.get(RestrictionType.NONE) + 1);
     } else {
       restrictionTypeCount.put(RestrictionType.NONE, 1);
     }
   }
 
   private void incrementRestrictionTypeCount(Customer customer,
-                                             Map<RestrictionType, Integer> restrictionTypeCount)
-  {
+      Map<RestrictionType, Integer> restrictionTypeCount) {
     for (RestrictionType restrictionType : customer.getRestrictions()) {
       if (restrictionTypeCount.containsKey(restrictionType)) {
         restrictionTypeCount.replace(restrictionType,
-                                     restrictionTypeCount.get(restrictionType) + 1);
+            restrictionTypeCount.get(restrictionType) + 1);
       } else {
         restrictionTypeCount.put(restrictionType, 1);
       }

@@ -9,10 +9,9 @@ import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 public class ReservationDtoBuilder {
   private static final String A_DINNER_DATE = "2150-07-21T15:23:20.142Z";
   private static final double A_RESERVATION_PRICE = 1000;
-
+  private final List<CustomerApiDto> customers;
   private String dinnerDate;
   private double reservationPrice;
-  private final List<CustomerApiDto> customers;
 
   public ReservationDtoBuilder() {
     dinnerDate = A_DINNER_DATE;

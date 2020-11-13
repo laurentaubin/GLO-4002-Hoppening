@@ -14,11 +14,8 @@ public class Reservation {
   private final List<Table> tables;
   private final ReservationDate reservationDate;
 
-  public Reservation(ReservationId reservationId,
-                     DinnerDate dinnerDate,
-                     List<Table> tables,
-                     ReservationDate reservationDate)
-  {
+  public Reservation(ReservationId reservationId, DinnerDate dinnerDate, List<Table> tables,
+      ReservationDate reservationDate) {
     this.reservationId = reservationId;
     this.dinnerDate = dinnerDate;
     this.tables = tables;
@@ -53,7 +50,7 @@ public class Reservation {
     Map<RestrictionType, Integer> restrictionTypeCount = new HashMap<>();
     for (Table table : tables) {
       restrictionTypeCount = mergeCurrentCountWithTableRestrictionCount(restrictionTypeCount,
-                                                                        table.getRestrictionTypeCount());
+          table.getRestrictionTypeCount());
     }
     return restrictionTypeCount;
   }
@@ -61,9 +58,9 @@ public class Reservation {
   public Set<RestrictionType> getRestrictionTypes() {
     Set<RestrictionType> restrictionTypes = new HashSet<>();
     for (Customer customer : this.getCustomers()) {
-      Set<RestrictionType> restrictions = customer.getRestrictions()
-                                                  .isEmpty() ? Set.of(RestrictionType.NONE)
-                                                             : customer.getRestrictions();
+      Set<RestrictionType> restrictions =
+          customer.getRestrictions().isEmpty() ? Set.of(RestrictionType.NONE)
+              : customer.getRestrictions();
       restrictionTypes.addAll(restrictions);
     }
     return restrictionTypes;
@@ -91,14 +88,13 @@ public class Reservation {
     return numberOfRestrictions;
   }
 
-  private Map<RestrictionType, Integer> mergeCurrentCountWithTableRestrictionCount(Map<RestrictionType, Integer> currentCount,
-                                                                                   Map<RestrictionType, Integer> tableCount)
-  {
+  private Map<RestrictionType, Integer> mergeCurrentCountWithTableRestrictionCount(
+      Map<RestrictionType, Integer> currentCount, Map<RestrictionType, Integer> tableCount) {
     Map<RestrictionType, Integer> updatedCount = new HashMap<>(currentCount);
     for (RestrictionType restrictionType : tableCount.keySet()) {
       if (updatedCount.containsKey(restrictionType)) {
         updatedCount.replace(restrictionType,
-                             updatedCount.get(restrictionType) + tableCount.get(restrictionType));
+            updatedCount.get(restrictionType) + tableCount.get(restrictionType));
       } else {
         updatedCount.put(restrictionType, tableCount.get(restrictionType));
       }
