@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.api.report.assembler;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,17 +18,20 @@ public class ChefReportDtoAssembler {
     chefReportInformationDtos = chefReportInformation.stream()
                                                      .map(this::assembleChefReportInformationDto)
                                                      .collect(Collectors.toList());
+
     return new ChefReportDto(chefReportInformationDtos);
   }
 
   private ChefReportInformationDto assembleChefReportInformationDto(ChefReportInformation chefReportInformation) {
-    Set<String> chefsName = getChefsName(chefReportInformation.getChefs());
+    List<String> chefsName = getChefsName(chefReportInformation.getChefs());
     return new ChefReportInformationDto(chefReportInformation.getDate(),
                                         chefsName,
                                         chefReportInformation.getTotalPrice());
   }
 
-  private Set<String> getChefsName(Set<Chef> chefs) {
-    return chefs.stream().map(Chef::getName).collect(Collectors.toSet());
+  private List<String> getChefsName(Set<Chef> chefs) {
+    List<String> chefNames = chefs.stream().map(Chef::getName).collect(Collectors.toList());
+    Collections.sort(chefNames);
+    return chefNames;
   }
 }

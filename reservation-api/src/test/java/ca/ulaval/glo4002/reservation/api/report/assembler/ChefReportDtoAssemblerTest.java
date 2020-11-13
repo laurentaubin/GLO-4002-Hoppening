@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.api.report.assembler;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,10 +27,11 @@ public class ChefReportDtoAssemblerTest {
 
   private static final ChefPriority ANOTHER_CHEF_TYPE = ChefPriority.VERY_LOW;
   private static final String ANOTHER_CHEF_NAME = "Amélie Mélo";
-  private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES =
-      Set.of(RestrictionType.ALLERGIES, RestrictionType.VEGAN);
+  private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES = Set.of(RestrictionType.ALLERGIES,
+                                                                            RestrictionType.VEGAN);
 
   private ChefReportDtoAssembler chefReportDtoAssembler;
+
   private Chef aChef;
   private Chef anotherChef;
 
@@ -49,8 +51,8 @@ public class ChefReportDtoAssemblerTest {
     ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
 
     // then
-    assertThat(chefReportDto.getChefsReportInformationDto().size())
-        .isEqualTo(chefReport.getChefReportInformation().size());
+    assertThat(chefReportDto.getChefsReportInformationDto()
+                            .size()).isEqualTo(chefReport.getChefReportInformation().size());
   }
 
   @Test
@@ -63,8 +65,9 @@ public class ChefReportDtoAssemblerTest {
     ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
 
     // then
-    assertThat(chefReportDto.getChefsReportInformationDto().get(0).getDate())
-        .isEqualTo(expectedDate);
+    assertThat(chefReportDto.getChefsReportInformationDto()
+                            .get(0)
+                            .getDate()).isEqualTo(expectedDate);
   }
 
   @Test
@@ -77,8 +80,27 @@ public class ChefReportDtoAssemblerTest {
     ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
 
     // then
-    assertThat(chefReportDto.getChefsReportInformationDto().get(0).getTotalPrice())
-        .isEqualTo(expectedTotalPrice);
+    assertThat(chefReportDto.getChefsReportInformationDto()
+                            .get(0)
+                            .getTotalPrice()).isEqualTo(expectedTotalPrice);
+  }
+
+  @Test
+  public void whenAssembleChefReportDto_thenChefsAreInAlphabeticalOrder() {
+    // given
+    ChefReport chefReport = new ChefReport();
+    Chef firstChef = new Chef("B", ChefPriority.HIGH, Set.of(RestrictionType.NONE));
+    Chef secondChef = new Chef("A", ChefPriority.HIGH, Set.of(RestrictionType.NONE));
+    chefReport.addChefReportInformation(A_DATE, Set.of(firstChef, secondChef), A_TOTAL_PRICE);
+    List<String> expectedSortedChefs = List.of("A", "B");
+
+    // when
+    ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
+
+    // then
+    assertThat(chefReportDto.getChefsReportInformationDto()
+                            .get(0)
+                            .getChefs()).isEqualTo(expectedSortedChefs);
   }
 
   @Test
@@ -91,7 +113,7 @@ public class ChefReportDtoAssemblerTest {
     ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
 
     // then
-    Set<String> actualChefsName = chefReportDto.getChefsReportInformationDto().get(0).getChefs();
+    List<String> actualChefsName = chefReportDto.getChefsReportInformationDto().get(0).getChefs();
     assertThat(actualChefsName.size()).isEqualTo(expectedChefs.size());
   }
 

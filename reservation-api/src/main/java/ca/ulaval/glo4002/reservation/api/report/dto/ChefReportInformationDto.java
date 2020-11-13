@@ -1,17 +1,17 @@
 package ca.ulaval.glo4002.reservation.api.report.dto;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "date", "chefs", "totalPrice" })
 public class ChefReportInformationDto {
   private final String date;
-  private final Set<String> chefs;
+  private final List<String> chefs;
   private final BigDecimal totalPrice;
 
-  public ChefReportInformationDto(String date, Set<String> chefs, BigDecimal totalPrice) {
+  public ChefReportInformationDto(String date, List<String> chefs, BigDecimal totalPrice) {
     this.date = date;
     this.chefs = chefs;
     this.totalPrice = totalPrice;
@@ -25,7 +25,7 @@ public class ChefReportInformationDto {
     return totalPrice;
   }
 
-  public Set<String> getChefs() {
+  public List<String> getChefs() {
     return chefs;
   }
 }
