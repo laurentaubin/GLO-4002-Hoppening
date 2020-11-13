@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import ca.ulaval.glo4002.reservation.domain.DinnerDate;
-import ca.ulaval.glo4002.reservation.domain.ReservationDate;
+import ca.ulaval.glo4002.reservation.domain.date.DinnerDate;
+import ca.ulaval.glo4002.reservation.domain.date.ReservationDate;
 
 public class Reservation {
 

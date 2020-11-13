@@ -17,11 +17,17 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ca.ulaval.glo4002.reservation.domain.chef.ChefManager;
+import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequest;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
 import ca.ulaval.glo4002.reservation.domain.material.Buffet;
 import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
+import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationFactory;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
@@ -75,6 +81,9 @@ public class RestaurantTest {
   @Mock
   private Map<LocalDate, DailyDishesQuantity> dailyDishesQuantity;
 
+  @Mock
+  private ChefManager chefManager;
+
   private Restaurant restaurant;
 
   @BeforeEach
@@ -83,7 +92,8 @@ public class RestaurantTest {
                                 reservationBook,
                                 ingredientInventory,
                                 hoppeningEvent,
-                                buffet);
+                                buffet,
+                                chefManager);
   }
 
   @Test
@@ -265,7 +275,32 @@ public class RestaurantTest {
 
     // then
     verify(buffet).updateDailyDishesQuantity(aReservation);
+  }
 
+  @Test
+  public void whenMakeReservation_thenChefsAreHired() {
+    // given
+    givenValidReservationRequest();
+
+    // when
+    restaurant.makeReservation(reservationRequest);
+
+    // then
+    verify(chefManager).hireChefsForReservations(reservations);
+  }
+
+  @Test
+  public void givenTooPickyForChefs_whenMakeReservation_thenThrowForbiddenReservationException() {
+    // given
+    givenValidReservationRequest();
+    doThrow(NoChefsAvailableException.class).when(chefManager)
+                                            .hireChefsForReservations(reservations);
+
+    // when
+    Executable makingReservation = () -> restaurant.makeReservation(reservationRequest);
+
+    // then
+    assertThrows(ForbiddenReservationException.class, makingReservation);
   }
 
   private void givenValidReservationRequest() {

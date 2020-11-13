@@ -1,11 +1,9 @@
-package ca.ulaval.glo4002.reservation.domain;
+package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
-import ca.ulaval.glo4002.reservation.domain.reservation.Table;
 import ca.ulaval.glo4002.reservation.service.reservation.TableObject;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationQuantityException;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;

@@ -10,41 +10,45 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.material.MaterialReport;
 import ca.ulaval.glo4002.reservation.domain.material.MaterialReportGenerator;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceRepository;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientReport;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientReportGenerator;
+import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.report.*;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
 
-public class ReportService {
+public class IngredientReportService {
 
   private final IngredientQuantityRepository ingredientQuantityRepository;
   private final IngredientPriceRepository ingredientPriceRepository;
-  private final ReportGenerator reportGenerator;
+  private final IngredientReportGenerator ingredientReportGenerator;
   private final Restaurant restaurant;
   private final MaterialReportGenerator materialReportGenerator;
   private final ReportPeriodFactory reportPeriodFactory;
 
-  public ReportService(IngredientQuantityRepository ingredientQuantityRepository,
-                       IngredientPriceRepository ingredientPriceRepository,
-                       ReportGenerator reportGenerator,
-                       Restaurant restaurant,
-                       MaterialReportGenerator materialReportGenerator,
-                       ReportPeriodFactory reportPeriodFactory)
-
+  public IngredientReportService(IngredientQuantityRepository ingredientQuantityRepository,
+                                 IngredientPriceRepository ingredientPriceRepository,
+                                 IngredientReportGenerator ingredientReportGenerator,
+                                 Restaurant restaurant,
+                                 MaterialReportGenerator materialReportGenerator,
+                                 ReportPeriodFactory reportPeriodFactory
+                                 )
   {
     this.ingredientQuantityRepository = ingredientQuantityRepository;
     this.ingredientPriceRepository = ingredientPriceRepository;
-    this.reportGenerator = reportGenerator;
+    this.ingredientReportGenerator = ingredientReportGenerator;
     this.restaurant = restaurant;
     this.materialReportGenerator = materialReportGenerator;
     this.reportPeriodFactory = reportPeriodFactory;
   }
 
-  public Report getIngredientReport(String startDate, String endDate) {
+  public IngredientReport getIngredientReport(String startDate, String endDate) {
     ReportPeriod reportPeriod = reportPeriodFactory.create(LocalDate.parse(startDate),
                                                            LocalDate.parse(endDate));
     List<IngredientPriceDto> ingredientPrices = ingredientPriceRepository.getIngredientsPrice();
     Map<LocalDate, Map<IngredientName, BigDecimal>> dateToIngredientQuantities = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
-    return reportGenerator.generateReport(ingredientPrices, dateToIngredientQuantities);
+    return ingredientReportGenerator.generateReport(ingredientPrices, dateToIngredientQuantities);
   }
 
   public DinnerPeriodObject getDinnerPeriodValueObject() {

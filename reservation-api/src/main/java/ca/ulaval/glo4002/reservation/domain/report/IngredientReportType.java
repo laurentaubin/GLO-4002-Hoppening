@@ -11,6 +11,11 @@ public enum IngredientReportType {
     this.reportType = reportType;
   }
 
+  @Override
+  public String toString() {
+    return reportType;
+  }
+
   public static IngredientReportType valueOfName(String name) {
     for (IngredientReportType ingredientReportType : IngredientReportType.values()) {
       if (ingredientReportType.toString().equals(name)) {
@@ -18,10 +23,5 @@ public enum IngredientReportType {
       }
     }
     throw new InvalidReportTypeException();
-  }
-
-  @Override
-  public String toString() {
-    return reportType;
   }
 }

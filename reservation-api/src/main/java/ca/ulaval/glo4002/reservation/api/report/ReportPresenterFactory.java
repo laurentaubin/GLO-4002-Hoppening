@@ -1,11 +1,11 @@
 package ca.ulaval.glo4002.reservation.api.report;
 
+import ca.ulaval.glo4002.reservation.api.report.presenter.total.TotalIngredientReportPresenter;
 import ca.ulaval.glo4002.reservation.api.report.presenter.total.TotalReportDtoFactory;
-import ca.ulaval.glo4002.reservation.api.report.presenter.total.TotalReportPresenter;
+import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitIngredientReportPresenter;
 import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitReportDtoFactory;
-import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitReportPresenter;
-import ca.ulaval.glo4002.reservation.domain.report.ReportPresenter;
-import ca.ulaval.glo4002.reservation.domain.report.ReportType;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientReportPresenter;
+import ca.ulaval.glo4002.reservation.domain.report.IngredientReportType;
 
 public class ReportPresenterFactory {
   private final UnitReportDtoFactory unitReportDtoFactory;
@@ -18,11 +18,11 @@ public class ReportPresenterFactory {
     this.totalReportDtoFactory = totalReportDtoFactory;
   }
 
-  public ReportPresenter create(ReportType reportType) {
-    if (reportType.equals(ReportType.UNIT)) {
-      return new UnitReportPresenter(unitReportDtoFactory);
+  public IngredientReportPresenter create(IngredientReportType ingredientReportType) {
+    if (ingredientReportType.equals(IngredientReportType.UNIT)) {
+      return new UnitIngredientReportPresenter(unitReportDtoFactory);
     } else {
-      return new TotalReportPresenter(totalReportDtoFactory);
+      return new TotalIngredientReportPresenter(totalReportDtoFactory);
     }
   }
 }

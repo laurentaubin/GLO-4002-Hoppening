@@ -1,8 +1,8 @@
 package ca.ulaval.glo4002.reservation.service.reservation.assembler;
 
 import ca.ulaval.glo4002.reservation.api.configuration.dto.CreateConfigurationRequestDto;
-import ca.ulaval.glo4002.reservation.domain.HoppeningConfigurationRequest;
-import ca.ulaval.glo4002.reservation.domain.HoppeningConfigurationRequestFactory;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequest;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequestFactory;
 import ca.ulaval.glo4002.reservation.service.reservation.PeriodObject;
 
 public class ConfigurationRequestAssembler {

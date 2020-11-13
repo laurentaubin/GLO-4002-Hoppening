@@ -10,6 +10,7 @@ import ca.ulaval.glo4002.reservation.api.configuration.ConfigurationResource;
 import ca.ulaval.glo4002.reservation.api.configuration.validator.ConfigurationDateFormatValidator;
 import ca.ulaval.glo4002.reservation.api.report.ReportPresenterFactory;
 import ca.ulaval.glo4002.reservation.api.report.ReportResource;
+import ca.ulaval.glo4002.reservation.api.report.assembler.ChefReportDtoAssembler;
 import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportDtoFactory;
 import ca.ulaval.glo4002.reservation.api.report.presenter.material.MaterialReportPresenter;
 import ca.ulaval.glo4002.reservation.api.report.presenter.total.TotalReportDtoFactory;
@@ -18,21 +19,30 @@ import ca.ulaval.glo4002.reservation.api.report.presenter.unit.UnitReportDtoFact
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.api.reservation.ReservationResource;
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
-import ca.ulaval.glo4002.reservation.domain.*;
+import ca.ulaval.glo4002.reservation.domain.IngredientInventory;
+import ca.ulaval.glo4002.reservation.domain.ReservationBook;
+import ca.ulaval.glo4002.reservation.domain.Restaurant;
+import ca.ulaval.glo4002.reservation.domain.chef.ChefManager;
+import ca.ulaval.glo4002.reservation.domain.date.DinnerDateFactory;
+import ca.ulaval.glo4002.reservation.domain.date.Period;
+import ca.ulaval.glo4002.reservation.domain.date.ReservationDateFactory;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.MenuRepository;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequestFactory;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
 import ca.ulaval.glo4002.reservation.domain.material.*;
 import ca.ulaval.glo4002.reservation.domain.report.*;
-import ca.ulaval.glo4002.reservation.domain.reservation.AllergiesDetector;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIngredientCalculator;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
+import ca.ulaval.glo4002.reservation.domain.report.chef.ChefReportGenerator;
+import ca.ulaval.glo4002.reservation.domain.report.chef.ChefRepository;
+import ca.ulaval.glo4002.reservation.domain.reservation.*;
 import ca.ulaval.glo4002.reservation.infra.inmemory.*;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceHttpRepository;
 import ca.ulaval.glo4002.reservation.server.ReservationServer;
-import ca.ulaval.glo4002.reservation.service.report.ReportService;
+import ca.ulaval.glo4002.reservation.service.report.ChefReportService;
+import ca.ulaval.glo4002.reservation.service.report.IngredientReportService;
 import ca.ulaval.glo4002.reservation.service.reservation.RestaurantService;
 import ca.ulaval.glo4002.reservation.service.reservation.assembler.*;
 
@@ -57,18 +67,29 @@ public class ReservationContext {
     IngredientAvailabilityValidator ingredientAvailabilityValidator = createIngredientAvailabilityValidator(reservationIngredientCalculator);
     AllergiesDetector allergiesDetector = new AllergiesDetector(reservationIngredientCalculator);
     Buffet buffet = new Buffet(new DailyDishesQuantityFactory());
+    ChefRepository chefRepository = new InMemoryChefRepository();
+    ChefReportService chefReportService = createChefReportService(chefRepository);
+    ChefManager chefManager = new ChefManager(chefRepository);
     Restaurant restaurant = createRestaurant(ingredientQuantityRepository,
                                              reservationRepository,
                                              ingredientAvailabilityValidator,
                                              allergiesDetector,
-                                             buffet);
+                                             buffet,
+                                             chefManager);
 
     RestaurantService restaurantService = createReservationService(restaurant);
-    ReportService reportService = createReportService(ingredientQuantityRepository, restaurant);
-    Object[] resources = createResources(restaurantService, reportService);
+    IngredientReportService reportService = createReportService(ingredientQuantityRepository,
+                                                                restaurant);
+    Object[] resources = createResources(restaurantService, reportService, chefReportService);
     server = createServer(resources);
 
     server.start();
+  }
+
+  private ChefReportService createChefReportService(ChefRepository chefRepository) {
+    ChefReportGenerator chefReportGenerator = new ChefReportGenerator();
+
+    return new ChefReportService(chefReportGenerator, chefRepository);
   }
 
   private RestaurantService createReservationService(Restaurant restaurant) {
@@ -87,16 +108,16 @@ public class ReservationContext {
                                  restaurant);
   }
 
-  private ReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository,
-                                            Restaurant restaurant)
+  private IngredientReportService createReportService(IngredientQuantityRepository ingredientQuantityRepository,
+                                                      Restaurant restaurant)
   {
     IngredientPriceRepository ingredientPriceRepository = new IngredientPriceHttpRepository();
     IngredientPriceCalculatorFactory ingredientPriceCalculatorFactory = new IngredientPriceCalculatorFactory();
     IngredientReportInformationFactory ingredientReportInformationFactory = new IngredientReportInformationFactory();
     DailyIngredientReportInformationFactory dailyIngredientReportInformationFactory = new DailyIngredientReportInformationFactory(ingredientReportInformationFactory);
-    ReportFactory reportFactory = new ReportFactory(dailyIngredientReportInformationFactory);
-    ReportGenerator reportGenerator = new ReportGenerator(ingredientPriceCalculatorFactory,
-                                                          reportFactory);
+    IngredientReportFactory ingredientReportFactory = new IngredientReportFactory(dailyIngredientReportInformationFactory);
+    IngredientReportGenerator ingredientReportGenerator = new IngredientReportGenerator(ingredientPriceCalculatorFactory,
+                                                                                        ingredientReportFactory);
     MaterialToBuyPriceCalculator materialToBuyPriceCalculator = new MaterialToBuyPriceCalculator();
     CleanMaterialPriceCalculator cleanMaterialPriceCalculator = new CleanMaterialPriceCalculator();
     MaterialReportGenerator materialReportGenerator = new MaterialReportGenerator(cleanMaterialPriceCalculator,
@@ -104,19 +125,21 @@ public class ReservationContext {
     ReportPeriodFactory reportPeriodFactory = new ReportPeriodFactory(restaurant.getHoppeningEvent()
                                                                                 .getDinnerPeriod());
 
-    return new ReportService(ingredientQuantityRepository,
-                             ingredientPriceRepository,
-                             reportGenerator,
-                             restaurant,
-                             materialReportGenerator,
-                             reportPeriodFactory);
+    return new IngredientReportService(ingredientQuantityRepository,
+                                       ingredientPriceRepository,
+                                       ingredientReportGenerator,
+                                       restaurant,
+                                       materialReportGenerator,
+                                       reportPeriodFactory);
   }
 
   private Object[] createResources(RestaurantService restaurantService,
-                                   ReportService reportService)
+                                   IngredientReportService ingredientReportService,
+                                   ChefReportService chefReportService)
   {
     ReservationResource reservationResource = createReservationResource(restaurantService);
-    ReportResource reportResource = createReportResource(reportService);
+    ReportResource reportResource = createReportResource(ingredientReportService,
+                                                         chefReportService);
     ConfigurationResource configurationResource = new ConfigurationResource(restaurantService,
                                                                             new ConfigurationDateFormatValidator(DATE_REGEX));
 
@@ -132,8 +155,11 @@ public class ReservationContext {
     return new ReservationResource(restaurantService, dateFormatValidator);
   }
 
-  private ReportResource createReportResource(ReportService reportService) {
-    ReportDateValidator reportDateValidator = new ReportDateValidator(DATE_REGEX, reportService);
+  private ReportResource createReportResource(IngredientReportService ingredientReportService,
+                                              ChefReportService chefReportService)
+  {
+    ReportDateValidator reportDateValidator = new ReportDateValidator(DATE_REGEX,
+                                                                      ingredientReportService);
 
     UnitReportDayDtoFactory unitReportDayDtoFactory = new UnitReportDayDtoFactory();
     UnitReportDtoFactory unitReportDtoFactory = new UnitReportDtoFactory(unitReportDayDtoFactory);
@@ -141,11 +167,14 @@ public class ReservationContext {
     MaterialReportDtoFactory materialReportDtoFactory = new MaterialReportDtoFactory();
     ReportPresenterFactory reportPresenterFactory = new ReportPresenterFactory(unitReportDtoFactory,
                                                                                totalReportDtoFactory);
+    ChefReportDtoAssembler chefReportDtoAssembler = new ChefReportDtoAssembler();
     MaterialReportPresenter materialReportPresenter = new MaterialReportPresenter(materialReportDtoFactory);
 
-    return new ReportResource(reportService,
+    return new ReportResource(ingredientReportService,
+                              chefReportService,
                               reportDateValidator,
                               reportPresenterFactory,
+                              chefReportDtoAssembler,
                               materialReportPresenter);
   }
 
@@ -171,7 +200,8 @@ public class ReservationContext {
                                       ReservationRepository reservationRepository,
                                       IngredientAvailabilityValidator ingredientAvailabilityValidator,
                                       AllergiesDetector allergiesDetector,
-                                      Buffet buffet)
+                                      Buffet buffet,
+                                      ChefManager chefManager)
   {
     ReservationFactory reservationFactory = createReservationFactory();
     ReservationBook reservationBook = new ReservationBook(reservationRepository);
@@ -183,7 +213,8 @@ public class ReservationContext {
                           reservationBook,
                           ingredientInventory,
                           hoppeningEvent,
-                          buffet);
+                          buffet,
+                          chefManager);
   }
 
   private ReservationFactory createReservationFactory() {

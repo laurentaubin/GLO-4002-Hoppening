@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.domain.DinnerDate;
-import ca.ulaval.glo4002.reservation.domain.ReservationDate;
+import ca.ulaval.glo4002.reservation.domain.date.DinnerDate;
+import ca.ulaval.glo4002.reservation.domain.date.ReservationDate;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.Table;

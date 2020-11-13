@@ -10,8 +10,7 @@ public interface ChefRepository {
 
   void updateRestaurantChefs(LocalDate dinnerDate, Set<Chef> newChefs);
 
-  Map<LocalDate, Set<Chef>> getAllChefsWorkSchedule();
+  Map<LocalDate, Set<Chef>> getAllChefs();
 
-  Set<Chef> getAllChefs();
-
+  Set<Chef> getChefsForDate(LocalDate date);
 }

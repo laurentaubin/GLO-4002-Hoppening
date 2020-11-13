@@ -7,7 +7,7 @@
 // import org.junit.jupiter.api.BeforeEach;
 // import org.junit.jupiter.api.Test;
 //
-// import ca.ulaval.glo4002.reservation.domain.Period;
+// import ca.ulaval.glo4002.reservation.domain.date.Period;
 // import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 //
 // public class ReportPeriodAssemblerTest {

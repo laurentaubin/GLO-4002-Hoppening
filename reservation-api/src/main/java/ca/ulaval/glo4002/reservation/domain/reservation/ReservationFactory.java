@@ -1,10 +1,13 @@
-package ca.ulaval.glo4002.reservation.domain;
+package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.domain.reservation.Table;
+import ca.ulaval.glo4002.reservation.domain.ReservationRequest;
+import ca.ulaval.glo4002.reservation.domain.date.DinnerDate;
+import ca.ulaval.glo4002.reservation.domain.date.DinnerDateFactory;
+import ca.ulaval.glo4002.reservation.domain.date.ReservationDate;
+import ca.ulaval.glo4002.reservation.domain.date.ReservationDateFactory;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
 
 public class ReservationFactory {
   private final DinnerDateFactory dinnerDateFactory;

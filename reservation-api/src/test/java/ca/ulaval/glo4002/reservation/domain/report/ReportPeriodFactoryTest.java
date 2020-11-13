@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import ca.ulaval.glo4002.reservation.domain.Period;
+import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportDateException;
 
 public class ReportPeriodFactoryTest {

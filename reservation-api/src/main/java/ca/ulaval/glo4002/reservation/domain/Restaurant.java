@@ -4,11 +4,16 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import ca.ulaval.glo4002.reservation.domain.chef.ChefManager;
 import ca.ulaval.glo4002.reservation.domain.exception.ForbiddenReservationException;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequest;
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
 import ca.ulaval.glo4002.reservation.domain.material.Buffet;
 import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
+import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationFactory;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
@@ -20,23 +25,31 @@ public class Restaurant {
   private final ReservationBook reservationBook;
   private final IngredientInventory ingredientInventory;
   private final Buffet buffet;
+  private final ChefManager chefManager;
 
   public Restaurant(ReservationFactory reservationFactory,
                     ReservationBook reservationBook,
                     IngredientInventory ingredientInventory,
                     HoppeningEvent hoppeningEvent,
-                    Buffet buffet)
+                    Buffet buffet,
+                    ChefManager chefManager)
   {
     this.reservationFactory = reservationFactory;
     this.reservationBook = reservationBook;
     this.ingredientInventory = ingredientInventory;
     this.hoppeningEvent = hoppeningEvent;
     this.buffet = buffet;
+    this.chefManager = chefManager;
   }
 
   public ReservationId makeReservation(ReservationRequest reservationRequest) {
     Reservation reservation = reservationFactory.create(reservationRequest, hoppeningEvent);
     verifyReservation(reservation);
+    try {
+      hireChefsForNewReservation(reservation);
+    } catch (NoChefsAvailableException noChefsAvailableException) {
+      throw new ForbiddenReservationException();
+    }
     buffet.updateDailyDishesQuantity(reservation);
     return registerReservation(reservation);
   }
@@ -95,4 +108,9 @@ public class Restaurant {
                                                                     existingReservationAtDinnerDate);
   }
 
+  private void hireChefsForNewReservation(Reservation reservation) {
+    List<Reservation> currentReservations = reservationBook.getReservationsByDate(reservation.getDinnerDate());
+    currentReservations.add(reservation);
+    chefManager.hireChefsForReservations(currentReservations);
+  }
 }

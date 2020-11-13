@@ -2,7 +2,7 @@ package ca.ulaval.glo4002.reservation.service.report;
 
 import java.time.format.DateTimeFormatter;
 
-import ca.ulaval.glo4002.reservation.domain.Period;
+import ca.ulaval.glo4002.reservation.domain.date.Period;
 
 public class DinnerPeriodObject {
   private static final String PATTERN_FORMAT = "MMMM dd YYYY";

@@ -1,11 +1,9 @@
-package ca.ulaval.glo4002.reservation.domain;
+package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
-import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 import ca.ulaval.glo4002.reservation.service.reservation.CustomerObject;
 
 public class CustomerFactory {

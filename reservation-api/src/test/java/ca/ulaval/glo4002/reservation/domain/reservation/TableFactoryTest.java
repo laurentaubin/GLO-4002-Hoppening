@@ -2,8 +2,6 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import ca.ulaval.glo4002.reservation.service.reservation.CustomerFactory;
-import ca.ulaval.glo4002.reservation.service.reservation.TableFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,10 +14,10 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.service.reservation.dto.CustomerDto;
-import ca.ulaval.glo4002.reservation.service.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.domain.exception.InvalidReservationQuantityException;
-import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.service.reservation.CustomerObject;
+import ca.ulaval.glo4002.reservation.service.reservation.TableObject;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationQuantityException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
 @ExtendWith(MockitoExtension.class)
 public class TableFactoryTest {
@@ -42,10 +40,10 @@ public class TableFactoryTest {
   @Test
   public void givenEmptyTables_whenValidateTables_thenThrowInvalidReservationQuantityException() {
     // given
-    List<TableDto> tableDtos = Collections.emptyList();
+    List<TableObject> tableObjects = Collections.emptyList();
 
     // when
-    Executable creatingTables = () -> tableFactory.createTables(tableDtos);
+    Executable creatingTables = () -> tableFactory.createTables(tableObjects);
 
     // then
     assertThrows(InvalidReservationQuantityException.class, creatingTables);
@@ -54,12 +52,12 @@ public class TableFactoryTest {
   @Test
   public void givenTableWithEmptyCustomers_whenValidateTables_thenThrowInvalidReservationQuantityException() {
     // given
-    List<CustomerDto> customerDtos = Collections.emptyList();
-    TableDto tableDto = new TableDto(customerDtos);
-    List<TableDto> tableDtos = Collections.singletonList(tableDto);
+    List<CustomerObject> customerObjects = Collections.emptyList();
+    TableObject tableObject = new TableObject(customerObjects);
+    List<TableObject> tableObjects = Collections.singletonList(tableObject);
 
     // when
-    Executable creatingTables = () -> tableFactory.createTables(tableDtos);
+    Executable creatingTables = () -> tableFactory.createTables(tableObjects);
 
     // then
     assertThrows(InvalidReservationQuantityException.class, creatingTables);
@@ -68,11 +66,11 @@ public class TableFactoryTest {
   @Test
   public void givenTablesWithExceedingNumberOfCustomersPerTable_whenValidateTables_thenThrowTooManyPeopleException() {
     // given
-    TableDto tableDto = new TableDto(givenCustomers(EXCEEDING_NUMBER_OF_CUSTOMERS_PER_TABLE));
-    List<TableDto> tableDtos = Collections.singletonList(tableDto);
+    TableObject tableObject = new TableObject(givenCustomers(EXCEEDING_NUMBER_OF_CUSTOMERS_PER_TABLE));
+    List<TableObject> tableObjects = Collections.singletonList(tableObject);
 
     // when
-    Executable creatingTables = () -> tableFactory.createTables(tableDtos);
+    Executable creatingTables = () -> tableFactory.createTables(tableObjects);
 
     // then
     assertThrows(TooManyPeopleException.class, creatingTables);
@@ -81,23 +79,23 @@ public class TableFactoryTest {
   @Test
   public void givenTablesWithTotalNumberOfCustomersExceedingCustomerCapacityPerReservation_whenValidateTables_thenThrowTooManyPeopleException() {
     // given
-    TableDto aTableDto = new TableDto(givenCustomers(FOUR_CUSTOMERS));
-    TableDto anotherTableDto = new TableDto(givenCustomers(THREE_CUSTOMERS));
+    TableObject aTableObject = new TableObject(givenCustomers(FOUR_CUSTOMERS));
+    TableObject anotherTableObject = new TableObject(givenCustomers(THREE_CUSTOMERS));
 
-    List<TableDto> tableDtos = Arrays.asList(aTableDto, anotherTableDto);
+    List<TableObject> tableObjects = Arrays.asList(aTableObject, anotherTableObject);
 
     // when
-    Executable creatingTables = () -> tableFactory.createTables(tableDtos);
+    Executable creatingTables = () -> tableFactory.createTables(tableObjects);
 
     // then
     assertThrows(TooManyPeopleException.class, creatingTables);
   }
 
-  private List<CustomerDto> givenCustomers(int numberOfCustomers) {
-    List<CustomerDto> customerDtos = new ArrayList<>();
+  private List<CustomerObject> givenCustomers(int numberOfCustomers) {
+    List<CustomerObject> customerObjects = new ArrayList<>();
     for (int count = 0; count < numberOfCustomers; count++) {
-      customerDtos.add(new CustomerDto(ANY_NAME, ANY_RESTRICTIONS));
+      customerObjects.add(new CustomerObject(ANY_NAME, ANY_RESTRICTIONS));
     }
-    return customerDtos;
+    return customerObjects;
   }
 }

@@ -4,8 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
-import ca.ulaval.glo4002.reservation.service.reservation.TableFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ca.ulaval.glo4002.reservation.domain.ReservationRequest;
 import ca.ulaval.glo4002.reservation.domain.date.*;
 import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
-import ca.ulaval.glo4002.reservation.service.reservation.dto.TableDto;
+import ca.ulaval.glo4002.reservation.service.reservation.TableObject;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationFactoryTest {
@@ -47,7 +45,7 @@ public class ReservationFactoryTest {
   private ReservationDate reservationDate;
 
   @Mock
-  private List<TableDto> tableDtos;
+  private List<TableObject> tableObjects;
 
   @Mock
   private List<Table> tables;
@@ -58,16 +56,13 @@ public class ReservationFactoryTest {
   @Mock
   private Period reservationPeriod;
 
-  @Mock
-  private ReservationIdFactory reservationIdFactory;
-
   private ReservationFactory reservationFactory;
 
   @BeforeEach
   public void setUpReservationFactory() {
     reservationFactory = new ReservationFactory(dinnerDateFactory,
                                                 reservationDateFactory,
-                                                tableFactory, reservationIdFactory);
+                                                tableFactory);
   }
 
   @Test
@@ -109,7 +104,7 @@ public class ReservationFactoryTest {
     given(dinnerDateFactory.create(DINNER_DATE.toString(), dinnerPeriod)).willReturn(dinnerDate);
     given(reservationDateFactory.create(RESERVATION_DATE.toString(),
                                         reservationPeriod)).willReturn(reservationDate);
-    given(tableFactory.createTables(tableDtos)).willReturn(tables);
+    given(tableFactory.createTables(tableObjects)).willReturn(tables);
 
     // when
     Reservation reservation = reservationFactory.create(reservationRequest, hoppeningEvent);
@@ -128,6 +123,6 @@ public class ReservationFactoryTest {
   private void setUpReservationRequest() {
     given(reservationRequest.getDinnerDate()).willReturn(DINNER_DATE.toString());
     given(reservationRequest.getReservationDate()).willReturn(RESERVATION_DATE.toString());
-    given(reservationRequest.getTables()).willReturn(tableDtos);
+    given(reservationRequest.getTables()).willReturn(tableObjects);
   }
 }

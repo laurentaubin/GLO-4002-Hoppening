@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.domain.Period;
+import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 

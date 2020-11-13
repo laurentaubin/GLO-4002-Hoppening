@@ -13,8 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportDateException;
-import ca.ulaval.glo4002.reservation.service.report.DinnerPeriodDto;
-import ca.ulaval.glo4002.reservation.service.report.ReportService;
+import ca.ulaval.glo4002.reservation.service.report.DinnerPeriodObject;
+import ca.ulaval.glo4002.reservation.service.report.IngredientReportService;
 
 @ExtendWith(MockitoExtension.class)
 public class IngredientReportDateValidatorTest {
@@ -27,16 +27,16 @@ public class IngredientReportDateValidatorTest {
   private static final String A_WORD = "nfdsdf";
 
   @Mock
-  private ReportService reportService;
+  private IngredientReportService ingredientReportService;
 
   @Mock
-  private DinnerPeriodDto dinnerPeriodDto;
+  private DinnerPeriodObject dinnerPeriodObject;
 
   private ReportDateValidator reportDateValidator;
 
   @BeforeEach
   public void setUp() {
-    reportDateValidator = new ReportDateValidator(DATE_REGEX, reportService);
+    reportDateValidator = new ReportDateValidator(DATE_REGEX, ingredientReportService);
   }
 
   @Test
@@ -112,8 +112,8 @@ public class IngredientReportDateValidatorTest {
   }
 
   private void givenValidDinnerPeriod() {
-    given(reportService.getDinnerPeriodDto()).willReturn(dinnerPeriodDto);
-    given(dinnerPeriodDto.getStartDate()).willReturn(VALID_START_DATE);
-    given(dinnerPeriodDto.getEndDate()).willReturn(VALID_END_DATE);
+    given(ingredientReportService.getDinnerPeriodValueObject()).willReturn(dinnerPeriodObject);
+    given(dinnerPeriodObject.getStartDate()).willReturn(VALID_START_DATE);
+    given(dinnerPeriodObject.getEndDate()).willReturn(VALID_END_DATE);
   }
 }

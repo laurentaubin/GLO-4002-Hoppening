@@ -1,8 +1,9 @@
-package ca.ulaval.glo4002.reservation.domain;
+package ca.ulaval.glo4002.reservation.domain.hoppening;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.exception.InvalidTimeFrameException;
 import ca.ulaval.glo4002.reservation.service.reservation.PeriodObject;
 

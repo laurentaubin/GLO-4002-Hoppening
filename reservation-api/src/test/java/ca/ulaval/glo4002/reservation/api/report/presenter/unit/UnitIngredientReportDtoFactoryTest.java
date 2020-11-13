@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,16 +133,16 @@ public class UnitIngredientReportDtoFactoryTest {
   }
 
   private UnitReportDayDto givenAnUnitReportDayDto() {
-    List<IngredientReportInformationDto> ingredientReportInformationDtos =
-      Collections.singletonList(new IngredientReportInformationDto(IngredientName.PEPPERONI.toString(),
-                                                                   PEPPERONI_QUANTITY,
-                                                                   PEPPERONI_PRICE));
+    List<IngredientReportInformationDto> ingredientReportInformationDtos = Arrays.asList(new IngredientReportInformationDto(IngredientName.PEPPERONI.toString(),
+                                                                                                                            PEPPERONI_QUANTITY,
+                                                                                                                            PEPPERONI_PRICE));
     return new UnitReportDayDto(FIRST_DATE, ingredientReportInformationDtos, A_DAILY_TOTAL_PRICE);
   }
 
   private UnitReportDayDto givenAnotherUnitReportDayDto() {
-    List<IngredientReportInformationDto> anotherIngredientReportInformationDtos =
-      Collections.singletonList(new IngredientReportInformationDto(IngredientName.KIMCHI.toString(), KIMCHI_QUANTITY, KIMCHI_PRICE));
+    List<IngredientReportInformationDto> anotherIngredientReportInformationDtos = Arrays.asList(new IngredientReportInformationDto(IngredientName.KIMCHI.toString(),
+                                                                                                                                   KIMCHI_QUANTITY,
+                                                                                                                                   KIMCHI_PRICE));
     return new UnitReportDayDto(LATER_DATE,
                                 anotherIngredientReportInformationDtos,
                                 ANOTHER_DAILY_TOTAL_PRICE);

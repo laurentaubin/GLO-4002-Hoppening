@@ -3,7 +3,6 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import ca.ulaval.glo4002.reservation.service.reservation.CustomerFactory;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import ca.ulaval.glo4002.reservation.exception.InvalidRestrictionException;
-import ca.ulaval.glo4002.reservation.service.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.service.reservation.CustomerObject;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidRestrictionException;
 
 public class CustomerFactoryTest {
   private static final String A_NAME = "name";
@@ -29,11 +28,11 @@ public class CustomerFactoryTest {
   @Test
   public void whenCreate_thenCustomerIsCreated() {
     // given
-    CustomerDto customerDto = new CustomerDto(A_NAME,
-                                              Collections.singletonList(A_RESTRICTION_TYPE.toString()));
+    CustomerObject customerObject = new CustomerObject(A_NAME,
+                                                       Collections.singletonList(A_RESTRICTION_TYPE.toString()));
 
     // when
-    Customer customer = customerFactory.create(customerDto);
+    Customer customer = customerFactory.create(customerObject);
 
     // then
     assertThat(customer.getName()).isEqualTo(A_NAME);
@@ -45,10 +44,10 @@ public class CustomerFactoryTest {
   public void givenAnInvalidRestriction_whenCreate_thenThrowInvalidRestrictionException() {
     // given
     List<String> restrictionsName = Collections.singletonList(INVALID_RESTRICTION);
-    CustomerDto customerDto = new CustomerDto(A_NAME, restrictionsName);
+    CustomerObject customerObject = new CustomerObject(A_NAME, restrictionsName);
 
     // when
-    Executable creatingCustomer = () -> customerFactory.create(customerDto);
+    Executable creatingCustomer = () -> customerFactory.create(customerObject);
 
     // then
     assertThrows(InvalidRestrictionException.class, creatingCustomer);

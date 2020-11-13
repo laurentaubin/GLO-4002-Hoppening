@@ -3,7 +3,7 @@ package ca.ulaval.glo4002.reservation.domain.report;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import ca.ulaval.glo4002.reservation.domain.Period;
+import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportDateException;
 
 public class ReportPeriodFactory {
