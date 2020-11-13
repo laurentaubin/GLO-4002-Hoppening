@@ -94,12 +94,12 @@ public class ReservationContext {
 
   private RestaurantService createReservationService(Restaurant restaurant) {
     CustomerAssembler customerAssembler = new CustomerAssembler();
-    CustomerObjectAssembler customerObjectAssembler = new CustomerObjectAssembler();
-    TableObjectAssembler tableObjectAssembler = new TableObjectAssembler(customerObjectAssembler);
-    ReservationRequestAssembler reservationRequestAssembler = new ReservationRequestAssembler(tableObjectAssembler);
-    PeriodObjectAssembler eventPeriodObjectAssembler = new PeriodObjectAssembler();
+    CustomerDtoAssembler customerDtoAssembler = new CustomerDtoAssembler();
+    TableDtoAssembler tableDtoAssembler = new TableDtoAssembler(customerDtoAssembler);
+    ReservationRequestAssembler reservationRequestAssembler = new ReservationRequestAssembler(tableDtoAssembler);
+    PeriodDtoAssembler eventPeriodDtoAssembler = new PeriodDtoAssembler();
     HoppeningConfigurationRequestFactory hoppeningConfigurationRequestFactory = new HoppeningConfigurationRequestFactory();
-    ConfigurationRequestAssembler configurationRequestAssembler = new ConfigurationRequestAssembler(eventPeriodObjectAssembler,
+    ConfigurationRequestAssembler configurationRequestAssembler = new ConfigurationRequestAssembler(eventPeriodDtoAssembler,
                                                                                                     hoppeningConfigurationRequestFactory);
 
     return new RestaurantService(new ReservationAssembler(DATE_TIME_FORMAT, customerAssembler),

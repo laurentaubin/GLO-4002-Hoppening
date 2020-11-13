@@ -10,10 +10,6 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.material.MaterialReport;
 import ca.ulaval.glo4002.reservation.domain.material.MaterialReportGenerator;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientPriceRepository;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientReport;
-import ca.ulaval.glo4002.reservation.domain.report.IngredientReportGenerator;
-import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.report.*;
 import ca.ulaval.glo4002.reservation.infra.inmemory.IngredientQuantityRepository;
 import ca.ulaval.glo4002.reservation.infra.report.IngredientPriceDto;
@@ -32,8 +28,7 @@ public class IngredientReportService {
                                  IngredientReportGenerator ingredientReportGenerator,
                                  Restaurant restaurant,
                                  MaterialReportGenerator materialReportGenerator,
-                                 ReportPeriodFactory reportPeriodFactory
-                                 )
+                                 ReportPeriodFactory reportPeriodFactory)
   {
     this.ingredientQuantityRepository = ingredientQuantityRepository;
     this.ingredientPriceRepository = ingredientPriceRepository;
@@ -51,8 +46,8 @@ public class IngredientReportService {
     return ingredientReportGenerator.generateReport(ingredientPrices, dateToIngredientQuantities);
   }
 
-  public DinnerPeriodObject getDinnerPeriodValueObject() {
-    return new DinnerPeriodObject(restaurant.getHoppeningEvent().getDinnerPeriod());
+  public DinnerPeriodDto getDinnerPeriodDto() {
+    return new DinnerPeriodDto(restaurant.getHoppeningEvent().getDinnerPeriod());
   }
 
   public MaterialReport getMaterialReport(String startDate, String endDate) {

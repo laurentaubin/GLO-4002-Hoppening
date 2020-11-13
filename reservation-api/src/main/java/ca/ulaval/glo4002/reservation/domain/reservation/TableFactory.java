@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ca.ulaval.glo4002.reservation.service.reservation.TableObject;
+import ca.ulaval.glo4002.reservation.service.reservation.dto.TableDto;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationQuantityException;
 import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
@@ -18,33 +18,33 @@ public class TableFactory {
     this.customerFactory = customerFactory;
   }
 
-  public List<Table> createTables(List<TableObject> tableObjects) {
-    validateCovidRegulationRules(tableObjects);
+  public List<Table> createTables(List<TableDto> tableDtos) {
+    validateCovidRegulationRules(tableDtos);
     List<Table> tables = new ArrayList<>();
-    for (TableObject tableObject : tableObjects) {
-      tables.add(createTable(tableObject));
+    for (TableDto tableDto : tableDtos) {
+      tables.add(createTable(tableDto));
     }
     return tables;
   }
 
-  private Table createTable(TableObject tableObject) {
-    List<Customer> customers = tableObject.getCustomerObjects()
-                                          .stream()
-                                          .map(customerFactory::create)
-                                          .collect(Collectors.toList());
+  private Table createTable(TableDto tableDto) {
+    List<Customer> customers = tableDto.getCustomerObjects()
+                                       .stream()
+                                       .map(customerFactory::create)
+                                       .collect(Collectors.toList());
     return new Table(customers);
   }
 
-  private void validateCovidRegulationRules(List<TableObject> tableObjects) {
-    if (tableObjects.isEmpty()) {
+  private void validateCovidRegulationRules(List<TableDto> tableDtos) {
+    if (tableDtos.isEmpty()) {
       throw new InvalidReservationQuantityException();
     }
-    validateNumberOfCustomers(tableObjects);
+    validateNumberOfCustomers(tableDtos);
   }
 
-  private void validateNumberOfCustomers(List<TableObject> tables) {
+  private void validateNumberOfCustomers(List<TableDto> tables) {
     int totalNumberOfCustomers = 0;
-    for (TableObject table : tables) {
+    for (TableDto table : tables) {
       if (table.getCustomerObjects().size() > MAX_NUMBER_OF_CUSTOMERS_PER_TABLE) {
         throw new TooManyPeopleException();
       }

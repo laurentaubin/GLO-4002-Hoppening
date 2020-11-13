@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.report.validator.ReportDateValidator;
 import ca.ulaval.glo4002.reservation.domain.report.exception.InvalidReportDateException;
-import ca.ulaval.glo4002.reservation.service.report.DinnerPeriodObject;
+import ca.ulaval.glo4002.reservation.service.report.DinnerPeriodDto;
 import ca.ulaval.glo4002.reservation.service.report.IngredientReportService;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +30,7 @@ public class IngredientReportDateValidatorTest {
   private IngredientReportService ingredientReportService;
 
   @Mock
-  private DinnerPeriodObject dinnerPeriodObject;
+  private DinnerPeriodDto dinnerPeriodDto;
 
   private ReportDateValidator reportDateValidator;
 
@@ -112,8 +112,8 @@ public class IngredientReportDateValidatorTest {
   }
 
   private void givenValidDinnerPeriod() {
-    given(ingredientReportService.getDinnerPeriodValueObject()).willReturn(dinnerPeriodObject);
-    given(dinnerPeriodObject.getStartDate()).willReturn(VALID_START_DATE);
-    given(dinnerPeriodObject.getEndDate()).willReturn(VALID_END_DATE);
+    given(ingredientReportService.getDinnerPeriodDto()).willReturn(dinnerPeriodDto);
+    given(dinnerPeriodDto.getStartDate()).willReturn(VALID_START_DATE);
+    given(dinnerPeriodDto.getEndDate()).willReturn(VALID_END_DATE);
   }
 }

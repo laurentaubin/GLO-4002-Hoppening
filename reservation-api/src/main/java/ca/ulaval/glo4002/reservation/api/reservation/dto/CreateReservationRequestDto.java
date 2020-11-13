@@ -16,7 +16,7 @@ public class CreateReservationRequestDto {
 
   @Valid
   @NotNull
-  private List<TableDto> tables;
+  private List<TableApiDto> tables;
 
   @Valid
   @NotNull
@@ -42,11 +42,11 @@ public class CreateReservationRequestDto {
     this.dinnerDate = dinnerDate;
   }
 
-  public void setTables(List<TableDto> tables) {
+  public void setTables(List<TableApiDto> tables) {
     this.tables = tables;
   }
 
-  public List<TableDto> getTables() {
+  public List<TableApiDto> getTables() {
     return tables;
   }
 

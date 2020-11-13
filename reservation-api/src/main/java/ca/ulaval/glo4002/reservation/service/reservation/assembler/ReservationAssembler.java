@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerApiDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
@@ -27,10 +27,10 @@ public class ReservationAssembler {
     reservationDto.setDinnerDate(reservation.getDinnerDate().format(dateFormatter));
     reservationDto.setReservationPrice(formatReservationPrice(reservation.getReservationFees()));
 
-    List<CustomerDto> customers = reservation.getCustomers()
-                                             .stream()
-                                             .map(customerAssembler::assembleDtoFromCustomer)
-                                             .collect(Collectors.toList());
+    List<CustomerApiDto> customers = reservation.getCustomers()
+                                                .stream()
+                                                .map(customerAssembler::assembleDtoFromCustomer)
+                                                .collect(Collectors.toList());
 
     reservationDto.setCustomers(customers);
 

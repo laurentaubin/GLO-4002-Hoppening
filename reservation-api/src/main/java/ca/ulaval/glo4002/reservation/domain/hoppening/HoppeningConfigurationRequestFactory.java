@@ -5,14 +5,14 @@ import java.time.format.DateTimeFormatter;
 
 import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.exception.InvalidTimeFrameException;
-import ca.ulaval.glo4002.reservation.service.reservation.PeriodObject;
+import ca.ulaval.glo4002.reservation.service.reservation.dto.PeriodDto;
 
 public class HoppeningConfigurationRequestFactory {
   private static final String DATE_FORMAT = "yyyy-MM-dd";
   private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
-  public HoppeningConfigurationRequest create(PeriodObject dinnerPeriodValueObject,
-                                              PeriodObject reservationPeriodValueObject)
+  public HoppeningConfigurationRequest create(PeriodDto dinnerPeriodValueObject,
+                                              PeriodDto reservationPeriodValueObject)
   {
     Period dinnerPeriod = createPeriod(dinnerPeriodValueObject.getStartDate(),
                                        dinnerPeriodValueObject.getEndDate());

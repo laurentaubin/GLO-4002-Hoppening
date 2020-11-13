@@ -3,22 +3,22 @@ package ca.ulaval.glo4002.reservation.service.reservation.assembler;
 import ca.ulaval.glo4002.reservation.api.configuration.dto.CreateConfigurationRequestDto;
 import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequest;
 import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequestFactory;
-import ca.ulaval.glo4002.reservation.service.reservation.PeriodObject;
+import ca.ulaval.glo4002.reservation.service.reservation.dto.PeriodDto;
 
 public class ConfigurationRequestAssembler {
-  private final PeriodObjectAssembler periodObjectAssembler;
+  private final PeriodDtoAssembler periodDtoAssembler;
   private final HoppeningConfigurationRequestFactory hoppeningConfigurationRequestFactory;
 
-  public ConfigurationRequestAssembler(PeriodObjectAssembler eventPeriodObjectAssembler,
+  public ConfigurationRequestAssembler(PeriodDtoAssembler eventPeriodDtoAssembler,
                                        HoppeningConfigurationRequestFactory hoppeningConfigurationRequestFactory)
   {
     this.hoppeningConfigurationRequestFactory = hoppeningConfigurationRequestFactory;
-    this.periodObjectAssembler = eventPeriodObjectAssembler;
+    this.periodDtoAssembler = eventPeriodDtoAssembler;
   }
 
   public HoppeningConfigurationRequest assemble(CreateConfigurationRequestDto createConfigurationRequestDto) {
-    PeriodObject dinnerPeriod = periodObjectAssembler.assemble(createConfigurationRequestDto.getDinnerPeriod());
-    PeriodObject reservationPeriod = periodObjectAssembler.assemble(createConfigurationRequestDto.getReservationPeriod());
+    PeriodDto dinnerPeriod = periodDtoAssembler.assemble(createConfigurationRequestDto.getDinnerPeriod());
+    PeriodDto reservationPeriod = periodDtoAssembler.assemble(createConfigurationRequestDto.getReservationPeriod());
 
     return hoppeningConfigurationRequestFactory.create(dinnerPeriod, reservationPeriod);
   }

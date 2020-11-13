@@ -5,28 +5,28 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerApiDto;
 import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
 import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 public class CustomerAssembler {
-  public Customer assembleFromCustomerDto(CustomerDto customerDto) {
-    Set<RestrictionType> restrictions = customerDto.getRestrictions()
-                                                   .stream()
-                                                   .map(RestrictionType::valueOfName)
-                                                   .collect(Collectors.toSet());
-    return new Customer(customerDto.getName(), restrictions);
+  public Customer assembleFromCustomerDto(CustomerApiDto customerApiDto) {
+    Set<RestrictionType> restrictions = customerApiDto.getRestrictions()
+                                                      .stream()
+                                                      .map(RestrictionType::valueOfName)
+                                                      .collect(Collectors.toSet());
+    return new Customer(customerApiDto.getName(), restrictions);
   }
 
-  public CustomerDto assembleDtoFromCustomer(Customer customer) {
+  public CustomerApiDto assembleDtoFromCustomer(Customer customer) {
     List<String> restrictions = customer.getRestrictions()
                                         .stream()
                                         .map(RestrictionType::toString)
                                         .collect(Collectors.toList());
     Collections.sort(restrictions);
-    CustomerDto customerDto = new CustomerDto();
-    customerDto.setName(customer.getName());
-    customerDto.setRestrictions(restrictions);
-    return customerDto;
+    CustomerApiDto customerApiDto = new CustomerApiDto();
+    customerApiDto.setName(customer.getName());
+    customerApiDto.setRestrictions(restrictions);
+    return customerApiDto;
   }
 }

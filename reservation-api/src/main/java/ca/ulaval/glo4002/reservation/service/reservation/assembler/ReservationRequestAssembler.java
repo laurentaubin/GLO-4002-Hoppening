@@ -5,23 +5,23 @@ import java.util.stream.Collectors;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.domain.ReservationRequest;
-import ca.ulaval.glo4002.reservation.service.reservation.TableObject;
+import ca.ulaval.glo4002.reservation.service.reservation.dto.TableDto;
 
 public class ReservationRequestAssembler {
-  private final TableObjectAssembler tableObjectAssembler;
+  private final TableDtoAssembler tableDtoAssembler;
 
-  public ReservationRequestAssembler(TableObjectAssembler tableObjectAssembler) {
-    this.tableObjectAssembler = tableObjectAssembler;
+  public ReservationRequestAssembler(TableDtoAssembler tableDtoAssembler) {
+    this.tableDtoAssembler = tableDtoAssembler;
   }
 
   public ReservationRequest assemble(CreateReservationRequestDto createReservationRequestDto) {
     String dinnerDate = createReservationRequestDto.getDinnerDate();
     String reservationDate = createReservationRequestDto.getReservationDetails()
                                                         .getReservationDate();
-    List<TableObject> tableObjects = createReservationRequestDto.getTables()
-                                                                .stream()
-                                                                .map(tableObjectAssembler::assemble)
-                                                                .collect(Collectors.toList());
-    return new ReservationRequest(dinnerDate, reservationDate, tableObjects);
+    List<TableDto> tableDtos = createReservationRequestDto.getTables()
+                                                          .stream()
+                                                          .map(tableDtoAssembler::assemble)
+                                                          .collect(Collectors.toList());
+    return new ReservationRequest(dinnerDate, reservationDate, tableDtos);
   }
 }

@@ -1,9 +1,10 @@
 package ca.ulaval.glo4002.reservation.api.reservation.builder;
 
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import java.util.ArrayList;
 import java.util.List;
+
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerApiDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 
 public class ReservationDtoBuilder {
   private static final String A_DINNER_DATE = "2150-07-21T15:23:20.142Z";
@@ -11,7 +12,7 @@ public class ReservationDtoBuilder {
 
   private String dinnerDate;
   private double reservationPrice;
-  private final List<CustomerDto> customers;
+  private final List<CustomerApiDto> customers;
 
   public ReservationDtoBuilder() {
     dinnerDate = A_DINNER_DATE;
@@ -29,7 +30,7 @@ public class ReservationDtoBuilder {
     return this;
   }
 
-  public ReservationDtoBuilder withCustomer(CustomerDto customer) {
+  public ReservationDtoBuilder withCustomer(CustomerApiDto customer) {
     customers.add(customer);
     return this;
   }

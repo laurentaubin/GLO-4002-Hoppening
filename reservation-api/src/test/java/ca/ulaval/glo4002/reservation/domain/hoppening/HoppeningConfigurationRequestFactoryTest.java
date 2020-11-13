@@ -12,7 +12,7 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.domain.exception.InvalidTimeFrameException;
-import ca.ulaval.glo4002.reservation.service.reservation.PeriodObject;
+import ca.ulaval.glo4002.reservation.service.reservation.dto.PeriodDto;
 
 @ExtendWith(MockitoExtension.class)
 public class HoppeningConfigurationRequestFactoryTest {
@@ -35,10 +35,10 @@ public class HoppeningConfigurationRequestFactoryTest {
   @Test
   public void givenValidPeriods_whenCreate_thenHoppeningConfigurationRequestIsCreated() {
     // given
-    PeriodObject reservationPeriod = createPeriodValueObject(FIRST_CHRONOLOGICAL_DATE,
-                                                             SECOND_CHRONOLOGICAL_DATE);
-    PeriodObject dinnerPeriod = createPeriodValueObject(THIRD_CHRONOLOGICAL_DATE,
-                                                        LAST_CHRONOLOGICAL_DATE);
+    PeriodDto reservationPeriod = createPeriodValueObject(FIRST_CHRONOLOGICAL_DATE,
+                                                          SECOND_CHRONOLOGICAL_DATE);
+    PeriodDto dinnerPeriod = createPeriodValueObject(THIRD_CHRONOLOGICAL_DATE,
+                                                     LAST_CHRONOLOGICAL_DATE);
 
     // when
     HoppeningConfigurationRequest hoppeningConfigurationRequest = hoppeningConfigurationRequestFactory.create(dinnerPeriod,
@@ -58,10 +58,10 @@ public class HoppeningConfigurationRequestFactoryTest {
   @Test
   public void givenInvalidReservationPeriod_whenCreate_thenTheHoppeningDateAreNotChenge() {
     // given
-    PeriodObject reservationPeriod = createPeriodValueObject(SECOND_CHRONOLOGICAL_DATE,
-                                                             FIRST_CHRONOLOGICAL_DATE);
-    PeriodObject dinnerPeriod = createPeriodValueObject(THIRD_CHRONOLOGICAL_DATE,
-                                                        LAST_CHRONOLOGICAL_DATE);
+    PeriodDto reservationPeriod = createPeriodValueObject(SECOND_CHRONOLOGICAL_DATE,
+                                                          FIRST_CHRONOLOGICAL_DATE);
+    PeriodDto dinnerPeriod = createPeriodValueObject(THIRD_CHRONOLOGICAL_DATE,
+                                                     LAST_CHRONOLOGICAL_DATE);
 
     // when
     Executable hoppeningConfigurationRequest = () -> hoppeningConfigurationRequestFactory.create(dinnerPeriod,
@@ -74,10 +74,10 @@ public class HoppeningConfigurationRequestFactoryTest {
   @Test
   public void givenInvalidDinnerPeriod_whenCreate_thenTheHoppeningDateAreNotChenge() {
     // given
-    PeriodObject reservationPeriod = createPeriodValueObject(FIRST_CHRONOLOGICAL_DATE,
-                                                             SECOND_CHRONOLOGICAL_DATE);
-    PeriodObject dinnerPeriod = createPeriodValueObject(LAST_CHRONOLOGICAL_DATE,
-                                                        THIRD_CHRONOLOGICAL_DATE);
+    PeriodDto reservationPeriod = createPeriodValueObject(FIRST_CHRONOLOGICAL_DATE,
+                                                          SECOND_CHRONOLOGICAL_DATE);
+    PeriodDto dinnerPeriod = createPeriodValueObject(LAST_CHRONOLOGICAL_DATE,
+                                                     THIRD_CHRONOLOGICAL_DATE);
 
     // when
     Executable hoppeningConfigurationRequest = () -> hoppeningConfigurationRequestFactory.create(dinnerPeriod,
@@ -90,10 +90,10 @@ public class HoppeningConfigurationRequestFactoryTest {
   @Test
   public void givenOverlappingPeriod_whenCreate_thenTheHoppeningDateAreNotChenge() {
     // given
-    PeriodObject reservationPeriod = createPeriodValueObject(FIRST_CHRONOLOGICAL_DATE,
-                                                             THIRD_CHRONOLOGICAL_DATE);
-    PeriodObject dinnerPeriod = createPeriodValueObject(SECOND_CHRONOLOGICAL_DATE,
-                                                        LAST_CHRONOLOGICAL_DATE);
+    PeriodDto reservationPeriod = createPeriodValueObject(FIRST_CHRONOLOGICAL_DATE,
+                                                          THIRD_CHRONOLOGICAL_DATE);
+    PeriodDto dinnerPeriod = createPeriodValueObject(SECOND_CHRONOLOGICAL_DATE,
+                                                     LAST_CHRONOLOGICAL_DATE);
 
     // when
     Executable hoppeningConfigurationRequest = () -> hoppeningConfigurationRequestFactory.create(dinnerPeriod,
@@ -103,7 +103,7 @@ public class HoppeningConfigurationRequestFactoryTest {
     assertThrows(InvalidTimeFrameException.class, hoppeningConfigurationRequest);
   }
 
-  private PeriodObject createPeriodValueObject(String startDate, String endDate) {
-    return new PeriodObject(startDate, endDate);
+  private PeriodDto createPeriodValueObject(String startDate, String endDate) {
+    return new PeriodDto(startDate, endDate);
   }
 }

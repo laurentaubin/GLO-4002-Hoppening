@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ca.ulaval.glo4002.reservation.domain.ReservationRequest;
 import ca.ulaval.glo4002.reservation.domain.date.*;
 import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
-import ca.ulaval.glo4002.reservation.service.reservation.TableObject;
+import ca.ulaval.glo4002.reservation.service.reservation.dto.TableDto;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationFactoryTest {
@@ -45,7 +45,7 @@ public class ReservationFactoryTest {
   private ReservationDate reservationDate;
 
   @Mock
-  private List<TableObject> tableObjects;
+  private List<TableDto> tableDtos;
 
   @Mock
   private List<Table> tables;
@@ -104,7 +104,7 @@ public class ReservationFactoryTest {
     given(dinnerDateFactory.create(DINNER_DATE.toString(), dinnerPeriod)).willReturn(dinnerDate);
     given(reservationDateFactory.create(RESERVATION_DATE.toString(),
                                         reservationPeriod)).willReturn(reservationDate);
-    given(tableFactory.createTables(tableObjects)).willReturn(tables);
+    given(tableFactory.createTables(tableDtos)).willReturn(tables);
 
     // when
     Reservation reservation = reservationFactory.create(reservationRequest, hoppeningEvent);
@@ -123,6 +123,6 @@ public class ReservationFactoryTest {
   private void setUpReservationRequest() {
     given(reservationRequest.getDinnerDate()).willReturn(DINNER_DATE.toString());
     given(reservationRequest.getReservationDate()).willReturn(RESERVATION_DATE.toString());
-    given(reservationRequest.getTables()).willReturn(tableObjects);
+    given(reservationRequest.getTables()).willReturn(tableDtos);
   }
 }

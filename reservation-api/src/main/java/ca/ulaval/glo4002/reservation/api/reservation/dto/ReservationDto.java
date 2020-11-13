@@ -6,7 +6,7 @@ import java.util.List;
 public class ReservationDto {
   private String dinnerDate;
   private BigDecimal reservationPrice;
-  private List<CustomerDto> customers;
+  private List<CustomerApiDto> customers;
 
   public String getDinnerDate() {
     return dinnerDate;
@@ -24,11 +24,11 @@ public class ReservationDto {
     this.reservationPrice = reservationPrice;
   }
 
-  public List<CustomerDto> getCustomers() {
+  public List<CustomerApiDto> getCustomers() {
     return customers;
   }
 
-  public void setCustomers(List<CustomerDto> customers) {
+  public void setCustomers(List<CustomerApiDto> customers) {
     this.customers = customers;
   }
 }

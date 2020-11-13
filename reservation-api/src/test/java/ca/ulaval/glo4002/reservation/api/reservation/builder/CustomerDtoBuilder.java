@@ -3,7 +3,7 @@ package ca.ulaval.glo4002.reservation.api.reservation.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerApiDto;
 
 public class CustomerDtoBuilder {
   private static final String A_NAME = "bob";
@@ -26,11 +26,11 @@ public class CustomerDtoBuilder {
     return this;
   }
 
-  public CustomerDto build() {
-    CustomerDto customerDto = new CustomerDto();
-    customerDto.setName(name);
-    customerDto.setRestrictions(restrictions);
+  public CustomerApiDto build() {
+    CustomerApiDto customerApiDto = new CustomerApiDto();
+    customerApiDto.setName(name);
+    customerApiDto.setRestrictions(restrictions);
 
-    return customerDto;
+    return customerApiDto;
   }
 }

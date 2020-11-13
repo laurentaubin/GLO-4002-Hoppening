@@ -7,16 +7,19 @@ public class ReportDateValidator {
   private final String reportDateRegex;
   private final IngredientReportService ingredientReportService;
 
-  public ReportDateValidator(String reportDateRegex, IngredientReportService ingredientReportService) {
+  public ReportDateValidator(String reportDateRegex,
+                             IngredientReportService ingredientReportService)
+  {
     this.reportDateRegex = reportDateRegex;
     this.ingredientReportService = ingredientReportService;
   }
 
   public void validate(String startDate, String endDate) {
     if (areDatesInvalid(startDate, endDate)) {
-      throw new InvalidReportDateException(ingredientReportService.getDinnerPeriodValueObject()
-                                                        .getStartDate(),
-                                           ingredientReportService.getDinnerPeriodValueObject().getEndDate());
+      throw new InvalidReportDateException(ingredientReportService.getDinnerPeriodDto()
+                                                                  .getStartDate(),
+                                           ingredientReportService.getDinnerPeriodDto()
+                                                                  .getEndDate());
     }
   }
 

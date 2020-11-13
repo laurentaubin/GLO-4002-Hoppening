@@ -5,7 +5,7 @@ import java.util.List;
 
 import ca.ulaval.glo4002.reservation.api.reservation.dto.CreateReservationRequestDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDetailsDto;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.TableDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.TableApiDto;
 
 public class CreateReservationRequestDtoBuilder {
   private static final String A_VENDOR_CODE = "vendor code";
@@ -13,7 +13,7 @@ public class CreateReservationRequestDtoBuilder {
 
   private String vendorCode;
   private String dinnerDate;
-  private final List<TableDto> tables;
+  private final List<TableApiDto> tables;
   private ReservationDetailsDto reservationDetails;
 
   public CreateReservationRequestDtoBuilder() {
@@ -33,7 +33,7 @@ public class CreateReservationRequestDtoBuilder {
     return this;
   }
 
-  public CreateReservationRequestDtoBuilder withTable(TableDto table) {
+  public CreateReservationRequestDtoBuilder withTable(TableApiDto table) {
     tables.add(table);
     return this;
   }

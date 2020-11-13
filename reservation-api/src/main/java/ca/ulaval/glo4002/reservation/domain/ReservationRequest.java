@@ -2,14 +2,14 @@ package ca.ulaval.glo4002.reservation.domain;
 
 import java.util.List;
 
-import ca.ulaval.glo4002.reservation.service.reservation.TableObject;
+import ca.ulaval.glo4002.reservation.service.reservation.dto.TableDto;
 
 public class ReservationRequest {
   private final String dinnerDate;
   private final String reservationDate;
-  private final List<TableObject> tables;
+  private final List<TableDto> tables;
 
-  public ReservationRequest(String dinnerDate, String reservationDate, List<TableObject> tables) {
+  public ReservationRequest(String dinnerDate, String reservationDate, List<TableDto> tables) {
     this.dinnerDate = dinnerDate;
     this.reservationDate = reservationDate;
     this.tables = tables;
@@ -23,7 +23,7 @@ public class ReservationRequest {
     return reservationDate;
   }
 
-  public List<TableObject> getTables() {
+  public List<TableDto> getTables() {
     return tables;
   }
 }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerApiDto;
 import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
 import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
@@ -29,15 +29,15 @@ class CustomerAssemblerTest {
   @Test
   public void whenAssembleFromCustomerDto_thenReturnValidCustomer() {
     // given
-    CustomerDto customerDto = new CustomerDtoBuilder().withRestriction(VEGETARIAN_RESTRICTION)
-                                                      .withRestriction(VEGAN_RESTRICTION)
-                                                      .build();
+    CustomerApiDto customerApiDto = new CustomerDtoBuilder().withRestriction(VEGETARIAN_RESTRICTION)
+                                                            .withRestriction(VEGAN_RESTRICTION)
+                                                            .build();
 
     // when
-    Customer actualCustomer = customerAssembler.assembleFromCustomerDto(customerDto);
+    Customer actualCustomer = customerAssembler.assembleFromCustomerDto(customerApiDto);
 
     // then
-    assertThat(actualCustomer.getName()).isEqualTo(customerDto.getName());
+    assertThat(actualCustomer.getName()).isEqualTo(customerApiDto.getName());
     assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((VEGETARIAN_RESTRICTION)));
     assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((VEGAN_RESTRICTION)));
   }
@@ -45,17 +45,17 @@ class CustomerAssemblerTest {
   @Test
   public void givenACustomerDtoWithAllRestrictions_whenAssembleFromCustomerDto_thenReturnValidCustomer() {
     // given
-    CustomerDto customerDto = new CustomerDtoBuilder().withRestriction(VEGETARIAN_RESTRICTION)
-                                                      .withRestriction(VEGAN_RESTRICTION)
-                                                      .withRestriction(ALLERGIES_RESTRICTION)
-                                                      .withRestriction(ILLNESS_RESTRICTION)
-                                                      .build();
+    CustomerApiDto customerApiDto = new CustomerDtoBuilder().withRestriction(VEGETARIAN_RESTRICTION)
+                                                            .withRestriction(VEGAN_RESTRICTION)
+                                                            .withRestriction(ALLERGIES_RESTRICTION)
+                                                            .withRestriction(ILLNESS_RESTRICTION)
+                                                            .build();
 
     // when
-    Customer actualCustomer = customerAssembler.assembleFromCustomerDto(customerDto);
+    Customer actualCustomer = customerAssembler.assembleFromCustomerDto(customerApiDto);
 
     // then
-    assertThat(actualCustomer.getName()).isEqualTo(customerDto.getName());
+    assertThat(actualCustomer.getName()).isEqualTo(customerApiDto.getName());
     assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((VEGETARIAN_RESTRICTION)));
     assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((VEGAN_RESTRICTION)));
     assertThat(actualCustomer.getRestrictions()).contains(RestrictionType.valueOfName((ALLERGIES_RESTRICTION)));
@@ -65,26 +65,26 @@ class CustomerAssemblerTest {
   @Test
   public void givenACustomerDtoWithNoRestrictions_whenAssembleFromCustomerDto_thenReturnValidCustomer() {
     // given
-    CustomerDto customerDto = new CustomerDtoBuilder().build();
+    CustomerApiDto customerApiDto = new CustomerDtoBuilder().build();
 
     // when
-    Customer actualCustomer = customerAssembler.assembleFromCustomerDto(customerDto);
+    Customer actualCustomer = customerAssembler.assembleFromCustomerDto(customerApiDto);
 
     // then
-    assertThat(actualCustomer.getName()).isEqualTo(customerDto.getName());
+    assertThat(actualCustomer.getName()).isEqualTo(customerApiDto.getName());
     assertThat(actualCustomer.getRestrictions()).hasSize(0);
   }
 
   @Test
   public void givenACustomerDtoWithDuplicateRestrictions_whenAssembleFromCustomerDto_thenRestrictionsOnlyAppearOnce() {
     // given
-    CustomerDto customerDto = new CustomerDtoBuilder().withRestriction(ALLERGIES_RESTRICTION)
-                                                      .withRestriction(ALLERGIES_RESTRICTION)
-                                                      .withRestriction(ILLNESS_RESTRICTION)
-                                                      .build();
+    CustomerApiDto customerApiDto = new CustomerDtoBuilder().withRestriction(ALLERGIES_RESTRICTION)
+                                                            .withRestriction(ALLERGIES_RESTRICTION)
+                                                            .withRestriction(ILLNESS_RESTRICTION)
+                                                            .build();
 
     // when
-    Customer actualCustomer = customerAssembler.assembleFromCustomerDto(customerDto);
+    Customer actualCustomer = customerAssembler.assembleFromCustomerDto(customerApiDto);
 
     // then
     assertThat(actualCustomer.getRestrictions()).hasSize(2);
@@ -101,12 +101,12 @@ class CustomerAssemblerTest {
                                              .build();
 
     // when
-    CustomerDto actualCustomerDto = customerAssembler.assembleDtoFromCustomer(customer);
+    CustomerApiDto actualCustomerApiDto = customerAssembler.assembleDtoFromCustomer(customer);
 
     // then
-    assertThat(actualCustomerDto.getName()).isEqualTo(customer.getName());
-    assertThat(actualCustomerDto.getRestrictions()).contains(VEGETARIAN_ACTUAL_RESTRICTION.toString());
-    assertThat(actualCustomerDto.getRestrictions()).contains(VEGAN_ACTUAL_RESTRICTION.toString());
+    assertThat(actualCustomerApiDto.getName()).isEqualTo(customer.getName());
+    assertThat(actualCustomerApiDto.getRestrictions()).contains(VEGETARIAN_ACTUAL_RESTRICTION.toString());
+    assertThat(actualCustomerApiDto.getRestrictions()).contains(VEGAN_ACTUAL_RESTRICTION.toString());
   }
 
   @Test
@@ -115,11 +115,11 @@ class CustomerAssemblerTest {
     Customer customer = new CustomerBuilder().build();
 
     // when
-    CustomerDto actualCustomerDto = customerAssembler.assembleDtoFromCustomer(customer);
+    CustomerApiDto actualCustomerApiDto = customerAssembler.assembleDtoFromCustomer(customer);
 
     // then
-    assertThat(actualCustomerDto.getName()).isEqualTo(customer.getName());
-    assertThat(actualCustomerDto.getRestrictions()).hasSize(0);
+    assertThat(actualCustomerApiDto.getName()).isEqualTo(customer.getName());
+    assertThat(actualCustomerApiDto.getRestrictions()).hasSize(0);
   }
 
   @Test
@@ -130,12 +130,12 @@ class CustomerAssemblerTest {
                                              .build();
 
     // when
-    CustomerDto actualCustomerDto = customerAssembler.assembleDtoFromCustomer(customer);
+    CustomerApiDto actualCustomerApiDto = customerAssembler.assembleDtoFromCustomer(customer);
 
     // then
-    assertThat(actualCustomerDto.getRestrictions()
-                                .get(0)).isEqualTo(RestrictionType.ILLNESS.toString());
-    assertThat(actualCustomerDto.getRestrictions()
-                                .get(1)).isEqualTo(RestrictionType.VEGAN.toString());
+    assertThat(actualCustomerApiDto.getRestrictions()
+                                   .get(0)).isEqualTo(RestrictionType.ILLNESS.toString());
+    assertThat(actualCustomerApiDto.getRestrictions()
+                                   .get(1)).isEqualTo(RestrictionType.VEGAN.toString());
   }
 }

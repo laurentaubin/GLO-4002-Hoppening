@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.api.reservation.builder.CustomerDtoBuilder;
-import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerDto;
+import ca.ulaval.glo4002.reservation.api.reservation.dto.CustomerApiDto;
 import ca.ulaval.glo4002.reservation.api.reservation.dto.ReservationDto;
 import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
@@ -75,14 +75,15 @@ class ReservationAssemblerTest {
     // given
     Customer customer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN).build();
     Table table = new TableBuilder().withCustomer(customer).build();
-    CustomerDto customerDto = new CustomerDtoBuilder().withRestriction(VEGAN_RESTRICTION).build();
+    CustomerApiDto customerApiDto = new CustomerDtoBuilder().withRestriction(VEGAN_RESTRICTION)
+                                                            .build();
     Reservation reservation = new ReservationBuilder().withTable(table).build();
-    given(customerAssembler.assembleDtoFromCustomer(customer)).willReturn(customerDto);
+    given(customerAssembler.assembleDtoFromCustomer(customer)).willReturn(customerApiDto);
 
     // when
     ReservationDto reservationDto = reservationAssembler.assembleDtoFromReservation(reservation);
 
     // then
-    assertThat(reservationDto.getCustomers()).contains(customerDto);
+    assertThat(reservationDto.getCustomers()).contains(customerApiDto);
   }
 }
