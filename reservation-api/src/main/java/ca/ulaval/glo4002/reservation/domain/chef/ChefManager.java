@@ -2,14 +2,7 @@ package ca.ulaval.glo4002.reservation.domain.chef;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import ca.ulaval.glo4002.reservation.domain.report.chef.ChefRepository;
 import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
@@ -22,7 +15,7 @@ public class ChefManager {
 
   public ChefManager(ChefRepository chefRepository) {
     this.chefRepository = chefRepository;
-    availableChefs = Arrays.stream(ChefType.values()).map(Chef::new).collect(Collectors.toList());
+    this.availableChefs = new ArrayList<>(chefRepository.getAllChefs());
   }
 
   public void hireChefsForReservations(List<Reservation> reservations) {
@@ -51,7 +44,7 @@ public class ChefManager {
     Set<Chef> suitableChefs = new HashSet<>();
     for (RestrictionType restrictionType : dishQuantities.keySet()) {
       for (Chef chef : availableChefs) {
-        if (chef.getSpecialities().contains(restrictionType) && chef.getAvailableCustomers() > 0) {
+        if (chef.getSpecialties().contains(restrictionType) && chef.getAvailableCustomers() > 0) {
           suitableChefs.add(chef);
         }
       }
@@ -118,7 +111,7 @@ public class ChefManager {
   private boolean chefShouldBeHired(Map<RestrictionType, Integer> dishesNeededCount, Chef chef) {
     return dishesNeededCount.keySet()
                             .stream()
-                            .anyMatch(restrictionType -> chef.getSpecialities()
+                            .anyMatch(restrictionType -> chef.getSpecialties()
                                                              .contains(restrictionType)
                                                          && dishesNeededCount.get(restrictionType) >= 0);
   }
@@ -172,7 +165,7 @@ public class ChefManager {
                                             Chef chef)
   {
     int chefCapacity = chef.getAvailableCustomers();
-    for (RestrictionType restrictionType : chef.getSpecialities()) {
+    for (RestrictionType restrictionType : chef.getSpecialties()) {
       if (!dishesNeededQuantities.containsKey(restrictionType)) {
         continue;
       }
@@ -192,7 +185,7 @@ public class ChefManager {
                                    Set<Chef> hiredChefs)
   {
     for (Chef chef : hiredChefs) {
-      for (RestrictionType restrictionType : chef.getSpecialities()) {
+      for (RestrictionType restrictionType : chef.getSpecialties()) {
         if (dishesNeededCount.containsKey(restrictionType)) {
           int numberOfDishesNeeded = dishesNeededCount.get(restrictionType);
           dishesNeededCount.put(restrictionType,

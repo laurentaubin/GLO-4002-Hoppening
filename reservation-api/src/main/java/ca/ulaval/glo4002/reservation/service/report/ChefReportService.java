@@ -19,7 +19,7 @@ public class ChefReportService {
   }
 
   public ChefReport getChefReport() {
-    Map<LocalDate, Set<Chef>> chefsByDate = chefRepository.getAllChefs();
+    Map<LocalDate, Set<Chef>> chefsByDate = chefRepository.getAllChefsWorkSchedule();
     return chefReportGenerator.generateReport(chefsByDate);
   }
 }

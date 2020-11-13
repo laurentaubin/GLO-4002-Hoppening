@@ -10,16 +10,24 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.api.report.dto.ChefReportDto;
 import ca.ulaval.glo4002.reservation.domain.chef.Chef;
-import ca.ulaval.glo4002.reservation.domain.chef.ChefType;
+import ca.ulaval.glo4002.reservation.domain.chef.ChefPriority;
 import ca.ulaval.glo4002.reservation.domain.report.chef.ChefReport;
+import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 public class ChefReportDtoAssemblerTest {
   private static final String A_DATE = "2020-02-10";
   private static final String ANOTHER_DATE = "2040-02-10";
   private static final BigDecimal A_TOTAL_PRICE = BigDecimal.TEN;
   private static final BigDecimal ANOTHER_TOTAL_PRICE = BigDecimal.ONE;
-  private static final ChefType A_CHEF_TYPE = ChefType.BOB_SMARTIES;
-  private static final ChefType ANOTHER_CHEF_TYPE = ChefType.ERIC_ARDO;
+
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.VERY_HIGH;
+  private static final String A_CHEF_NAME = "Bob Smarties";
+  private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.VEGAN);
+
+  private static final ChefPriority ANOTHER_CHEF_TYPE = ChefPriority.VERY_LOW;
+  private static final String ANOTHER_CHEF_NAME = "Amélie Mélo";
+  private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES = Set.of(RestrictionType.ALLERGIES,
+                                                                            RestrictionType.VEGAN);
 
   private ChefReportDtoAssembler chefReportDtoAssembler;
   private Chef aChef;
@@ -28,8 +36,8 @@ public class ChefReportDtoAssemblerTest {
   @BeforeEach
   public void setUpChefReportDtoAssembler() {
     chefReportDtoAssembler = new ChefReportDtoAssembler();
-    aChef = new Chef(A_CHEF_TYPE);
-    anotherChef = new Chef(ANOTHER_CHEF_TYPE);
+    aChef = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);
+    anotherChef = new Chef(ANOTHER_CHEF_NAME, ANOTHER_CHEF_TYPE, SOME_OTHER_SPECIALTIES);
   }
 
   @Test

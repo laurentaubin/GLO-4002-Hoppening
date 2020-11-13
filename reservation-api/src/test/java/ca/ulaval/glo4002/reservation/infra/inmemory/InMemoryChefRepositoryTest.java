@@ -12,11 +12,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.domain.chef.Chef;
-import ca.ulaval.glo4002.reservation.domain.chef.ChefType;
+import ca.ulaval.glo4002.reservation.domain.chef.ChefPriority;
+import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 @ExtendWith(MockitoExtension.class)
 public class InMemoryChefRepositoryTest {
-  public static final ChefType A_CHEF_TYPE = ChefType.THIERRY_AKI;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.LOW;
+  private static final String A_CHEF_NAME = "A Name";
+  private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.NONE);
+  private static final Chef A_CHEF = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);
 
   private InMemoryChefRepository inMemoryChefRepository;
 
@@ -28,7 +32,7 @@ public class InMemoryChefRepositoryTest {
   @Test
   public void givenNoReservation_whenRestaurantChefByDayIsEmpty_thenMapShouldBeEmpty() {
     // when
-    Map<LocalDate, Set<Chef>> chefsByDay = inMemoryChefRepository.getAllChefs();
+    Map<LocalDate, Set<Chef>> chefsByDay = inMemoryChefRepository.getAllChefsWorkSchedule();
 
     // then
     assertThat(chefsByDay).isEmpty();
@@ -38,13 +42,14 @@ public class InMemoryChefRepositoryTest {
   public void whenUpdateRestaurantChef_thenChefsAreUpdated() {
     // given
     LocalDate dinnerDate = LocalDate.of(2000, 12, 12);
-    Set<Chef> newChefs = Set.of(new Chef(A_CHEF_TYPE));
+    Set<Chef> newChefs = Set.of(A_CHEF);
 
     // when
     inMemoryChefRepository.updateRestaurantChefs(dinnerDate, newChefs);
 
     // then
-    assertThat(inMemoryChefRepository.getAllChefs()).containsEntry(dinnerDate, newChefs);
+    assertThat(inMemoryChefRepository.getAllChefsWorkSchedule()).containsEntry(dinnerDate,
+                                                                               newChefs);
   }
 
   @Test
@@ -52,15 +57,15 @@ public class InMemoryChefRepositoryTest {
     // given
     LocalDate aDate = LocalDate.of(12, 12, 12);
     LocalDate anotherDate = LocalDate.of(13, 12, 12);
-    Set<Chef> someChefs = Set.of(new Chef(A_CHEF_TYPE));
-    Set<Chef> someOtherChefs = Set.of(new Chef(A_CHEF_TYPE));
+    Set<Chef> someChefs = Set.of(A_CHEF);
+    Set<Chef> someOtherChefs = Set.of(A_CHEF);
     inMemoryChefRepository.updateRestaurantChefs(aDate, someChefs);
     inMemoryChefRepository.updateRestaurantChefs(anotherDate, someOtherChefs);
 
     Map<LocalDate, Set<Chef>> expectedChefs = Map.of(aDate, someChefs, anotherDate, someOtherChefs);
 
     // when
-    Map<LocalDate, Set<Chef>> actualChefs = inMemoryChefRepository.getAllChefs();
+    Map<LocalDate, Set<Chef>> actualChefs = inMemoryChefRepository.getAllChefsWorkSchedule();
 
     // then
     assertThat(actualChefs).isEqualTo(expectedChefs);
@@ -71,8 +76,8 @@ public class InMemoryChefRepositoryTest {
     // given
     LocalDate aDate = LocalDate.of(12, 12, 12);
     LocalDate anotherDate = LocalDate.of(13, 12, 12);
-    Set<Chef> someChefs = Set.of(new Chef(A_CHEF_TYPE));
-    Set<Chef> someOtherChefs = Set.of(new Chef(A_CHEF_TYPE));
+    Set<Chef> someChefs = Set.of(A_CHEF);
+    Set<Chef> someOtherChefs = Set.of(A_CHEF);
     inMemoryChefRepository.updateRestaurantChefs(aDate, someChefs);
     inMemoryChefRepository.updateRestaurantChefs(anotherDate, someOtherChefs);
 

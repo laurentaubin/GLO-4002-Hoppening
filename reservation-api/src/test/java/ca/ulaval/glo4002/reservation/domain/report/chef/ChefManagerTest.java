@@ -2,11 +2,10 @@ package ca.ulaval.glo4002.reservation.domain.report.chef;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
 import ca.ulaval.glo4002.reservation.domain.chef.Chef;
 import ca.ulaval.glo4002.reservation.domain.chef.ChefManager;
-import ca.ulaval.glo4002.reservation.domain.chef.ChefType;
+import ca.ulaval.glo4002.reservation.domain.chef.ChefPriority;
 import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
@@ -34,12 +33,13 @@ class ChefManagerTest {
   private ChefManager chefManager;
 
   @BeforeEach
-  public void setUpChefManager() {
+  public void setUpChefManagerAndChefRepository() {
+    givenSomeChefs();
     chefManager = new ChefManager(chefRepository);
   }
 
   @Test
-  public void givenAReservationWithThreeVeganCustomers_whenHireChefsForReservation_thenBobSmartiesIsHired() {
+  public void givenAReservationWithThreeVeganCustomers_whenHireChefsForReservation_thenTheChefWithTheHighestPriorityAndVeganSpecialtyIsHired() {
     // given
     Customer aVeganCustomer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN).build();
     Table aVeganTable = new TableBuilder().withCustomer(aVeganCustomer)
@@ -48,7 +48,10 @@ class ChefManagerTest {
                                           .build();
     Reservation aVeganReservation = new ReservationBuilder().withTable(aVeganTable).build();
     List<Reservation> reservations = Collections.singletonList(aVeganReservation);
-    Chef bobSmarties = new Chef(ChefType.BOB_SMARTIES);
+
+    Chef bobSmarties = new Chef("Bob Smarties",
+                                ChefPriority.VERY_HIGH,
+                                Set.of(RestrictionType.VEGAN));
     bobSmarties.addCustomers(3);
 
     // when
@@ -60,7 +63,7 @@ class ChefManagerTest {
   }
 
   @Test
-  public void givenAReservationWithThreeVegetarianCustomers_whenHireChefsForReservation_thenBobRossbeefIsHired() {
+  public void givenAReservationWithThreeVegetarianCustomers_whenHireChefsForReservation_thenChefWithHighestPriorityAndVegetarianSpecialtyIsHired() {
     // given
     Customer aVegetarianCustomer = new CustomerBuilder().withRestriction(RestrictionType.VEGETARIAN)
                                                         .build();
@@ -71,7 +74,9 @@ class ChefManagerTest {
     Reservation aVegetarianReservation = new ReservationBuilder().withTable(aVegetarianTable)
                                                                  .build();
     List<Reservation> reservations = Collections.singletonList(aVegetarianReservation);
-    Chef bobRossbeef = new Chef(ChefType.BOB_ROSSBEEF);
+    Chef bobRossbeef = new Chef("Bob Rossbeef",
+                                ChefPriority.HIGH,
+                                Set.of(RestrictionType.VEGETARIAN));
     bobRossbeef.addCustomers(3);
 
     // when
@@ -84,7 +89,7 @@ class ChefManagerTest {
   }
 
   @Test
-  public void givenAReservationWithOneVeganAndOneAllergicCustomer_whenHireChefsForReservation_thenEcharlotteCardinIsHired() {
+  public void givenAReservationWithOneVeganAndOneAllergicCustomer_whenHireChefsForReservation_thenTheChefWithBothSpecialtiesAndTheHighestPriorityIsHired() {
     // given
     Customer aVeganCustomer = new CustomerBuilder().withRestriction(RestrictionType.VEGAN).build();
     Customer anAllergicCustomer = new CustomerBuilder().withRestriction(RestrictionType.ALLERGIES)
@@ -94,7 +99,9 @@ class ChefManagerTest {
                                           .build();
     Reservation aVeganReservation = new ReservationBuilder().withTable(aVeganTable).build();
     List<Reservation> reservations = Collections.singletonList(aVeganReservation);
-    Chef echarlotteCardin = new Chef(ChefType.ECHARLOTTE_CARDIN);
+    Chef echarlotteCardin = new Chef("Écharlotte Cardin",
+                                     ChefPriority.MEDIUM,
+                                     Set.of(RestrictionType.VEGAN, RestrictionType.ALLERGIES));
     echarlotteCardin.addCustomers(2);
 
     // when
@@ -106,7 +113,7 @@ class ChefManagerTest {
   }
 
   @Test
-  public void givenAReservationWithOneNoneOneVegetarianAndOneIllCustomer_whenHireChefsForReservation_thenThierryAkiAndEricArdoAreHired() {
+  public void givenAReservationWithOneNoneOneVegetarianAndOneIllCustomer_whenHireChefsForReservation_thenTheTwoChefsComplementingBothSpecialtiesAndWithTheHighestPrioritiesAreHired() {
     // given
     Customer aNoneCustomer = new CustomerBuilder().withRestriction(RestrictionType.NONE).build();
     Customer aVegetarianCustomer = new CustomerBuilder().withRestriction(RestrictionType.VEGETARIAN)
@@ -118,8 +125,10 @@ class ChefManagerTest {
                                           .build();
     Reservation aVeganReservation = new ReservationBuilder().withTable(aVeganTable).build();
     List<Reservation> reservations = Collections.singletonList(aVeganReservation);
-    Chef thierryAki = new Chef(ChefType.THIERRY_AKI);
-    Chef ericArdo = new Chef(ChefType.ERIC_ARDO);
+    Chef thierryAki = new Chef("Thierry Aki", ChefPriority.VERY_HIGH, Set.of(RestrictionType.NONE));
+    Chef ericArdo = new Chef("Éric Ardo",
+                             ChefPriority.LOW,
+                             Set.of(RestrictionType.VEGETARIAN, RestrictionType.ILLNESS));
     thierryAki.addCustomers(1);
     ericArdo.addCustomers(2);
 
@@ -235,5 +244,44 @@ class ChefManagerTest {
                                      .withCustomer(aCustomer)
                                      .build();
     return new ReservationBuilder().withTable(aTable).withTable(aTable).build();
+  }
+
+  private Set<Chef> getAvailableChefs() {
+    List<Chef> chefs = Arrays.asList(new Chef("Thierry Aki",
+                                              ChefPriority.VERY_HIGH,
+                                              Set.of(RestrictionType.NONE)),
+                                     new Chef("Bob Smarties",
+                                              ChefPriority.VERY_HIGH,
+                                              Set.of(RestrictionType.VEGAN)),
+                                     new Chef("Bob Rossbeef",
+                                              ChefPriority.HIGH,
+                                              Set.of(RestrictionType.VEGETARIAN)),
+                                     new Chef("Bill Adicion",
+                                              ChefPriority.HIGH,
+                                              Set.of(RestrictionType.ALLERGIES)),
+                                     new Chef("Omar Calmar",
+                                              ChefPriority.MEDIUM,
+                                              Set.of(RestrictionType.ILLNESS)),
+                                     new Chef("Écharlotte Cardin",
+                                              ChefPriority.MEDIUM,
+                                              Set.of(RestrictionType.VEGAN,
+                                                     RestrictionType.ALLERGIES)),
+                                     new Chef("Éric Ardo",
+                                              ChefPriority.LOW,
+                                              Set.of(RestrictionType.VEGETARIAN,
+                                                     RestrictionType.ILLNESS)),
+                                     new Chef("Hans Riz",
+                                              ChefPriority.LOW,
+                                              Set.of(RestrictionType.NONE,
+                                                     RestrictionType.ILLNESS)),
+                                     new Chef("Amélie Mélo",
+                                              ChefPriority.VERY_LOW,
+                                              Set.of(RestrictionType.ALLERGIES,
+                                                     RestrictionType.VEGAN)));
+    return new HashSet<>(chefs);
+  }
+
+  private void givenSomeChefs() {
+    given(chefRepository.getAllChefs()).willReturn(getAvailableChefs());
   }
 }

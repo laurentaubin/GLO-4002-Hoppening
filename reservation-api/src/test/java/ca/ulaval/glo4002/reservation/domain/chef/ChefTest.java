@@ -4,21 +4,26 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import ca.ulaval.glo4002.reservation.domain.exception.InvalidNumberOfCustomersException;
+import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 class ChefTest {
 
-  public static final ChefType A_CHEF_TYPE = ChefType.HANS_RIZ;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.LOW;
+  private static final String A_CHEF_NAME = "A Name";
+  private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.NONE);
 
   private Chef chef;
 
   @BeforeEach
   public void setUpChef() {
-    chef = new Chef(A_CHEF_TYPE);
+    chef = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);
   }
 
   @Test

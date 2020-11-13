@@ -8,11 +8,16 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.domain.chef.Chef;
-import ca.ulaval.glo4002.reservation.domain.chef.ChefType;
+import ca.ulaval.glo4002.reservation.domain.chef.ChefPriority;
+import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 class ChefReportTest {
 
-  private static final Set<Chef> SOME_CHEFS = Set.of(new Chef(ChefType.THIERRY_AKI));
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.VERY_HIGH;
+  private static final String A_CHEF_NAME = "Thierry Aki";
+  private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.NONE);
+  private static final Chef A_CHEF = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);
+  private static final Set<Chef> SOME_CHEFS = Set.of(A_CHEF);
   private static final BigDecimal A_TOTAL_PRICE = BigDecimal.TEN;
 
   @Test

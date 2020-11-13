@@ -12,15 +12,14 @@ public class Chef {
 
   private final String name;
   private final ChefPriority priority;
-  private final BigDecimal price;
-  private final Set<RestrictionType> specialities;
+  private final Set<RestrictionType> specialties;
   private int numberOfCustomers;
+  private final BigDecimal price = BigDecimal.valueOf(6000);
 
-  public Chef(ChefType chefType) {
-    this.name = chefType.getName();
-    this.priority = chefType.getPriority();
-    this.price = chefType.getChefPrice();
-    this.specialities = chefType.getRestrictionTypes();
+  public Chef(String name, ChefPriority chefPriority, Set<RestrictionType> specialties) {
+    this.name = name;
+    this.priority = chefPriority;
+    this.specialties = specialties;
   }
 
   public String getName() {
@@ -35,8 +34,8 @@ public class Chef {
     return price;
   }
 
-  public Set<RestrictionType> getSpecialities() {
-    return specialities;
+  public Set<RestrictionType> getSpecialties() {
+    return specialties;
   }
 
   public void addCustomers(int newCustomers) {
@@ -70,12 +69,12 @@ public class Chef {
     Chef chef = (Chef) o;
 
     return chef.name.equals(name) && chef.priority.equals(priority)
-           && chef.price.compareTo(price) == 0 && chef.specialities.equals(specialities)
+           && chef.price.compareTo(price) == 0 && chef.specialties.equals(specialties)
            && chef.numberOfCustomers == numberOfCustomers;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, priority, price, specialities, numberOfCustomers);
+    return Objects.hash(name, priority, price, specialties, numberOfCustomers);
   }
 }

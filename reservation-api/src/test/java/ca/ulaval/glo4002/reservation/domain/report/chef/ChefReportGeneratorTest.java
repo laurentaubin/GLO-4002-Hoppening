@@ -15,13 +15,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.domain.chef.Chef;
-import ca.ulaval.glo4002.reservation.domain.chef.ChefType;
+import ca.ulaval.glo4002.reservation.domain.chef.ChefPriority;
+import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 @ExtendWith(MockitoExtension.class)
 public class ChefReportGeneratorTest {
 
-  private static final ChefType A_CHEF_TYPE = ChefType.BOB_SMARTIES;
-  private static final ChefType ANOTHER_CHEF_TYPE = ChefType.AMELIE_MELO;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.VERY_HIGH;
+  private static final String A_CHEF_NAME = "Bob Smarties";
+  private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.VEGAN);
+
+  private static final ChefPriority ANOTHER_CHEF_TYPE = ChefPriority.VERY_LOW;
+  private static final String ANOTHER_CHEF_NAME = "Amélie Mélo";
+  private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES = Set.of(RestrictionType.ALLERGIES,
+                                                                            RestrictionType.VEGAN);
+
   private static final LocalDate A_DATE = LocalDate.of(Integer.parseInt("2020"),
                                                        Integer.parseInt("12"),
                                                        Integer.parseInt("10"));
@@ -35,8 +43,8 @@ public class ChefReportGeneratorTest {
   @BeforeEach
   public void setUpChefGenerator() {
     chefReportGenerator = new ChefReportGenerator();
-    aChef = new Chef(A_CHEF_TYPE);
-    anotherChef = new Chef(ANOTHER_CHEF_TYPE);
+    aChef = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);
+    anotherChef = new Chef(ANOTHER_CHEF_NAME, ANOTHER_CHEF_TYPE, SOME_OTHER_SPECIALTIES);
   }
 
   @Test
