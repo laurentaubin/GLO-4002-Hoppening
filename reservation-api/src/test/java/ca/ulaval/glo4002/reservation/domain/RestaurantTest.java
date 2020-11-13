@@ -303,6 +303,18 @@ public class RestaurantTest {
     assertThrows(ForbiddenReservationException.class, makingReservation);
   }
 
+  @Test
+  public void whenMakeReservation_thenVerifyIfThereIsAConflictCausedByAllergies() {
+    // given
+    givenValidReservationRequest();
+
+    // when
+    restaurant.makeReservation(reservationRequest);
+
+    // then
+    verify(ingredientInventory).doesReservationCauseAllergicConflict(aReservation, reservations);
+  }
+
   private void givenValidReservationRequest() {
     given(reservationBook.getReservationsByDate(any())).willReturn(reservations);
     given(reservationFactory.create(reservationRequest, hoppeningEvent)).willReturn(aReservation);
@@ -324,17 +336,5 @@ public class RestaurantTest {
     given(ingredientInventory.doesReservationCauseAllergicConflict(aReservation,
                                                                    reservations)).willReturn(DOES_NOT_CAUSE_ALLERGIC_CONFLICT);
     given(ingredientInventory.areAllNecessaryIngredientsAvailable(aReservation)).willReturn(NOT_ALL_INGREDIENTS_AVAILABLE);
-  }
-
-  private void givenDinnerPeriod(LocalDate dinnerStartDate, LocalDate dinnerEndDate) {
-    Period dinnerPeriod = new Period(dinnerStartDate, dinnerEndDate);
-    given(hoppeningConfigurationRequest.getDinnerPeriod()).willReturn(dinnerPeriod);
-  }
-
-  private void givenReservationPeriod(LocalDate reservationStartDate,
-                                      LocalDate reservationEndDate)
-  {
-    Period reservationPeriod = new Period(reservationStartDate, reservationEndDate);
-    given(hoppeningConfigurationRequest.getReservationPeriod()).willReturn(reservationPeriod);
   }
 }
