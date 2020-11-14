@@ -88,6 +88,29 @@ public class DailyDishesQuantityTest {
     assertThat(dailyDishesQuantity.getDishesQuantity()).isEqualTo(expectedDishesQuantity);
   }
 
+  @Test
+  public void givenCustomerWithTwoRestrictions_whenUpdateQuantity_thenTotalDishesQuantityIsProperlyCalculated() {
+    // given
+    Map<Material, BigDecimal> expectedDishesQuantity = givenExpectedMaterialQuantityForOneCustomerWithTwoRestrictions();
+
+    // when
+    dailyDishesQuantity.updateQuantity(1, 2);
+
+    // then
+    assertThat(dailyDishesQuantity.getDishesQuantity()).isEqualTo(expectedDishesQuantity);
+
+  }
+
+  private Map<Material, BigDecimal> givenExpectedMaterialQuantityForOneCustomerWithTwoRestrictions() {
+    Map<Material, BigDecimal> materialQuantity = new HashMap<>();
+    materialQuantity.put(Material.SPOON, BigDecimal.valueOf(3));
+    materialQuantity.put(Material.KNIFE, BigDecimal.valueOf(3));
+    materialQuantity.put(Material.BOWL, BigDecimal.valueOf(3));
+    materialQuantity.put(Material.FORK, BigDecimal.valueOf(5));
+    materialQuantity.put(Material.PLATE, BigDecimal.valueOf(5));
+    return materialQuantity;
+  }
+
   private Map<Material, BigDecimal> givenExpectedMaterialQuantityForOneCustomer() {
     Map<Material, BigDecimal> materialQuantity = new HashMap<>();
     for (Material material : Material.values()) {
