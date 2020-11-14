@@ -17,7 +17,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 @ExtendWith(MockitoExtension.class)
 public class InMemoryChefRepositoryTest {
-  private static final ChefPriority A_CHEF_TYPE = ChefPriority.LOW;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.NINTH;
   private static final String A_CHEF_NAME = "A Name";
   private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.NONE);
   private static final Chef A_CHEF = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);
@@ -49,7 +49,7 @@ public class InMemoryChefRepositoryTest {
 
     // then
     assertThat(inMemoryChefRepository.getAllChefsWorkSchedule()).containsEntry(dinnerDate,
-        newChefs);
+                                                                               newChefs);
   }
 
   @Test

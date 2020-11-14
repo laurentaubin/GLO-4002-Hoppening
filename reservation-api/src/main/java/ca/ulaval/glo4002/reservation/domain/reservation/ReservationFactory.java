@@ -15,7 +15,9 @@ public class ReservationFactory {
   private final TableFactory tableFactory;
 
   public ReservationFactory(DinnerDateFactory dinnerDateFactory,
-      ReservationDateFactory reservationDateFactory, TableFactory tableRequestFactory) {
+                            ReservationDateFactory reservationDateFactory,
+                            TableFactory tableRequestFactory)
+  {
     this.dinnerDateFactory = dinnerDateFactory;
     this.reservationDateFactory = reservationDateFactory;
     this.tableFactory = tableRequestFactory;
@@ -24,9 +26,9 @@ public class ReservationFactory {
   public Reservation create(ReservationRequest reservationRequest, HoppeningEvent hoppeningEvent) {
     ReservationId reservationId = new ReservationId();
     DinnerDate dinnerDate = dinnerDateFactory.create(reservationRequest.getDinnerDate(),
-        hoppeningEvent.getDinnerPeriod());
-    ReservationDate reservationDate = reservationDateFactory
-        .create(reservationRequest.getReservationDate(), hoppeningEvent.getReservationPeriod());
+                                                     hoppeningEvent.getDinnerPeriod());
+    ReservationDate reservationDate = reservationDateFactory.create(reservationRequest.getReservationDate(),
+                                                                    hoppeningEvent.getReservationPeriod());
     List<Table> tables = tableFactory.createTables(reservationRequest.getTables());
     return new Reservation(reservationId, dinnerDate, tables, reservationDate);
   }

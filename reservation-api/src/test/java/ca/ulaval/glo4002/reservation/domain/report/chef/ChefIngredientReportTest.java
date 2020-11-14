@@ -15,7 +15,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 public class ChefIngredientReportTest {
 
-  private static final ChefPriority A_CHEF_TYPE = ChefPriority.VERY_HIGH;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.SECOND;
   private static final String A_CHEF_NAME = "Bob Smarties";
   private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.VEGAN);
   private static final String A_DATE = "2020-10-23";
@@ -45,11 +45,10 @@ public class ChefIngredientReportTest {
     chefReport.addChefReportInformation(A_DATE, chefs, A_PRICE);
 
     // when
-    List<ChefReportInformation> multipleChefReportInformation =
-        chefReport.getChefReportInformation();
+    List<ChefReportInformation> multipleChefReportInformation = chefReport.getChefReportInformation();
 
     // then
-    assertThat(multipleChefReportInformation.get(0).getChefs())
-        .isEqualTo(chefReportInformation.getChefs());
+    assertThat(multipleChefReportInformation.get(0)
+                                            .getChefs()).isEqualTo(chefReportInformation.getChefs());
   }
 }

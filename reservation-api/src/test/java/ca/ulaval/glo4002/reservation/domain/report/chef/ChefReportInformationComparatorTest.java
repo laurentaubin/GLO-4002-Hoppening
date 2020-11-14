@@ -14,7 +14,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 class ChefReportInformationComparatorTest {
 
-  private static final ChefPriority A_CHEF_TYPE = ChefPriority.VERY_HIGH;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.FIRST;
   private static final String A_CHEF_NAME = "Thierry Aki";
   private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.NONE);
   private static final Chef A_CHEF = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);
@@ -46,10 +46,8 @@ class ChefReportInformationComparatorTest {
     // given
     String earlierDate = "2020-12-12";
     String laterDate = "2021-12-12";
-    ChefReportInformation earlierChefReportInformation =
-        givenAChefReportInformationWithDate(earlierDate);
-    ChefReportInformation laterChefReportInformation =
-        givenAChefReportInformationWithDate(laterDate);
+    ChefReportInformation earlierChefReportInformation = givenAChefReportInformationWithDate(earlierDate);
+    ChefReportInformation laterChefReportInformation = givenAChefReportInformationWithDate(laterDate);
 
     // when
     int result = comparator.compare(earlierChefReportInformation, laterChefReportInformation);
@@ -63,10 +61,8 @@ class ChefReportInformationComparatorTest {
     // given
     String earlierDate = "2020-12-12";
     String laterDate = "2021-12-12";
-    ChefReportInformation earlierChefReportInformation =
-        givenAChefReportInformationWithDate(earlierDate);
-    ChefReportInformation laterChefReportInformation =
-        givenAChefReportInformationWithDate(laterDate);
+    ChefReportInformation earlierChefReportInformation = givenAChefReportInformationWithDate(earlierDate);
+    ChefReportInformation laterChefReportInformation = givenAChefReportInformationWithDate(laterDate);
 
     // when
     int result = comparator.compare(laterChefReportInformation, earlierChefReportInformation);

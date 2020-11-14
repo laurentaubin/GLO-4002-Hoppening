@@ -42,8 +42,8 @@ public class IngredientReportDateValidatorTest {
   @Test
   public void givenValidStartAndEndDates_whenValidate_thenReportDatesAreValid() {
     // when
-    Executable validatingDates =
-        () -> reportDateValidator.validate(VALID_START_DATE, VALID_END_DATE);
+    Executable validatingDates = () -> reportDateValidator.validate(VALID_START_DATE,
+                                                                    VALID_END_DATE);
 
     // then
     assertDoesNotThrow(validatingDates);
@@ -55,8 +55,8 @@ public class IngredientReportDateValidatorTest {
     givenValidDinnerPeriod();
 
     // when
-    Executable validatingDates =
-        () -> reportDateValidator.validate(NULL_START_DATE, VALID_END_DATE);
+    Executable validatingDates = () -> reportDateValidator.validate(NULL_START_DATE,
+                                                                    VALID_END_DATE);
 
     // then
     assertThrows(InvalidReportDateException.class, validatingDates);
@@ -68,8 +68,8 @@ public class IngredientReportDateValidatorTest {
     givenValidDinnerPeriod();
 
     // when
-    Executable validatingDates =
-        () -> reportDateValidator.validate(VALID_START_DATE, NULL_END_DATE);
+    Executable validatingDates = () -> reportDateValidator.validate(VALID_START_DATE,
+                                                                    NULL_END_DATE);
 
     // then
     assertThrows(InvalidReportDateException.class, validatingDates);

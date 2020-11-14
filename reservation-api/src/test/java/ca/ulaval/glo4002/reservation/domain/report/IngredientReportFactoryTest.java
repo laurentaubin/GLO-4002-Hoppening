@@ -49,17 +49,19 @@ public class IngredientReportFactoryTest {
     // given
     Map<IngredientName, BigDecimal> someIngredientsQuantities = givenSomeIngredientsQuantities();
     Map<IngredientName, BigDecimal> otherIngredientsQuantities = givenOtherIngredientsQuantities();
-    Map<LocalDate, Map<IngredientName, BigDecimal>> dateToIngredientsQuantities =
-        Map.of(A_DATE, someIngredientsQuantities, ANOTHER_DATE, otherIngredientsQuantities);
+    Map<LocalDate, Map<IngredientName, BigDecimal>> dateToIngredientsQuantities = Map.of(A_DATE,
+                                                                                         someIngredientsQuantities,
+                                                                                         ANOTHER_DATE,
+                                                                                         otherIngredientsQuantities);
 
     // when
     ingredientReportFactory.create(ingredientPriceCalculator, dateToIngredientsQuantities);
 
     // then
     verify(dailyIngredientReportInformationFactory).create(ingredientPriceCalculator,
-        someIngredientsQuantities);
+                                                           someIngredientsQuantities);
     verify(dailyIngredientReportInformationFactory).create(ingredientPriceCalculator,
-        otherIngredientsQuantities);
+                                                           otherIngredientsQuantities);
   }
 
   @Test
@@ -67,21 +69,24 @@ public class IngredientReportFactoryTest {
     // given
     Map<IngredientName, BigDecimal> someIngredientsQuantities = givenSomeIngredientsQuantities();
     Map<IngredientName, BigDecimal> otherIngredientsQuantities = givenOtherIngredientsQuantities();
-    Map<LocalDate, Map<IngredientName, BigDecimal>> dateToIngredientsQuantities =
-        Map.of(A_DATE, someIngredientsQuantities, ANOTHER_DATE, otherIngredientsQuantities);
+    Map<LocalDate, Map<IngredientName, BigDecimal>> dateToIngredientsQuantities = Map.of(A_DATE,
+                                                                                         someIngredientsQuantities,
+                                                                                         ANOTHER_DATE,
+                                                                                         otherIngredientsQuantities);
     given(dailyIngredientReportInformationFactory.create(ingredientPriceCalculator,
-        someIngredientsQuantities)).willReturn(aDailyIngredientReportInformation);
+                                                         someIngredientsQuantities)).willReturn(aDailyIngredientReportInformation);
     given(dailyIngredientReportInformationFactory.create(ingredientPriceCalculator,
-        otherIngredientsQuantities)).willReturn(anotherDailyIngredientReportInformation);
+                                                         otherIngredientsQuantities)).willReturn(anotherDailyIngredientReportInformation);
 
     // when
-    IngredientReport ingredientReport =
-        ingredientReportFactory.create(ingredientPriceCalculator, dateToIngredientsQuantities);
+    IngredientReport ingredientReport = ingredientReportFactory.create(ingredientPriceCalculator,
+                                                                       dateToIngredientsQuantities);
 
     // then
-    assertThat(ingredientReport.getDailyIngredientsInformation())
-        .containsExactlyEntriesIn(Map.of(A_DATE, aDailyIngredientReportInformation, ANOTHER_DATE,
-            anotherDailyIngredientReportInformation));
+    assertThat(ingredientReport.getDailyIngredientsInformation()).containsExactlyEntriesIn(Map.of(A_DATE,
+                                                                                                  aDailyIngredientReportInformation,
+                                                                                                  ANOTHER_DATE,
+                                                                                                  anotherDailyIngredientReportInformation));
   }
 
   private Map<IngredientName, BigDecimal> givenSomeIngredientsQuantities() {

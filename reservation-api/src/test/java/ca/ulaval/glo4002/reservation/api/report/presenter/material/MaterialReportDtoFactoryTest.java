@@ -46,14 +46,26 @@ class MaterialReportDtoFactoryTest {
     MaterialReportDto actualMaterialReportDto = materialReportDtoFactory.create(materialReport);
 
     // then
-    assertThat(actualMaterialReportDto.getDates().get(0).getBought())
-        .isEqualTo(expectedMaterialReportDto.getDates().get(0).getBought());
-    assertThat(actualMaterialReportDto.getDates().get(0).getCleaned())
-        .isEqualTo(expectedMaterialReportDto.getDates().get(0).getCleaned());
-    assertThat(actualMaterialReportDto.getDates().get(0).getDate())
-        .isEqualTo(expectedMaterialReportDto.getDates().get(0).getDate());
-    assertThat(actualMaterialReportDto.getDates().get(0).getTotalPrice())
-        .isEqualTo(expectedMaterialReportDto.getDates().get(0).getTotalPrice());
+    assertThat(actualMaterialReportDto.getDates()
+                                      .get(0)
+                                      .getBought()).isEqualTo(expectedMaterialReportDto.getDates()
+                                                                                       .get(0)
+                                                                                       .getBought());
+    assertThat(actualMaterialReportDto.getDates()
+                                      .get(0)
+                                      .getCleaned()).isEqualTo(expectedMaterialReportDto.getDates()
+                                                                                        .get(0)
+                                                                                        .getCleaned());
+    assertThat(actualMaterialReportDto.getDates()
+                                      .get(0)
+                                      .getDate()).isEqualTo(expectedMaterialReportDto.getDates()
+                                                                                     .get(0)
+                                                                                     .getDate());
+    assertThat(actualMaterialReportDto.getDates()
+                                      .get(0)
+                                      .getTotalPrice()).isEqualTo(expectedMaterialReportDto.getDates()
+                                                                                           .get(0)
+                                                                                           .getTotalPrice());
   }
 
   @Test
@@ -66,10 +78,16 @@ class MaterialReportDtoFactoryTest {
     MaterialReportDto actualMaterialReportDto = materialReportDtoFactory.create(materialReport);
 
     // then
-    assertThat(actualMaterialReportDto.getDates().get(0).getDate())
-        .isEqualTo(expectedMaterialReportDto.getDates().get(0).getDate());
-    assertThat(actualMaterialReportDto.getDates().get(1).getDate())
-        .isEqualTo(expectedMaterialReportDto.getDates().get(1).getDate());
+    assertThat(actualMaterialReportDto.getDates()
+                                      .get(0)
+                                      .getDate()).isEqualTo(expectedMaterialReportDto.getDates()
+                                                                                     .get(0)
+                                                                                     .getDate());
+    assertThat(actualMaterialReportDto.getDates()
+                                      .get(1)
+                                      .getDate()).isEqualTo(expectedMaterialReportDto.getDates()
+                                                                                     .get(1)
+                                                                                     .getDate());
   }
 
   private Map<String, BigDecimal> givenCleanedAndBoughtMaterialQuantitiesStringify() {
@@ -85,8 +103,9 @@ class MaterialReportDtoFactoryTest {
   private MaterialReportDto givenExpectedMaterialReportDto() {
     ArrayList<MaterialReportDayDto> materialReportDayDtos = new ArrayList<>();
     MaterialReportDayDto day = new MaterialReportDayDto(CURRENT_TIME.toString(),
-        givenCleanedAndBoughtMaterialQuantitiesStringify(),
-        givenCleanedAndBoughtMaterialQuantitiesStringify(), TOTAL_PRICE);
+                                                        givenCleanedAndBoughtMaterialQuantitiesStringify(),
+                                                        givenCleanedAndBoughtMaterialQuantitiesStringify(),
+                                                        TOTAL_PRICE);
     materialReportDayDtos.add(day);
     return new MaterialReportDto(materialReportDayDtos);
   }
@@ -94,11 +113,13 @@ class MaterialReportDtoFactoryTest {
   private MaterialReportDto givenExpectedMaterialReportDtoWithManyDates() {
     List<MaterialReportDayDto> materialReportDayDtos = new ArrayList<>();
     MaterialReportDayDto aMaterialReportDayDto = new MaterialReportDayDto(A_PAST_DATE.toString(),
-        givenCleanedAndBoughtMaterialQuantitiesStringify(),
-        givenCleanedAndBoughtMaterialQuantitiesStringify(), TOTAL_PRICE);
-    MaterialReportDayDto anotherMaterialReportDayDto = new MaterialReportDayDto(
-        CURRENT_TIME.toString(), givenCleanedAndBoughtMaterialQuantitiesStringify(),
-        givenCleanedAndBoughtMaterialQuantitiesStringify(), TOTAL_PRICE);
+                                                                          givenCleanedAndBoughtMaterialQuantitiesStringify(),
+                                                                          givenCleanedAndBoughtMaterialQuantitiesStringify(),
+                                                                          TOTAL_PRICE);
+    MaterialReportDayDto anotherMaterialReportDayDto = new MaterialReportDayDto(CURRENT_TIME.toString(),
+                                                                                givenCleanedAndBoughtMaterialQuantitiesStringify(),
+                                                                                givenCleanedAndBoughtMaterialQuantitiesStringify(),
+                                                                                TOTAL_PRICE);
     materialReportDayDtos.add(aMaterialReportDayDto);
     materialReportDayDtos.add(anotherMaterialReportDayDto);
     return new MaterialReportDto(materialReportDayDtos);
@@ -116,21 +137,24 @@ class MaterialReportDtoFactoryTest {
 
   private MaterialReport givenMaterialReport() {
     List<MaterialReportInformation> materialReportInfos = new ArrayList<>();
-    MaterialReportInformation info =
-        new MaterialReportInformation(CURRENT_TIME, givenCleanedAndBoughtMaterialQuantities(),
-            givenCleanedAndBoughtMaterialQuantities(), TOTAL_PRICE);
+    MaterialReportInformation info = new MaterialReportInformation(CURRENT_TIME,
+                                                                   givenCleanedAndBoughtMaterialQuantities(),
+                                                                   givenCleanedAndBoughtMaterialQuantities(),
+                                                                   TOTAL_PRICE);
     materialReportInfos.add(info);
     return new MaterialReport(materialReportInfos);
   }
 
   private MaterialReport givenMaterialReportWithManyDays() {
     List<MaterialReportInformation> materialReportInfos = new ArrayList<>();
-    MaterialReportInformation aMaterialReportInformation =
-        new MaterialReportInformation(CURRENT_TIME, givenCleanedAndBoughtMaterialQuantities(),
-            givenCleanedAndBoughtMaterialQuantities(), TOTAL_PRICE);
-    MaterialReportInformation anotherMaterialReportInformation =
-        new MaterialReportInformation(A_PAST_DATE, givenCleanedAndBoughtMaterialQuantities(),
-            givenCleanedAndBoughtMaterialQuantities(), TOTAL_PRICE);
+    MaterialReportInformation aMaterialReportInformation = new MaterialReportInformation(CURRENT_TIME,
+                                                                                         givenCleanedAndBoughtMaterialQuantities(),
+                                                                                         givenCleanedAndBoughtMaterialQuantities(),
+                                                                                         TOTAL_PRICE);
+    MaterialReportInformation anotherMaterialReportInformation = new MaterialReportInformation(A_PAST_DATE,
+                                                                                               givenCleanedAndBoughtMaterialQuantities(),
+                                                                                               givenCleanedAndBoughtMaterialQuantities(),
+                                                                                               TOTAL_PRICE);
     materialReportInfos.add(aMaterialReportInformation);
     materialReportInfos.add(anotherMaterialReportInformation);
     return new MaterialReport(materialReportInfos);

@@ -68,14 +68,12 @@ public class UnitIngredientReportDtoFactoryTest {
   @Test
   public void givenReport_whenCreate_thenCorrespondingUnitReportDayDtosAreCreated() {
     // given
-    Map<LocalDate, DailyIngredientReportInformation> givenDailyIngredientReportInformation =
-        givenDailyIngredientReportInformation();
-    given(ingredientReport.getDailyIngredientsInformation())
-        .willReturn(givenDailyIngredientReportInformation);
-    given(unitReportDayDtoFactory.create(LATER_DATE, aDailyIngredientReportInformation))
-        .willReturn(givenAnUnitReportDayDto());
-    given(unitReportDayDtoFactory.create(FIRST_DATE, anotherDailyIngredientReportInformation))
-        .willReturn(givenAnotherUnitReportDayDto());
+    Map<LocalDate, DailyIngredientReportInformation> givenDailyIngredientReportInformation = givenDailyIngredientReportInformation();
+    given(ingredientReport.getDailyIngredientsInformation()).willReturn(givenDailyIngredientReportInformation);
+    given(unitReportDayDtoFactory.create(LATER_DATE,
+                                         aDailyIngredientReportInformation)).willReturn(givenAnUnitReportDayDto());
+    given(unitReportDayDtoFactory.create(FIRST_DATE,
+                                         anotherDailyIngredientReportInformation)).willReturn(givenAnotherUnitReportDayDto());
 
     // when
     unitReportDtoFactory.create(ingredientReport);
@@ -87,16 +85,14 @@ public class UnitIngredientReportDtoFactoryTest {
 
   @Test
   public void givenReport_whenCreate_thenUnitReportDtoIsCorrectlyCreated() {
-    Map<LocalDate, DailyIngredientReportInformation> givenDailyIngredientReportInformation =
-        givenDailyIngredientReportInformation();
-    given(ingredientReport.getDailyIngredientsInformation())
-        .willReturn(givenDailyIngredientReportInformation);
+    Map<LocalDate, DailyIngredientReportInformation> givenDailyIngredientReportInformation = givenDailyIngredientReportInformation();
+    given(ingredientReport.getDailyIngredientsInformation()).willReturn(givenDailyIngredientReportInformation);
     UnitReportDayDto anUnitReportDayDto = givenAnUnitReportDayDto();
     UnitReportDayDto anotherUnitReportDayDto = givenAnotherUnitReportDayDto();
-    given(unitReportDayDtoFactory.create(LATER_DATE, aDailyIngredientReportInformation))
-        .willReturn(anUnitReportDayDto);
-    given(unitReportDayDtoFactory.create(FIRST_DATE, anotherDailyIngredientReportInformation))
-        .willReturn(anotherUnitReportDayDto);
+    given(unitReportDayDtoFactory.create(LATER_DATE,
+                                         aDailyIngredientReportInformation)).willReturn(anUnitReportDayDto);
+    given(unitReportDayDtoFactory.create(FIRST_DATE,
+                                         anotherDailyIngredientReportInformation)).willReturn(anotherUnitReportDayDto);
 
     // when
     UnitReportDto unitReportDto = unitReportDtoFactory.create(ingredientReport);
@@ -108,47 +104,47 @@ public class UnitIngredientReportDtoFactoryTest {
 
   @Test
   public void givenReport_whenCreate_thenUnitReportDayDtosAreInChronologicalOrder() {
-    Map<LocalDate, DailyIngredientReportInformation> givenDailyIngredientReportInformation =
-        givenDailyIngredientReportInformation();
-    given(ingredientReport.getDailyIngredientsInformation())
-        .willReturn(givenDailyIngredientReportInformation);
+    Map<LocalDate, DailyIngredientReportInformation> givenDailyIngredientReportInformation = givenDailyIngredientReportInformation();
+    given(ingredientReport.getDailyIngredientsInformation()).willReturn(givenDailyIngredientReportInformation);
     UnitReportDayDto anUnitReportDayDto = givenAnUnitReportDayDto();
     UnitReportDayDto anotherUnitReportDayDto = givenAnotherUnitReportDayDto();
-    given(unitReportDayDtoFactory.create(LATER_DATE, aDailyIngredientReportInformation))
-        .willReturn(anUnitReportDayDto);
-    given(unitReportDayDtoFactory.create(FIRST_DATE, anotherDailyIngredientReportInformation))
-        .willReturn(anotherUnitReportDayDto);
+    given(unitReportDayDtoFactory.create(LATER_DATE,
+                                         aDailyIngredientReportInformation)).willReturn(anUnitReportDayDto);
+    given(unitReportDayDtoFactory.create(FIRST_DATE,
+                                         anotherDailyIngredientReportInformation)).willReturn(anotherUnitReportDayDto);
 
     // when
     UnitReportDto unitReportDto = unitReportDtoFactory.create(ingredientReport);
 
     // then
-    assertThat(unitReportDto.getUnitReportDayDtos().get(0).getDate())
-        .isEqualTo(FIRST_DATE.toString());
-    assertThat(unitReportDto.getUnitReportDayDtos().get(1).getDate())
-        .isEqualTo(LATER_DATE.toString());
+    assertThat(unitReportDto.getUnitReportDayDtos()
+                            .get(0)
+                            .getDate()).isEqualTo(FIRST_DATE.toString());
+    assertThat(unitReportDto.getUnitReportDayDtos()
+                            .get(1)
+                            .getDate()).isEqualTo(LATER_DATE.toString());
   }
 
   private Map<LocalDate, DailyIngredientReportInformation> givenDailyIngredientReportInformation() {
-    Map<LocalDate, DailyIngredientReportInformation> dateToDailyIngredientReportInformation =
-        new HashMap<>();
+    Map<LocalDate, DailyIngredientReportInformation> dateToDailyIngredientReportInformation = new HashMap<>();
     dateToDailyIngredientReportInformation.put(LATER_DATE, aDailyIngredientReportInformation);
     dateToDailyIngredientReportInformation.put(FIRST_DATE, anotherDailyIngredientReportInformation);
     return dateToDailyIngredientReportInformation;
   }
 
   private UnitReportDayDto givenAnUnitReportDayDto() {
-    List<IngredientReportInformationDto> ingredientReportInformationDtos =
-        Arrays.asList(new IngredientReportInformationDto(IngredientName.PEPPERONI.toString(),
-            PEPPERONI_QUANTITY, PEPPERONI_PRICE));
+    List<IngredientReportInformationDto> ingredientReportInformationDtos = Arrays.asList(new IngredientReportInformationDto(IngredientName.PEPPERONI.toString(),
+                                                                                                                            PEPPERONI_QUANTITY,
+                                                                                                                            PEPPERONI_PRICE));
     return new UnitReportDayDto(FIRST_DATE, ingredientReportInformationDtos, A_DAILY_TOTAL_PRICE);
   }
 
   private UnitReportDayDto givenAnotherUnitReportDayDto() {
-    List<IngredientReportInformationDto> anotherIngredientReportInformationDtos =
-        Arrays.asList(new IngredientReportInformationDto(IngredientName.KIMCHI.toString(),
-            KIMCHI_QUANTITY, KIMCHI_PRICE));
-    return new UnitReportDayDto(LATER_DATE, anotherIngredientReportInformationDtos,
-        ANOTHER_DAILY_TOTAL_PRICE);
+    List<IngredientReportInformationDto> anotherIngredientReportInformationDtos = Arrays.asList(new IngredientReportInformationDto(IngredientName.KIMCHI.toString(),
+                                                                                                                                   KIMCHI_QUANTITY,
+                                                                                                                                   KIMCHI_PRICE));
+    return new UnitReportDayDto(LATER_DATE,
+                                anotherIngredientReportInformationDtos,
+                                ANOTHER_DAILY_TOTAL_PRICE);
   }
 }

@@ -21,11 +21,11 @@ public class ChefReportDtoAssemblerTest {
   private static final BigDecimal A_TOTAL_PRICE = BigDecimal.TEN;
   private static final BigDecimal ANOTHER_TOTAL_PRICE = BigDecimal.ONE;
 
-  private static final ChefPriority A_CHEF_TYPE = ChefPriority.VERY_HIGH;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.SECOND;
   private static final String A_CHEF_NAME = "Bob Smarties";
   private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.VEGAN);
 
-  private static final ChefPriority ANOTHER_CHEF_TYPE = ChefPriority.VERY_LOW;
+  private static final ChefPriority ANOTHER_CHEF_TYPE = ChefPriority.NINTH;
   private static final String ANOTHER_CHEF_NAME = "Amélie Mélo";
   private static final Set<RestrictionType> SOME_OTHER_SPECIALTIES = Set.of(RestrictionType.ALLERGIES,
                                                                             RestrictionType.VEGAN);
@@ -89,8 +89,8 @@ public class ChefReportDtoAssemblerTest {
   public void whenAssembleChefReportDto_thenChefsAreInAlphabeticalOrder() {
     // given
     ChefReport chefReport = new ChefReport();
-    Chef firstChef = new Chef("B", ChefPriority.HIGH, Set.of(RestrictionType.NONE));
-    Chef secondChef = new Chef("A", ChefPriority.HIGH, Set.of(RestrictionType.NONE));
+    Chef firstChef = new Chef("B", ChefPriority.FIRST, Set.of(RestrictionType.NONE));
+    Chef secondChef = new Chef("A", ChefPriority.FIRST, Set.of(RestrictionType.NONE));
     chefReport.addChefReportInformation(A_DATE, Set.of(firstChef, secondChef), A_TOTAL_PRICE);
     List<String> expectedSortedChefs = List.of("A", "B");
 

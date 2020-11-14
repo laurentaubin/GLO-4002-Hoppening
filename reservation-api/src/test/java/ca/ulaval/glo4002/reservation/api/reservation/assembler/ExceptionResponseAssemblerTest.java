@@ -24,12 +24,11 @@ public class ExceptionResponseAssemblerTest {
   @Test
   public void whenAssemblerExceptionResponse_thenReturnExceptionResponseWithCorrespondingErrorAndDescription() {
     // given
-    ReservationException reservationException =
-        new InvalidDinnerDateException(START_DATE, END_DATE);
+    ReservationException reservationException = new InvalidDinnerDateException(START_DATE,
+                                                                               END_DATE);
 
     // when
-    ExceptionResponse exceptionResponse =
-        assembler.assembleExceptionResponseFromException(reservationException);
+    ExceptionResponse exceptionResponse = assembler.assembleExceptionResponseFromException(reservationException);
 
     // then
     assertThat(exceptionResponse.getError()).isEqualTo(reservationException.getError());

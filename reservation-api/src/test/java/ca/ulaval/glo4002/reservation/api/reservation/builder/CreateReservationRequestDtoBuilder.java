@@ -42,8 +42,7 @@ public class CreateReservationRequestDtoBuilder {
     return this;
   }
 
-  public CreateReservationRequestDtoBuilder withReservationDetails(
-      ReservationDetailsDto reservationDetailsDto) {
+  public CreateReservationRequestDtoBuilder withReservationDetails(ReservationDetailsDto reservationDetailsDto) {
     this.reservationDetails = reservationDetailsDto;
     return this;
   }

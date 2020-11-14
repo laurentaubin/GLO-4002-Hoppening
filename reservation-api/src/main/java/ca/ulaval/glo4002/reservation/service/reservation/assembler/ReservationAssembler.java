@@ -27,8 +27,10 @@ public class ReservationAssembler {
     reservationDto.setDinnerDate(reservation.getDinnerDate().format(dateFormatter));
     reservationDto.setReservationPrice(formatReservationPrice(reservation.getReservationFees()));
 
-    List<CustomerApiDto> customers = reservation.getCustomers().stream()
-        .map(customerAssembler::assembleDtoFromCustomer).collect(Collectors.toList());
+    List<CustomerApiDto> customers = reservation.getCustomers()
+                                                .stream()
+                                                .map(customerAssembler::assembleDtoFromCustomer)
+                                                .collect(Collectors.toList());
 
     reservationDto.setCustomers(customers);
 

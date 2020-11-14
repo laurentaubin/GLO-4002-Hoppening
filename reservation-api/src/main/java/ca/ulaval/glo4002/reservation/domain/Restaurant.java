@@ -27,9 +27,13 @@ public class Restaurant {
   private final Buffet buffet;
   private final ChefManager chefManager;
 
-  public Restaurant(ReservationFactory reservationFactory, ReservationBook reservationBook,
-      IngredientInventory ingredientInventory, HoppeningEvent hoppeningEvent, Buffet buffet,
-      ChefManager chefManager) {
+  public Restaurant(ReservationFactory reservationFactory,
+                    ReservationBook reservationBook,
+                    IngredientInventory ingredientInventory,
+                    HoppeningEvent hoppeningEvent,
+                    Buffet buffet,
+                    ChefManager chefManager)
+  {
     this.reservationFactory = reservationFactory;
     this.reservationBook = reservationBook;
     this.ingredientInventory = ingredientInventory;
@@ -74,7 +78,8 @@ public class Restaurant {
 
   private void verifyMaximumNumberOfCustomersPerDay(Reservation reservation) {
     if (reservationBook.getNumberOfCustomersForADay(reservation.getDinnerDate())
-        + reservation.getNumberOfCustomers() > MAX_NUMBER_OF_CUSTOMERS_PER_DAY) {
+        + reservation.getNumberOfCustomers() > MAX_NUMBER_OF_CUSTOMERS_PER_DAY)
+    {
       throw new TooManyPeopleException();
     }
   }
@@ -87,7 +92,9 @@ public class Restaurant {
 
   private void verifyIngredientAvailability(Reservation reservation) {
     if (!ingredientInventory.areAllNecessaryIngredientsAvailable(reservation,
-        hoppeningEvent.getDinnerPeriod().getStartDate())) {
+                                                                 hoppeningEvent.getDinnerPeriod()
+                                                                               .getStartDate()))
+    {
       throw new ForbiddenReservationException();
     }
   }
@@ -99,15 +106,13 @@ public class Restaurant {
   }
 
   private boolean doesReservationCauseAllergicConflict(Reservation reservation) {
-    List<Reservation> existingReservationAtDinnerDate =
-        reservationBook.getReservationsByDate(reservation.getDinnerDate());
+    List<Reservation> existingReservationAtDinnerDate = reservationBook.getReservationsByDate(reservation.getDinnerDate());
     return ingredientInventory.doesReservationCauseAllergicConflict(reservation,
-        existingReservationAtDinnerDate);
+                                                                    existingReservationAtDinnerDate);
   }
 
   private void hireChefsForNewReservation(Reservation reservation) {
-    List<Reservation> currentReservations =
-        reservationBook.getReservationsByDate(reservation.getDinnerDate());
+    List<Reservation> currentReservations = reservationBook.getReservationsByDate(reservation.getDinnerDate());
     currentReservations.add(reservation);
     chefManager.hireChefsForReservations(currentReservations);
   }

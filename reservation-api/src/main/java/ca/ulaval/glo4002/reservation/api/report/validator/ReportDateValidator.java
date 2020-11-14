@@ -15,12 +15,12 @@ public class ReportDateValidator {
   public void validate(String startDate, String endDate) {
     if (areDatesInvalid(startDate, endDate)) {
       throw new InvalidReportDateException(reportService.getDinnerPeriodDto().getStartDate(),
-          reportService.getDinnerPeriodDto().getEndDate());
+                                           reportService.getDinnerPeriodDto().getEndDate());
     }
   }
 
   private boolean areDatesInvalid(String startDate, String endDate) {
     return startDate == null || endDate == null || !startDate.matches(reportDateRegex)
-        || !endDate.matches(reportDateRegex);
+           || !endDate.matches(reportDateRegex);
   }
 }

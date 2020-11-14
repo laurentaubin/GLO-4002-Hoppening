@@ -13,7 +13,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 class ChefReportTest {
 
-  private static final ChefPriority A_CHEF_TYPE = ChefPriority.VERY_HIGH;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.FIRST;
   private static final String A_CHEF_NAME = "Thierry Aki";
   private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.NONE);
   private static final Chef A_CHEF = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);

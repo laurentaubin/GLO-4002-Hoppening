@@ -16,9 +16,12 @@ public class AllergiesDetector {
   }
 
   public boolean isReservationAllergicFriendly(Reservation reservation,
-      List<Reservation> existingReservations, Map<IngredientName, BigDecimal> dailyIngredients) {
+                                               List<Reservation> existingReservations,
+                                               Map<IngredientName, BigDecimal> dailyIngredients)
+  {
     if (doesReservationContainAllergicCustomer(reservation)
-        && doesReservationContainACustomerWithARestrictionThatContainCarrots(reservation)) {
+        && doesReservationContainACustomerWithARestrictionThatContainCarrots(reservation))
+    {
       return false;
     }
 
@@ -28,14 +31,13 @@ public class AllergiesDetector {
 
     if (doesReservationContainACustomerWithARestrictionThatContainCarrots(reservation)) {
       return !doPreviousReservationsContainAllergicCustomer(reservation.getDinnerDate(),
-          existingReservations);
+                                                            existingReservations);
     }
 
     return true;
   }
 
-  private boolean doPreviousReservationsContainCarrots(
-      Map<IngredientName, BigDecimal> ingredients) {
+  private boolean doPreviousReservationsContainCarrots(Map<IngredientName, BigDecimal> ingredients) {
     return ingredients.containsKey(IngredientName.CARROTS);
   }
 
@@ -43,18 +45,18 @@ public class AllergiesDetector {
     return reservation.getRestrictionTypes().contains(RestrictionType.ALLERGIES);
   }
 
-  private boolean doesReservationContainACustomerWithARestrictionThatContainCarrots(
-      Reservation reservation) {
-    Map<IngredientName, BigDecimal> ingredientQuantity =
-        reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
+  private boolean doesReservationContainACustomerWithARestrictionThatContainCarrots(Reservation reservation) {
+    Map<IngredientName, BigDecimal> ingredientQuantity = reservationIngredientCalculator.getReservationIngredientsQuantity(reservation);
     return ingredientQuantity.containsKey(IngredientName.CARROTS);
   }
 
   private boolean doPreviousReservationsContainAllergicCustomer(LocalDateTime dinnerDate,
-      List<Reservation> existingReservations) {
+                                                                List<Reservation> existingReservations)
+  {
     List<Reservation> reservations = existingReservations.stream()
-        .filter(reservation -> reservation.getDinnerDate().equals(dinnerDate))
-        .collect(Collectors.toList());
+                                                         .filter(reservation -> reservation.getDinnerDate()
+                                                                                           .equals(dinnerDate))
+                                                         .collect(Collectors.toList());
     for (Reservation reservation : reservations) {
       if (reservation.getRestrictionTypes().contains(RestrictionType.ALLERGIES)) {
         return true;

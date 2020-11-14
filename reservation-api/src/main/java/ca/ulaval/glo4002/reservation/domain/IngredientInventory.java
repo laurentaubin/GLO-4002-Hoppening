@@ -17,8 +17,9 @@ public class IngredientInventory {
   private final AllergiesDetector allergiesDetector;
 
   public IngredientInventory(IngredientQuantityRepository ingredientQuantityRepository,
-      IngredientAvailabilityValidator ingredientAvailabilityValidator,
-      AllergiesDetector allergiesDetector) {
+                             IngredientAvailabilityValidator ingredientAvailabilityValidator,
+                             AllergiesDetector allergiesDetector)
+  {
     this.ingredientQuantityRepository = ingredientQuantityRepository;
     this.ingredientAvailabilityValidator = ingredientAvailabilityValidator;
     this.allergiesDetector = allergiesDetector;
@@ -29,17 +30,20 @@ public class IngredientInventory {
   }
 
   public boolean doesReservationCauseAllergicConflict(Reservation reservation,
-      List<Reservation> existingReservations) {
-    Map<IngredientName, BigDecimal> dailyIngredients =
-        getIngredientsAtDate(reservation.getDinnerDate().toLocalDate());
-    return !allergiesDetector.isReservationAllergicFriendly(reservation, existingReservations,
-        dailyIngredients);
+                                                      List<Reservation> existingReservations)
+  {
+    Map<IngredientName, BigDecimal> dailyIngredients = getIngredientsAtDate(reservation.getDinnerDate()
+                                                                                       .toLocalDate());
+    return !allergiesDetector.isReservationAllergicFriendly(reservation,
+                                                            existingReservations,
+                                                            dailyIngredients);
   }
 
   public boolean areAllNecessaryIngredientsAvailable(Reservation reservation,
-      LocalDate restaurantOpeningDate) {
+                                                     LocalDate restaurantOpeningDate)
+  {
     return ingredientAvailabilityValidator.areIngredientsAvailableForReservation(reservation,
-        restaurantOpeningDate);
+                                                                                 restaurantOpeningDate);
   }
 
   public Map<IngredientName, BigDecimal> getIngredientsAtDate(LocalDate date) {

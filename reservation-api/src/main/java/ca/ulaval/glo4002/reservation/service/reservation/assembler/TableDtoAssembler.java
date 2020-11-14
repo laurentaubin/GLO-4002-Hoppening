@@ -15,8 +15,10 @@ public class TableDtoAssembler {
   }
 
   public TableDto assemble(TableApiDto tableApiDto) {
-    List<CustomerDto> customerDtos = tableApiDto.getCustomers().stream()
-        .map(customerDtoAssembler::assemble).collect(Collectors.toList());
+    List<CustomerDto> customerDtos = tableApiDto.getCustomers()
+                                                .stream()
+                                                .map(customerDtoAssembler::assemble)
+                                                .collect(Collectors.toList());
     return new TableDto(customerDtos);
   }
 }

@@ -19,8 +19,10 @@ public class RestaurantService {
   private final Restaurant restaurant;
 
   public RestaurantService(ReservationAssembler reservationAssembler,
-      ReservationRequestAssembler reservationRequestAssembler,
-      ConfigurationRequestAssembler configurationRequestAssembler, Restaurant restaurant) {
+                           ReservationRequestAssembler reservationRequestAssembler,
+                           ConfigurationRequestAssembler configurationRequestAssembler,
+                           Restaurant restaurant)
+  {
     this.reservationAssembler = reservationAssembler;
     this.reservationRequestAssembler = reservationRequestAssembler;
     this.configurationRequestAssembler = configurationRequestAssembler;
@@ -28,8 +30,7 @@ public class RestaurantService {
   }
 
   public ReservationId makeReservation(CreateReservationRequestDto reservationRequestDto) {
-    ReservationRequest reservationRequest =
-        reservationRequestAssembler.assemble(reservationRequestDto);
+    ReservationRequest reservationRequest = reservationRequestAssembler.assemble(reservationRequestDto);
     return restaurant.makeReservation(reservationRequest);
   }
 
@@ -39,8 +40,7 @@ public class RestaurantService {
   }
 
   public void configureHoppeningEvent(CreateConfigurationRequestDto createConfigurationRequestDto) {
-    HoppeningConfigurationRequest hoppeningConfigurationRequest =
-        configurationRequestAssembler.assemble(createConfigurationRequestDto);
+    HoppeningConfigurationRequest hoppeningConfigurationRequest = configurationRequestAssembler.assemble(createConfigurationRequestDto);
     restaurant.configureHoppeningEvent(hoppeningConfigurationRequest);
   }
 }

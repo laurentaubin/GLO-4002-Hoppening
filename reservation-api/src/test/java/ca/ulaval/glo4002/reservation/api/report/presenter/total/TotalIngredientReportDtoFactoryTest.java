@@ -73,55 +73,55 @@ public class TotalIngredientReportDtoFactoryTest {
   @Test
   public void givenReport_whenCreate_thenIngredientReportInformationDtosAreCorrectlyAssembled() {
     // given
-    given(ingredientReport.generateTotalIngredientReportInformation())
-        .willReturn(givenIngredientReportInformation());
-    List<IngredientReportInformationDto> expectedIngredientReportInformationDto =
-        givenExpectedIngredientsReportInformationDtos();
+    given(ingredientReport.generateTotalIngredientReportInformation()).willReturn(givenIngredientReportInformation());
+    List<IngredientReportInformationDto> expectedIngredientReportInformationDto = givenExpectedIngredientsReportInformationDtos();
 
     // then
     TotalReportDto totalReportDto = totalReportDtoFactory.create(ingredientReport);
 
     // then
-    assertThat(totalReportDto.getIngredients())
-        .containsExactlyElementsIn(expectedIngredientReportInformationDto);
+    assertThat(totalReportDto.getIngredients()).containsExactlyElementsIn(expectedIngredientReportInformationDto);
   }
 
   @Test
   public void givenReport_whenCreate_thenIngredientReportInformationsDtosAreInAlphabeticalOrder() {
     // given
-    given(ingredientReport.generateTotalIngredientReportInformation())
-        .willReturn(givenIngredientReportInformation());
+    given(ingredientReport.generateTotalIngredientReportInformation()).willReturn(givenIngredientReportInformation());
 
     // then
     TotalReportDto totalReportDto = totalReportDtoFactory.create(ingredientReport);
 
     // then
-    assertThat(totalReportDto.getIngredients().get(0).getIngredientName())
-        .isEqualTo(IngredientName.KIMCHI.toString());
-    assertThat(totalReportDto.getIngredients().get(1).getIngredientName())
-        .isEqualTo(IngredientName.PEPPERONI.toString());
+    assertThat(totalReportDto.getIngredients()
+                             .get(0)
+                             .getIngredientName()).isEqualTo(IngredientName.KIMCHI.toString());
+    assertThat(totalReportDto.getIngredients()
+                             .get(1)
+                             .getIngredientName()).isEqualTo(IngredientName.PEPPERONI.toString());
   }
 
   private Map<IngredientName, IngredientReportInformation> givenIngredientReportInformation() {
-    Map<IngredientName, IngredientReportInformation> ingredientNameToIngredientReportInformation =
-        new HashMap<>();
-    IngredientReportInformation anIngredientReportInformation = new IngredientReportInformation(
-        IngredientName.PEPPERONI, PEPPERONI_QUANTITY, PEPPERONI_PRICE);
-    IngredientReportInformation anotherIngredientReportInformation =
-        new IngredientReportInformation(IngredientName.KIMCHI, KIMCHI_QUANTITY, KIMCHI_PRICE);
+    Map<IngredientName, IngredientReportInformation> ingredientNameToIngredientReportInformation = new HashMap<>();
+    IngredientReportInformation anIngredientReportInformation = new IngredientReportInformation(IngredientName.PEPPERONI,
+                                                                                                PEPPERONI_QUANTITY,
+                                                                                                PEPPERONI_PRICE);
+    IngredientReportInformation anotherIngredientReportInformation = new IngredientReportInformation(IngredientName.KIMCHI,
+                                                                                                     KIMCHI_QUANTITY,
+                                                                                                     KIMCHI_PRICE);
     ingredientNameToIngredientReportInformation.put(IngredientName.PEPPERONI,
-        anIngredientReportInformation);
+                                                    anIngredientReportInformation);
     ingredientNameToIngredientReportInformation.put(IngredientName.KIMCHI,
-        anotherIngredientReportInformation);
+                                                    anotherIngredientReportInformation);
     return ingredientNameToIngredientReportInformation;
   }
 
   private List<IngredientReportInformationDto> givenExpectedIngredientsReportInformationDtos() {
-    IngredientReportInformationDto pepperoniIngredientReportDto =
-        new IngredientReportInformationDto(IngredientName.PEPPERONI.toString(), PEPPERONI_QUANTITY,
-            PEPPERONI_PRICE);
-    IngredientReportInformationDto kimchiIngredientReportDto = new IngredientReportInformationDto(
-        IngredientName.KIMCHI.toString(), KIMCHI_QUANTITY, KIMCHI_PRICE);
+    IngredientReportInformationDto pepperoniIngredientReportDto = new IngredientReportInformationDto(IngredientName.PEPPERONI.toString(),
+                                                                                                     PEPPERONI_QUANTITY,
+                                                                                                     PEPPERONI_PRICE);
+    IngredientReportInformationDto kimchiIngredientReportDto = new IngredientReportInformationDto(IngredientName.KIMCHI.toString(),
+                                                                                                  KIMCHI_QUANTITY,
+                                                                                                  KIMCHI_PRICE);
     return Arrays.asList(pepperoniIngredientReportDto, kimchiIngredientReportDto);
   }
 }

@@ -15,7 +15,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 class ChefTest {
 
-  private static final ChefPriority A_CHEF_TYPE = ChefPriority.LOW;
+  private static final ChefPriority A_CHEF_TYPE = ChefPriority.NINTH;
   private static final String A_CHEF_NAME = "A Name";
   private static final Set<RestrictionType> SOME_SPECIALTIES = Set.of(RestrictionType.NONE);
 

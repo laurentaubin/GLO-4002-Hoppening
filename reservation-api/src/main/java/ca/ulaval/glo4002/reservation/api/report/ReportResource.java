@@ -29,11 +29,13 @@ public class ReportResource {
   private final ChefReportDtoAssembler chefReportDtoAssembler;
   private final MaterialReportPresenter materialReportPresenter;
 
-  public ReportResource(ReportService reportService, ChefReportService chefReportService,
-      ReportDateValidator reportDateValidator,
-      IngredientReportPresenterFactory ingredientReportPresenterFactory,
-      ChefReportDtoAssembler chefReportDtoAssembler,
-      MaterialReportPresenter materialReportPresenter) {
+  public ReportResource(ReportService reportService,
+                        ChefReportService chefReportService,
+                        ReportDateValidator reportDateValidator,
+                        IngredientReportPresenterFactory ingredientReportPresenterFactory,
+                        ChefReportDtoAssembler chefReportDtoAssembler,
+                        MaterialReportPresenter materialReportPresenter)
+  {
     this.reportService = reportService;
     this.chefReportService = chefReportService;
     this.reportDateValidator = reportDateValidator;
@@ -46,11 +48,12 @@ public class ReportResource {
   @Path("/ingredients")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getIngredientReport(@QueryParam("startDate") String startDate,
-      @QueryParam("endDate") String endDate, @QueryParam("type") String type) {
+                                      @QueryParam("endDate") String endDate,
+                                      @QueryParam("type") String type)
+  {
     reportDateValidator.validate(startDate, endDate);
     IngredientReport ingredientReport = reportService.getIngredientReport(startDate, endDate);
-    IngredientReportPresenter ingredientReportPresenter =
-        ingredientReportPresenterFactory.create(IngredientReportType.valueOfName(type));
+    IngredientReportPresenter ingredientReportPresenter = ingredientReportPresenterFactory.create(IngredientReportType.valueOfName(type));
     return ingredientReportPresenter.presentReport(ingredientReport);
   }
 
@@ -67,7 +70,8 @@ public class ReportResource {
   @Path("/material")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getMaterialReport(@QueryParam("startDate") String startDate,
-      @QueryParam("endDate") String endDate) {
+                                    @QueryParam("endDate") String endDate)
+  {
     reportDateValidator.validate(startDate, endDate);
     MaterialReport materialReport = reportService.getMaterialReport(startDate, endDate);
     return materialReportPresenter.presentReport(materialReport);

@@ -5,9 +5,11 @@ import java.math.BigDecimal;
 import ca.ulaval.glo4002.reservation.exception.InvalidRestrictionException;
 
 public enum RestrictionType {
-  VEGETARIAN("vegetarian", BigDecimal.valueOf(500)), VEGAN("vegan",
-      BigDecimal.valueOf(1000)), ALLERGIES("allergies",
-          BigDecimal.ZERO), ILLNESS("illness", BigDecimal.ZERO), NONE("none", BigDecimal.ZERO);
+  VEGETARIAN("vegetarian", BigDecimal.valueOf(500)),
+  VEGAN("vegan", BigDecimal.valueOf(1000)),
+  ALLERGIES("allergies", BigDecimal.ZERO),
+  ILLNESS("illness", BigDecimal.ZERO),
+  NONE("none", BigDecimal.ZERO);
 
   private final String name;
 

@@ -23,32 +23,30 @@ public class InMemoryChefRepository implements ChefRepository {
 
   private void generateBaseChefs() {
     availableChefs = new HashSet<>();
-    availableChefs.add(new Chef("Thierry Aki",
-                                ChefPriority.VERY_HIGH,
-                                Set.of(RestrictionType.NONE)));
+    availableChefs.add(new Chef("Thierry Aki", ChefPriority.FIRST, Set.of(RestrictionType.NONE)));
     availableChefs.add(new Chef("Bob Smarties",
-                                ChefPriority.VERY_HIGH,
+                                ChefPriority.SECOND,
                                 Set.of(RestrictionType.VEGAN)));
     availableChefs.add(new Chef("Bob Rossbeef",
-                                ChefPriority.HIGH,
+                                ChefPriority.THIRD,
                                 Set.of(RestrictionType.VEGETARIAN)));
     availableChefs.add(new Chef("Bill Adicion",
-                                ChefPriority.HIGH,
+                                ChefPriority.FOURTH,
                                 Set.of(RestrictionType.ALLERGIES)));
     availableChefs.add(new Chef("Omar Calmar",
-                                ChefPriority.MEDIUM,
+                                ChefPriority.FIFTH,
                                 Set.of(RestrictionType.ILLNESS)));
     availableChefs.add(new Chef("Écharlotte Cardin",
-                                ChefPriority.MEDIUM,
+                                ChefPriority.SIXTH,
                                 Set.of(RestrictionType.VEGAN, RestrictionType.ALLERGIES)));
     availableChefs.add(new Chef("Éric Ardo",
-                                ChefPriority.LOW,
+                                ChefPriority.SEVENTH,
                                 Set.of(RestrictionType.VEGETARIAN, RestrictionType.ILLNESS)));
     availableChefs.add(new Chef("Hans Riz",
-                                ChefPriority.LOW,
+                                ChefPriority.EIGHTH,
                                 Set.of(RestrictionType.NONE, RestrictionType.ILLNESS)));
     availableChefs.add(new Chef("Amélie Mélo",
-                                ChefPriority.VERY_LOW,
+                                ChefPriority.NINTH,
                                 Set.of(RestrictionType.ALLERGIES, RestrictionType.VEGAN)));
   }
 

@@ -31,8 +31,8 @@ public class ConfigurationResourceTest {
 
   @BeforeEach
   public void setUpConfigurationResource() {
-    configurationResource =
-        new ConfigurationResource(restaurantService, configurationDateFormatValidator);
+    configurationResource = new ConfigurationResource(restaurantService,
+                                                      configurationDateFormatValidator);
 
   }
 
@@ -50,13 +50,11 @@ public class ConfigurationResourceTest {
 
   private CreateConfigurationRequestDto buildConfigurationDto() {
     PeriodApiDto hoppeningDto = buildPeriodDto(ConfigurationResourceTest.A_HOPPENING_BEGIN_DATE,
-        ConfigurationResourceTest.A_HOPPENING_END_DATE);
-    PeriodApiDto reservationPeriodApiDto =
-        buildPeriodDto(ConfigurationResourceTest.A_RESERVATION_BEGIN_DATE,
-            ConfigurationResourceTest.A_RESERVATION_END_DATE);
+                                               ConfigurationResourceTest.A_HOPPENING_END_DATE);
+    PeriodApiDto reservationPeriodApiDto = buildPeriodDto(ConfigurationResourceTest.A_RESERVATION_BEGIN_DATE,
+                                                          ConfigurationResourceTest.A_RESERVATION_END_DATE);
 
-    CreateConfigurationRequestDto createConfigurationRequestDto =
-        new CreateConfigurationRequestDto();
+    CreateConfigurationRequestDto createConfigurationRequestDto = new CreateConfigurationRequestDto();
     createConfigurationRequestDto.setDinnerPeriod(hoppeningDto);
     createConfigurationRequestDto.setReservationPeriod(reservationPeriodApiDto);
 

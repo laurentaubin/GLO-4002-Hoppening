@@ -108,8 +108,7 @@ public class InMemoryReservationRepositoryTest {
   @Test
   public void givenNotExistingReservation_whenGetReservationById_thenThrowNonExistingReservationException() {
     // when
-    Executable gettingReservationById =
-        () -> reservationRepository.getReservationById(reservationId);
+    Executable gettingReservationById = () -> reservationRepository.getReservationById(reservationId);
 
     // then
     assertThrows(ReservationNotFoundException.class, gettingReservationById);

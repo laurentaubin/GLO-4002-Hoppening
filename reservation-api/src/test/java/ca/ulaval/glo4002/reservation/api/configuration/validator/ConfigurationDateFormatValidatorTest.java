@@ -27,8 +27,7 @@ public class ConfigurationDateFormatValidatorTest {
   @Test
   public void whenValidateFormat_thenDateIsValidated() {
     // when
-    Executable validatingDates = () -> configurationDateFormatValidator
-        .validateFormat(Collections.singletonList(A_VALID_DATE));
+    Executable validatingDates = () -> configurationDateFormatValidator.validateFormat(Collections.singletonList(A_VALID_DATE));
 
     // then
     assertDoesNotThrow(validatingDates);
@@ -37,8 +36,7 @@ public class ConfigurationDateFormatValidatorTest {
   @Test
   public void givenAnInvalidDate_whenValidateFormat_thenThrowInvalidDateException() {
     // when
-    Executable validatingDates = () -> configurationDateFormatValidator
-        .validateFormat(Collections.singletonList(AN_INVALID_DATE));
+    Executable validatingDates = () -> configurationDateFormatValidator.validateFormat(Collections.singletonList(AN_INVALID_DATE));
 
     // then
     assertThrows(InvalidDateException.class, validatingDates);

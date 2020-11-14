@@ -10,8 +10,7 @@ import org.junit.jupiter.api.function.Executable;
 import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatException;
 
 public class DinnerDateFormatValidatorTest {
-  private static final String DATE_REGEX =
-      "[0-9]{4}[-][0-9]{2}[-][0-9]{2}[T][0-9]{2}[:][0-9]{2}[:][0-9]{2}[.][0-9]{3}[Z]";
+  private static final String DATE_REGEX = "[0-9]{4}[-][0-9]{2}[-][0-9]{2}[T][0-9]{2}[:][0-9]{2}[:][0-9]{2}[.][0-9]{3}[Z]";
   private static final String DATE_CORRECTLY_FORMATTED = "2150-01-21T15:23:20.142Z";
   private static final String DATE_INCORRECTLY_FORMATTED = "21-01-2150T15:23:20.142Z";
   private static final String DATE_WITH_TWO_MILLISECONDS = "2150-01-21T15:23:20.14Z";

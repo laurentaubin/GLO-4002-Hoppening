@@ -24,9 +24,12 @@ public class ReportService {
   private final ReportPeriodFactory reportPeriodFactory;
 
   public ReportService(IngredientQuantityRepository ingredientQuantityRepository,
-      IngredientPriceRepository ingredientPriceRepository,
-      IngredientReportGenerator ingredientReportGenerator, Restaurant restaurant,
-      MaterialReportGenerator materialReportGenerator, ReportPeriodFactory reportPeriodFactory) {
+                       IngredientPriceRepository ingredientPriceRepository,
+                       IngredientReportGenerator ingredientReportGenerator,
+                       Restaurant restaurant,
+                       MaterialReportGenerator materialReportGenerator,
+                       ReportPeriodFactory reportPeriodFactory)
+  {
     this.ingredientQuantityRepository = ingredientQuantityRepository;
     this.ingredientPriceRepository = ingredientPriceRepository;
     this.ingredientReportGenerator = ingredientReportGenerator;
@@ -37,10 +40,11 @@ public class ReportService {
 
   public IngredientReport getIngredientReport(String startDate, String endDate) {
     ReportPeriod reportPeriod = reportPeriodFactory.create(LocalDate.parse(startDate),
-        LocalDate.parse(endDate), restaurant.getHoppeningEvent().getDinnerPeriod());
+                                                           LocalDate.parse(endDate),
+                                                           restaurant.getHoppeningEvent()
+                                                                     .getDinnerPeriod());
     List<IngredientPriceDto> ingredientPrices = ingredientPriceRepository.getIngredientsPrice();
-    Map<LocalDate, Map<IngredientName, BigDecimal>> dateToIngredientQuantities =
-        ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
+    Map<LocalDate, Map<IngredientName, BigDecimal>> dateToIngredientQuantities = ingredientQuantityRepository.getIngredientsQuantity(reportPeriod);
     return ingredientReportGenerator.generateReport(ingredientPrices, dateToIngredientQuantities);
   }
 
@@ -50,9 +54,10 @@ public class ReportService {
 
   public MaterialReport getMaterialReport(String startDate, String endDate) {
     ReportPeriod reportPeriod = reportPeriodFactory.create(LocalDate.parse(startDate),
-        LocalDate.parse(endDate), restaurant.getHoppeningEvent().getDinnerPeriod());
-    Map<LocalDate, DailyDishesQuantity> dailyDishesQuantity =
-        restaurant.getDailyDishesQuantity(reportPeriod);
+                                                           LocalDate.parse(endDate),
+                                                           restaurant.getHoppeningEvent()
+                                                                     .getDinnerPeriod());
+    Map<LocalDate, DailyDishesQuantity> dailyDishesQuantity = restaurant.getDailyDishesQuantity(reportPeriod);
     return materialReportGenerator.generateReport(dailyDishesQuantity, reportPeriod);
   }
 

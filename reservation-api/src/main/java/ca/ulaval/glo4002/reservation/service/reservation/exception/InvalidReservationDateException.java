@@ -12,7 +12,8 @@ public class InvalidReservationDateException extends ReservationException {
 
   public InvalidReservationDateException(LocalDate startDate, LocalDate endDate) {
     super(ERROR_CODE,
-        String.format(ERROR_MESSAGE, startDate.format(DateTimeFormatter.ofPattern(PATTERN_FORMAT)),
-            endDate.format(DateTimeFormatter.ofPattern(PATTERN_FORMAT))));
+          String.format(ERROR_MESSAGE,
+                        startDate.format(DateTimeFormatter.ofPattern(PATTERN_FORMAT)),
+                        endDate.format(DateTimeFormatter.ofPattern(PATTERN_FORMAT))));
   }
 }

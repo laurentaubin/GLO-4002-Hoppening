@@ -1,7 +1,7 @@
 package ca.ulaval.glo4002.reservation.domain.chef;
 
 public enum ChefPriority {
-  VERY_HIGH(5), HIGH(4), MEDIUM(3), LOW(2), VERY_LOW(1);
+  FIRST(9), SECOND(8), THIRD(7), FOURTH(6), FIFTH(5), SIXTH(4), SEVENTH(3), EIGHTH(2), NINTH(1);
 
   private final int priorityValue;
 

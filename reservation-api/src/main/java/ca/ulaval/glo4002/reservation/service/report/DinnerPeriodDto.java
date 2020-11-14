@@ -11,8 +11,8 @@ public class DinnerPeriodDto {
   private final String endDate;
 
   public DinnerPeriodDto(Period dinnerPeriod) {
-    this.startDate =
-        dinnerPeriod.getStartDate().format(DateTimeFormatter.ofPattern(PATTERN_FORMAT));
+    this.startDate = dinnerPeriod.getStartDate()
+                                 .format(DateTimeFormatter.ofPattern(PATTERN_FORMAT));
     this.endDate = dinnerPeriod.getEndDate().format(DateTimeFormatter.ofPattern(PATTERN_FORMAT));
   }
 

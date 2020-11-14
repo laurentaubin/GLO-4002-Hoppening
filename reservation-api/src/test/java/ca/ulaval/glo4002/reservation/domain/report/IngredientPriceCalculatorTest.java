@@ -49,8 +49,8 @@ class IngredientPriceCalculatorTest {
     ingredientPriceCalculator.generatePriceMapper(ingredientPriceDto);
 
     // when
-    BigDecimal actualTotalPrice =
-        ingredientPriceCalculator.getTotalPrice(ANOTHER_INGREDIENT_NAME, EXPECTED_TOTAL_PRICE);
+    BigDecimal actualTotalPrice = ingredientPriceCalculator.getTotalPrice(ANOTHER_INGREDIENT_NAME,
+                                                                          EXPECTED_TOTAL_PRICE);
 
     // then
     assertThat(actualTotalPrice.doubleValue()).isEqualTo(EXPECTED_TOTAL_PRICE.doubleValue());
@@ -63,8 +63,8 @@ class IngredientPriceCalculatorTest {
     ingredientPriceCalculator.generatePriceMapper(ingredientPriceDto);
 
     // when
-    Executable gettingTotalPrice =
-        () -> ingredientPriceCalculator.getTotalPrice(INGREDIENT_NAME_NOT_IN_DTO, ANY_BIG_DECIMAL);
+    Executable gettingTotalPrice = () -> ingredientPriceCalculator.getTotalPrice(INGREDIENT_NAME_NOT_IN_DTO,
+                                                                                 ANY_BIG_DECIMAL);
 
     // then
     assertThrows(IngredientNotFoundException.class, gettingTotalPrice);
@@ -79,8 +79,8 @@ class IngredientPriceCalculatorTest {
     ingredientPriceCalculator.generatePriceMapper(ingredientPriceDto);
 
     // then
-    assertThat(ingredientPriceCalculator.getTotalPrice(AN_INGREDIENT_NAME, BigDecimal.ONE))
-        .isEqualTo(EXPECTED_INGREDIENT_PRICE);
+    assertThat(ingredientPriceCalculator.getTotalPrice(AN_INGREDIENT_NAME,
+                                                       BigDecimal.ONE)).isEqualTo(EXPECTED_INGREDIENT_PRICE);
   }
 
   private List<IngredientPriceDto> givenTwoIngredientsDto() {
