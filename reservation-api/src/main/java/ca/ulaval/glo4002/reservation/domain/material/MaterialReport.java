@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.material;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class MaterialReport {
@@ -13,4 +14,12 @@ public class MaterialReport {
     return allMaterialReportInformation;
   }
 
+  public BigDecimal calculateTotalCost() {
+    BigDecimal totalCost = BigDecimal.ZERO;
+    for (MaterialReportInformation materialReportInformation : allMaterialReportInformation) {
+      totalCost = totalCost.add(materialReportInformation.getTotalPrice());
+    }
+
+    return totalCost;
+  }
 }

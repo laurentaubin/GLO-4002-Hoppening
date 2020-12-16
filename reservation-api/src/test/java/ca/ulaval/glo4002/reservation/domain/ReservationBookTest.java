@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,5 +76,18 @@ public class ReservationBookTest {
 
     // then
     assertThat(totalNumberOfReservationForADay).isEqualTo(EIGHT_CUSTOMERS);
+  }
+
+  @Test
+  public void givenTwoReservations_whenGetAllReservations_thenReturnAllReservations() {
+    // given
+    given(reservationRepository.getAllReservations()).willReturn(List.of(aReservation, aReservation));
+
+    // when
+    List<Reservation> reservations = reservationBook.getAllReservations();
+
+    // then
+    assertThat(reservations).contains(aReservation);
+    assertThat(reservations).hasSize(2);
   }
 }

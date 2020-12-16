@@ -39,7 +39,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     return reservationsByDate;
   }
 
-  private boolean isTheSameDate(LocalDateTime date, LocalDateTime dinnerDate) {
-    return LocalDate.from(date).isEqual(LocalDate.from(dinnerDate));
+  public List<Reservation> getAllReservations() {
+    return reservations;
   }
 }

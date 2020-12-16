@@ -70,7 +70,7 @@ public class RestaurantServiceTest {
   private RestaurantService restaurantService;
 
   @BeforeEach
-  public void setUpReservationService() {
+  public void setUpRestaurantService() {
 
     restaurantService = new RestaurantService(reservationAssembler,
                                               reservationRequestAssembler,

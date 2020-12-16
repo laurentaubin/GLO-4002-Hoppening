@@ -1,6 +1,8 @@
 package ca.ulaval.glo4002.reservation.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -115,5 +117,14 @@ public class Restaurant {
     List<Reservation> currentReservations = reservationBook.getReservationsByDate(reservation.getDinnerDate());
     currentReservations.add(reservation);
     chefManager.hireChefsForReservations(currentReservations);
+  }
+
+  public BigDecimal calculateTotalReservationFee() {
+    BigDecimal totalFee = BigDecimal.ZERO;
+    for (Reservation reservation : reservationBook.getAllReservations()) {
+      totalFee = totalFee.add(reservation.getReservationFees());
+    }
+
+    return totalFee;
   }
 }

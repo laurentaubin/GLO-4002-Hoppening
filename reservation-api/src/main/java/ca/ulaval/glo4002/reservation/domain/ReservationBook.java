@@ -34,4 +34,8 @@ public class ReservationBook {
     }
     return numberOfCustomers;
   }
+
+  public List<Reservation> getAllReservations() {
+    return reservationRepository.getAllReservations();
+  }
 }

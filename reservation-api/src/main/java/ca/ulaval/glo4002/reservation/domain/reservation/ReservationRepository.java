@@ -9,4 +9,6 @@ public interface ReservationRepository {
   Reservation getReservationById(ReservationId reservationId);
 
   List<Reservation> getReservationsByDate(LocalDateTime date);
+
+  List<Reservation> getAllReservations();
 }
