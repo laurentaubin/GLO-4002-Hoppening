@@ -19,7 +19,6 @@ import ca.ulaval.glo4002.reservation.domain.report.IngredientReportPresenter;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportType;
 import ca.ulaval.glo4002.reservation.domain.report.chef.ChefReport;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
-import org.hibernate.validator.constraints.CodePointLength;
 
 @Path("/reports")
 public class ReportResource {

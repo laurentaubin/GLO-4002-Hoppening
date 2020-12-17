@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class MaterialReport {
-  private List<MaterialReportInformation> allMaterialReportInformation;
+  private final List<MaterialReportInformation> allMaterialReportInformation;
 
   public MaterialReport(List<MaterialReportInformation> materialReportInformation) {
     allMaterialReportInformation = materialReportInformation;

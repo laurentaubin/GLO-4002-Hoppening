@@ -1,7 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 

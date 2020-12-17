@@ -8,12 +8,9 @@ import java.util.Objects;
 import ca.ulaval.glo4002.reservation.api.report.presenter.IngredientReportInformationDto;
 
 public class UnitReportDayDto {
-  private String date;
-  private List<IngredientReportInformationDto> ingredients;
-  private BigDecimal totalPrice;
-
-  public UnitReportDayDto() {
-  }
+  private final String date;
+  private final List<IngredientReportInformationDto> ingredients;
+  private final BigDecimal totalPrice;
 
   public UnitReportDayDto(LocalDate date,
                           List<IngredientReportInformationDto> ingredients,
@@ -30,10 +27,6 @@ public class UnitReportDayDto {
 
   public List<IngredientReportInformationDto> getIngredients() {
     return ingredients;
-  }
-
-  public void setIngredients(List<IngredientReportInformationDto> ingredients) {
-    this.ingredients = ingredients;
   }
 
   public BigDecimal getTotalPrice() {

@@ -1,6 +1,5 @@
 package ca.ulaval.glo4002.reservation.service.reservation.assembler;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,11 +18,7 @@ public class CustomerAssembler {
   }
 
   public CustomerApiDto assembleDtoFromCustomer(Customer customer) {
-    List<String> restrictions = customer.getRestrictions()
-                                        .stream()
-                                        .map(RestrictionType::toString)
-                                        .collect(Collectors.toList());
-    Collections.sort(restrictions);
+    List<String> restrictions = customer.getRestrictions().stream().map(RestrictionType::toString).sorted().collect(Collectors.toList());
     CustomerApiDto customerApiDto = new CustomerApiDto();
     customerApiDto.setName(customer.getName());
     customerApiDto.setRestrictions(restrictions);

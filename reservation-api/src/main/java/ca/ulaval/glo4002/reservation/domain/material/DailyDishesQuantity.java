@@ -8,7 +8,7 @@ public class DailyDishesQuantity {
   private static final BigDecimal BASE_NUMBER_OF_DISHES = BigDecimal.valueOf(3);
   private static final BigDecimal SUPPLEMENTARY_DISHES_COUNT_FOR_RESTRICTION = BigDecimal.valueOf(1);
 
-  private Map<Material, BigDecimal> dishesQuantity = new HashMap<>();
+  private final Map<Material, BigDecimal> dishesQuantity = new HashMap<>();
 
   public DailyDishesQuantity() {
   }

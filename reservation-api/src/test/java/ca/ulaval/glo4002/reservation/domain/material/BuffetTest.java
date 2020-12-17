@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 
@@ -75,8 +74,6 @@ public class BuffetTest {
 
   @Mock
   private DailyDishesQuantity lastDailyDishesQuantityBeforeReportPeriodStart;
-
-  private Period period = new Period(REPORT_PERIOD_START, REPORT_PERIOD_END);
 
   private Buffet buffet;
 

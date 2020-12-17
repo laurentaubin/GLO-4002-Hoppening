@@ -11,10 +11,6 @@ public class ReservationDetailsDto {
   @NotNull
   private String reservationDate;
 
-  public CountryDto getCountry() {
-    return country;
-  }
-
   public void setCountry(CountryDto countryDto) {
     this.country = countryDto;
   }

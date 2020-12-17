@@ -11,7 +11,7 @@ public class CreateReservationRequestDtoBuilder {
   private static final String A_VENDOR_CODE = "vendor code";
   private static final String A_DINNER_DATE = "2150-07-21T15:23:20.142Z";
   private final List<TableApiDto> tables;
-  private String vendorCode;
+  private final String vendorCode;
   private String dinnerDate;
   private ReservationDetailsDto reservationDetails;
 
@@ -22,18 +22,8 @@ public class CreateReservationRequestDtoBuilder {
     reservationDetails = new ReservationDetailsDtoBuilder().build();
   }
 
-  public CreateReservationRequestDtoBuilder withVendorCode(String vendorCode) {
-    this.vendorCode = vendorCode;
-    return this;
-  }
-
   public CreateReservationRequestDtoBuilder withDinnerDate(String dinnerDate) {
     this.dinnerDate = dinnerDate;
-    return this;
-  }
-
-  public CreateReservationRequestDtoBuilder withTable(TableApiDto table) {
-    tables.add(table);
     return this;
   }
 

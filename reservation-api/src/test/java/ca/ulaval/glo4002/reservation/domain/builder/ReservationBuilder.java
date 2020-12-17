@@ -15,21 +15,16 @@ public class ReservationBuilder {
   private static final LocalDateTime A_DINNER_DATE = LocalDateTime.now();
   private static final LocalDateTime A_RESERVATION_DATE = LocalDateTime.now();
 
-  private ReservationId id;
+  private final ReservationId id;
   private DinnerDate dinnerDate;
   private final List<Table> tables;
-  private ReservationDate reservationDate;
+  private final ReservationDate reservationDate;
 
   public ReservationBuilder() {
     id = new ReservationIdFactory().createFromVendorCode("ddsa");
     dinnerDate = new DinnerDate(A_DINNER_DATE);
     tables = new ArrayList<>();
     reservationDate = new ReservationDate(A_RESERVATION_DATE);
-  }
-
-  public ReservationBuilder withId(ReservationId id) {
-    this.id = id;
-    return this;
   }
 
   public ReservationBuilder withDinnerDate(LocalDateTime dinnerDate) {

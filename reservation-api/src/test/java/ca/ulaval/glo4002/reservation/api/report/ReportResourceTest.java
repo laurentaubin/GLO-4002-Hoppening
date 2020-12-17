@@ -18,7 +18,6 @@ import ca.ulaval.glo4002.reservation.domain.material.MaterialReport;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReport;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportPresenter;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportType;
-import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,9 +43,6 @@ public class ReportResourceTest {
 
   @Mock
   private ExpenseReport expenseReport;
-
-  @Mock
-  private ReportPeriod reportPeriod;
 
   @Mock
   private IngredientReportPresenterFactory ingredientReportPresenterFactory;

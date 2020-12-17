@@ -1,9 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.report.chef;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -15,7 +12,6 @@ import ca.ulaval.glo4002.reservation.domain.chef.Chef;
 import ca.ulaval.glo4002.reservation.domain.chef.ChefPriority;
 import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,9 +23,6 @@ class ChefReportTest {
   private static final Chef A_CHEF = new Chef(A_CHEF_NAME, A_CHEF_TYPE, SOME_SPECIALTIES);
   private static final Set<Chef> SOME_CHEFS = Set.of(A_CHEF);
   private static final BigDecimal A_TOTAL_PRICE = BigDecimal.TEN;
-
-  @Mock
-  private ChefReportInformation chefReportInformation;
 
   private ChefReport chefReport;
 

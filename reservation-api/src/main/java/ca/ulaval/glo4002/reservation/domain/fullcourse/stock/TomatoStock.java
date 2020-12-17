@@ -8,7 +8,7 @@ public class TomatoStock implements Available {
 
   private final IngredientName ingredient;
 
-  private int ingredientPreparationDays;
+  private final int ingredientPreparationDays;
 
   public TomatoStock(IngredientName ingredient, int ingredientPreparationDays) {
     this.ingredient = ingredient;

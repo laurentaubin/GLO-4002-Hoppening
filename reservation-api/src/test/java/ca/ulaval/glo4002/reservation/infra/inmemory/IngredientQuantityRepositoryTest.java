@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ca.ulaval.glo4002.reservation.domain.builder.CustomerBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.ReservationBuilder;
 import ca.ulaval.glo4002.reservation.domain.builder.TableBuilder;
-import ca.ulaval.glo4002.reservation.domain.date.Period;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.IngredientName;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.reservation.*;
@@ -148,7 +147,6 @@ public class IngredientQuantityRepositoryTest {
   @Test
   public void givenRepoNotEmptyAndAReportPeriod_whenGetIngredientsQuantity_thenReturnIngredientsQuantityForEachDayOfThePeriod() {
     // given
-    Period eventPeriod = new Period(DINNER_START_DATE, DINNER_END_DATE);
     ReportPeriod reportPeriod = new ReportPeriod(START_DATE, END_DATE);
     populateReportRepository(A_DINNER_DATE, ANOTHER_DINNER_DATE);
 

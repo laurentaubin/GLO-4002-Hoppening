@@ -8,10 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "dates" })
 public class UnitReportDto {
   @JsonProperty("dates")
-  private List<UnitReportDayDto> unitReportDayDtos;
-
-  public UnitReportDto() {
-  }
+  private final List<UnitReportDayDto> unitReportDayDtos;
 
   public UnitReportDto(List<UnitReportDayDto> unitReportDayDtos) {
     this.unitReportDayDtos = unitReportDayDtos;
