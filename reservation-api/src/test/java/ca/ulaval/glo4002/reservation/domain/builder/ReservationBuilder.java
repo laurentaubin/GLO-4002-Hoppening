@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.domain.builder;
 
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIdFactory;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ReservationBuilder {
   private ReservationDate reservationDate;
 
   public ReservationBuilder() {
-    id = new ReservationId();
+    id = new ReservationIdFactory().createFromVendorCode("ddsa");
     dinnerDate = new DinnerDate(A_DINNER_DATE);
     tables = new ArrayList<>();
     reservationDate = new ReservationDate(A_RESERVATION_DATE);

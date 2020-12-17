@@ -3,7 +3,6 @@ package ca.ulaval.glo4002.reservation.api.report.presenter.expense;
 import ca.ulaval.glo4002.reservation.api.report.dto.ExpenseReportDto;
 import ca.ulaval.glo4002.reservation.domain.report.expense.ExpenseReport;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class ExpenseReportDtoFactory {

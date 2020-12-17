@@ -56,13 +56,16 @@ public class ReservationFactoryTest {
   @Mock
   private Period reservationPeriod;
 
+  @Mock
+  private ReservationIdFactory reservationIdFactory;
+
   private ReservationFactory reservationFactory;
 
   @BeforeEach
   public void setUpReservationFactory() {
     reservationFactory = new ReservationFactory(dinnerDateFactory,
                                                 reservationDateFactory,
-                                                tableFactory);
+                                                tableFactory, reservationIdFactory);
   }
 
   @Test

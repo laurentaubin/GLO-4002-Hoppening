@@ -22,6 +22,6 @@ public class ReservationRequestAssembler {
                                                           .stream()
                                                           .map(tableDtoAssembler::assemble)
                                                           .collect(Collectors.toList());
-    return new ReservationRequest(dinnerDate, reservationDate, tableDtos);
+    return new ReservationRequest(dinnerDate, reservationDate, tableDtos, createReservationRequestDto.getVendorCode());
   }
 }

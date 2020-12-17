@@ -13,18 +13,20 @@ public class ReservationFactory {
   private final DinnerDateFactory dinnerDateFactory;
   private final ReservationDateFactory reservationDateFactory;
   private final TableFactory tableFactory;
+  private final ReservationIdFactory reservationIdFactory;
 
   public ReservationFactory(DinnerDateFactory dinnerDateFactory,
                             ReservationDateFactory reservationDateFactory,
-                            TableFactory tableRequestFactory)
+                            TableFactory tableRequestFactory, ReservationIdFactory reservationIdFactory)
   {
     this.dinnerDateFactory = dinnerDateFactory;
     this.reservationDateFactory = reservationDateFactory;
     this.tableFactory = tableRequestFactory;
+    this.reservationIdFactory = reservationIdFactory;
   }
 
   public Reservation create(ReservationRequest reservationRequest, HoppeningEvent hoppeningEvent) {
-    ReservationId reservationId = new ReservationId();
+    ReservationId reservationId = reservationIdFactory.createFromVendorCode(reservationRequest.getVendorCode());
     DinnerDate dinnerDate = dinnerDateFactory.create(reservationRequest.getDinnerDate(),
                                                      hoppeningEvent.getDinnerPeriod());
     ReservationDate reservationDate = reservationDateFactory.create(reservationRequest.getReservationDate(),

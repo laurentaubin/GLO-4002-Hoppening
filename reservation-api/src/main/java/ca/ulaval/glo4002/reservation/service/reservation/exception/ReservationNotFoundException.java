@@ -9,6 +9,6 @@ public class ReservationNotFoundException extends NotFoundException {
 
   public ReservationNotFoundException(ReservationId reservationId) {
     super(ERROR_CODE,
-          ERROR_MESSAGE.replace("RESERVATION_NUMBER", String.valueOf(reservationId.getLongId())));
+          ERROR_MESSAGE.replace("RESERVATION_NUMBER", String.valueOf(reservationId.getVendorCodeId())));
   }
 }

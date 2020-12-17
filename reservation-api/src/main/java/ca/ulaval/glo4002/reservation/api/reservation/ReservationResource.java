@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.api.reservation;
 
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIdFactory;
 import java.net.URI;
 
 import javax.validation.Valid;
@@ -18,12 +19,14 @@ public class ReservationResource {
 
   private final RestaurantService restaurantService;
   private final DateFormatValidator dateFormatValidator;
+  private final ReservationIdFactory reservationIdFactory;
 
   public ReservationResource(RestaurantService restaurantService,
-                             DateFormatValidator dateFormatValidator)
+                             DateFormatValidator dateFormatValidator, ReservationIdFactory reservationIdFactory)
   {
     this.restaurantService = restaurantService;
     this.dateFormatValidator = dateFormatValidator;
+    this.reservationIdFactory = reservationIdFactory;
   }
 
   @POST
@@ -35,15 +38,15 @@ public class ReservationResource {
                                                                   .getReservationDate());
     ReservationId reservationId = restaurantService.makeReservation(createReservationRequestDto);
     URI reservationLocation = URI.create(String.format("/reservations/%s",
-                                                       reservationId.getLongId()));
+                                                       reservationId.getVendorCodeId()));
     return Response.created(reservationLocation).build();
   }
 
   @GET
   @Path("/{reservationId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getReservation(@PathParam("reservationId") long id) {
-    ReservationId reservationId = new ReservationId(id);
+  public Response getReservation(@PathParam("reservationId") String id) {
+    ReservationId reservationId = reservationIdFactory.createFromExistingId(id);
     ReservationDto reservationDto = restaurantService.getReservationFromRestaurant(reservationId);
     return Response.ok().entity(reservationDto).build();
   }

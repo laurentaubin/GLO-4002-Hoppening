@@ -143,7 +143,7 @@ public class ReservationContext {
 
   private ReservationResource createReservationResource(RestaurantService restaurantService) {
     DateFormatValidator dateFormatValidator = new DateFormatValidator(DATE_TIME_REGEX);
-    return new ReservationResource(restaurantService, dateFormatValidator);
+    return new ReservationResource(restaurantService, dateFormatValidator, new ReservationIdFactory());
   }
 
   private ReportResource createReportResource(ReportService reportService)
@@ -209,7 +209,7 @@ public class ReservationContext {
     ReservationDateFactory reservationDateFactory = new ReservationDateFactory();
     CustomerFactory customerFactory = new CustomerFactory();
     TableFactory tableFactory = new TableFactory(customerFactory);
-    return new ReservationFactory(dinnerDateFactory, reservationDateFactory, tableFactory);
+    return new ReservationFactory(dinnerDateFactory, reservationDateFactory, tableFactory, new ReservationIdFactory());
   }
 
   private HoppeningEvent createInitialHoppeningEvent() {
