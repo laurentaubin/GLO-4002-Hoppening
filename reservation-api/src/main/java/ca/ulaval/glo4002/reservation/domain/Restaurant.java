@@ -14,9 +14,9 @@ import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationFactory;
+import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
 
 public class Restaurant {
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_DAY = 42;

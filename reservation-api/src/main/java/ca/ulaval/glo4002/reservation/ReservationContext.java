@@ -2,6 +2,9 @@ package ca.ulaval.glo4002.reservation;
 
 import ca.ulaval.glo4002.reservation.api.report.presenter.expense.ExpenseReportDtoFactory;
 import ca.ulaval.glo4002.reservation.api.report.presenter.expense.ExpenseReportPresenter;
+import ca.ulaval.glo4002.reservation.service.reservation.CustomerFactory;
+import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
+import ca.ulaval.glo4002.reservation.service.reservation.TableFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +36,7 @@ import ca.ulaval.glo4002.reservation.domain.fullcourse.MenuRepository;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.Available;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.IngredientAvailabilityValidator;
 import ca.ulaval.glo4002.reservation.domain.fullcourse.stock.TomatoStock;
-import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequestFactory;
+import ca.ulaval.glo4002.reservation.service.reservation.hopenning.HoppeningConfigurationRequestFactory;
 import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningEvent;
 import ca.ulaval.glo4002.reservation.domain.material.*;
 import ca.ulaval.glo4002.reservation.domain.report.*;

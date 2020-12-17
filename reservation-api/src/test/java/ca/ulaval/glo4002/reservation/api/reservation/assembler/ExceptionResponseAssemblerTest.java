@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import ca.ulaval.glo4002.reservation.api.reservation.ExceptionResponse;
 import ca.ulaval.glo4002.reservation.exception.ReservationException;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.domain.exception.InvalidDinnerDateException;
 
 public class ExceptionResponseAssemblerTest {
   private static final LocalDate START_DATE = LocalDate.of(2150, 7, 20);

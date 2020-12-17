@@ -14,7 +14,7 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.domain.exception.InvalidDinnerDateException;
 
 @ExtendWith(MockitoExtension.class)
 public class DinnerDateFactoryTest {

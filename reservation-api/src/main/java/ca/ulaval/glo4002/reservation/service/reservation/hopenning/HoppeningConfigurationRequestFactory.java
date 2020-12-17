@@ -1,5 +1,6 @@
-package ca.ulaval.glo4002.reservation.domain.hoppening;
+package ca.ulaval.glo4002.reservation.service.reservation.hopenning;
 
+import ca.ulaval.glo4002.reservation.domain.hoppening.HoppeningConfigurationRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 

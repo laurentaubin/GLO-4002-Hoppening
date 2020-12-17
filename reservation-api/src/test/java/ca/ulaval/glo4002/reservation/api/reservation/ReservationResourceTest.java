@@ -29,8 +29,8 @@ import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatExce
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.service.reservation.RestaurantService;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinnerDateException;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationDateException;
+import ca.ulaval.glo4002.reservation.domain.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.domain.exception.InvalidReservationDateException;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationResourceTest {

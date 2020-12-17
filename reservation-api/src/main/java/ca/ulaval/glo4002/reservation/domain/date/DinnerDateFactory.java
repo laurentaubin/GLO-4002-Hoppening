@@ -3,7 +3,7 @@ package ca.ulaval.glo4002.reservation.domain.date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.domain.exception.InvalidDinnerDateException;
 
 public class DinnerDateFactory {
   private static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";

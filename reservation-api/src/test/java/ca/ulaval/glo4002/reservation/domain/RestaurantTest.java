@@ -28,9 +28,9 @@ import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationFactory;
+import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
 
 @ExtendWith(MockitoExtension.class)
 public class RestaurantTest {

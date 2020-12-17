@@ -7,7 +7,7 @@ import java.util.List;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
+import ca.ulaval.glo4002.reservation.domain.exception.ReservationNotFoundException;
 
 public class InMemoryReservationRepository implements ReservationRepository {
   private final List<Reservation> reservations = new ArrayList<>();

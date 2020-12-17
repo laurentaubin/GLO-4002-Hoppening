@@ -3,6 +3,7 @@ package ca.ulaval.glo4002.reservation.domain.hoppening;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import ca.ulaval.glo4002.reservation.service.reservation.hopenning.HoppeningConfigurationRequestFactory;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;

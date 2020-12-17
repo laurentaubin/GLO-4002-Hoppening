@@ -1,12 +1,15 @@
-package ca.ulaval.glo4002.reservation.domain.reservation;
+package ca.ulaval.glo4002.reservation.service.reservation;
 
+import ca.ulaval.glo4002.reservation.domain.reservation.Customer;
+import ca.ulaval.glo4002.reservation.domain.reservation.Table;
+import ca.ulaval.glo4002.reservation.service.reservation.CustomerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import ca.ulaval.glo4002.reservation.service.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationQuantityException;
-import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.domain.exception.InvalidReservationQuantityException;
+import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
 
 public class TableFactory {
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_TABLE = 4;

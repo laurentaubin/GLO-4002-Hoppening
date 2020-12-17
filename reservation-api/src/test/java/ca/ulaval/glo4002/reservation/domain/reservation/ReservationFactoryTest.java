@@ -4,6 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
+import ca.ulaval.glo4002.reservation.service.reservation.TableFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 

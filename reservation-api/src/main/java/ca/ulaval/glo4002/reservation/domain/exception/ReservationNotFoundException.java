@@ -1,4 +1,4 @@
-package ca.ulaval.glo4002.reservation.service.reservation.exception;
+package ca.ulaval.glo4002.reservation.domain.exception;
 
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.exception.NotFoundException;
