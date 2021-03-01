@@ -23,13 +23,4 @@ public class ChefReport {
   public List<ChefReportInformation> getChefReportInformation() {
     return chefReportInformation;
   }
-
-  public BigDecimal calculateTotalCost() {
-    BigDecimal totalSum = BigDecimal.ZERO;
-    for (ChefReportInformation chefReportInformation : chefReportInformation) {
-      totalSum = totalSum.add(chefReportInformation.getTotalPrice());
-    }
-
-    return totalSum;
-  }
 }

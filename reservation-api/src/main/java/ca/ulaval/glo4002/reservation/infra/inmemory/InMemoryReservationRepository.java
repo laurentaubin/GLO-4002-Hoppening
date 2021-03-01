@@ -1,5 +1,6 @@
 package ca.ulaval.glo4002.reservation.infra.inmemory;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationRepository;
-import ca.ulaval.glo4002.reservation.domain.exception.ReservationNotFoundException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.ReservationNotFoundException;
 
 public class InMemoryReservationRepository implements ReservationRepository {
   private final List<Reservation> reservations = new ArrayList<>();
@@ -38,7 +39,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     return reservationsByDate;
   }
 
-  public List<Reservation> getAllReservations() {
-    return reservations;
+  private boolean isTheSameDate(LocalDateTime date, LocalDateTime dinnerDate) {
+    return LocalDate.from(date).isEqual(LocalDate.from(dinnerDate));
   }
 }

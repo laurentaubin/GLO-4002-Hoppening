@@ -14,4 +14,5 @@ public interface ChefRepository {
 
   Set<Chef> getAllChefs();
 
+  Set<Chef> getChefsForDate(LocalDate date);
 }

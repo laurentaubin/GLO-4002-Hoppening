@@ -2,8 +2,6 @@ package ca.ulaval.glo4002.reservation.domain.reservation;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import ca.ulaval.glo4002.reservation.service.reservation.CustomerFactory;
-import ca.ulaval.glo4002.reservation.service.reservation.TableFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,8 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ca.ulaval.glo4002.reservation.service.reservation.dto.CustomerDto;
 import ca.ulaval.glo4002.reservation.service.reservation.dto.TableDto;
-import ca.ulaval.glo4002.reservation.domain.exception.InvalidReservationQuantityException;
-import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationQuantityException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
 @ExtendWith(MockitoExtension.class)
 public class TableFactoryTest {

@@ -1,7 +1,5 @@
 package ca.ulaval.glo4002.reservation.api.report;
 
-import ca.ulaval.glo4002.reservation.api.report.presenter.expense.ExpenseReportPresenter;
-import ca.ulaval.glo4002.reservation.domain.report.expense.ExpenseReport;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -18,30 +16,32 @@ import ca.ulaval.glo4002.reservation.domain.report.IngredientReport;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportPresenter;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportType;
 import ca.ulaval.glo4002.reservation.domain.report.chef.ChefReport;
+import ca.ulaval.glo4002.reservation.service.report.ChefReportService;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @Path("/reports")
 public class ReportResource {
 
   private final ReportService reportService;
+  private final ChefReportService chefReportService;
   private final ReportDateValidator reportDateValidator;
   private final IngredientReportPresenterFactory ingredientReportPresenterFactory;
   private final ChefReportDtoAssembler chefReportDtoAssembler;
   private final MaterialReportPresenter materialReportPresenter;
-  private final ExpenseReportPresenter expenseReportPresenter;
 
   public ReportResource(ReportService reportService,
+                        ChefReportService chefReportService,
                         ReportDateValidator reportDateValidator,
                         IngredientReportPresenterFactory ingredientReportPresenterFactory,
                         ChefReportDtoAssembler chefReportDtoAssembler,
-                        MaterialReportPresenter materialReportPresenter, ExpenseReportPresenter expenseReportPresenter)
+                        MaterialReportPresenter materialReportPresenter)
   {
     this.reportService = reportService;
+    this.chefReportService = chefReportService;
     this.reportDateValidator = reportDateValidator;
     this.ingredientReportPresenterFactory = ingredientReportPresenterFactory;
     this.chefReportDtoAssembler = chefReportDtoAssembler;
     this.materialReportPresenter = materialReportPresenter;
-    this.expenseReportPresenter = expenseReportPresenter;
   }
 
   @GET
@@ -61,7 +61,7 @@ public class ReportResource {
   @Path("/chefs")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getChefReport() {
-    ChefReport chefReport = reportService.getChefReport();
+    ChefReport chefReport = chefReportService.getChefReport();
     ChefReportDto chefReportDto = chefReportDtoAssembler.assembleChefReportDto(chefReport);
     return Response.ok().entity(chefReportDto).build();
   }
@@ -75,13 +75,5 @@ public class ReportResource {
     reportDateValidator.validate(startDate, endDate);
     MaterialReport materialReport = reportService.getMaterialReport(startDate, endDate);
     return materialReportPresenter.presentReport(materialReport);
-  }
-
-  @GET
-  @Path("/total")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getExpenseReport(){
-    ExpenseReport expenseReport = reportService.getExpenseReport();
-    return expenseReportPresenter.presentReport(expenseReport);
   }
 }

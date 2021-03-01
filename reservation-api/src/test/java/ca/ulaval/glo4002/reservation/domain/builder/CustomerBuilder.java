@@ -9,12 +9,17 @@ import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 public class CustomerBuilder {
   private static final String A_NAME = "Johnny";
 
-  private final String name;
+  private String name;
   private final Set<RestrictionType> restrictions;
 
   public CustomerBuilder() {
     name = A_NAME;
     restrictions = new HashSet<>();
+  }
+
+  public CustomerBuilder withName(String name) {
+    this.name = name;
+    return this;
   }
 
   public CustomerBuilder withRestriction(RestrictionType restriction) {

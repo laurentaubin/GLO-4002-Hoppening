@@ -13,7 +13,7 @@ import ca.ulaval.glo4002.reservation.domain.reservation.RestrictionType;
 
 public class InMemoryChefRepository implements ChefRepository {
 
-  private final Map<LocalDate, Set<Chef>> restaurantChefsSchedule;
+  private Map<LocalDate, Set<Chef>> restaurantChefsSchedule;
   private Set<Chef> availableChefs;
 
   public InMemoryChefRepository() {

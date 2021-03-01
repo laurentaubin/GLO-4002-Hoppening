@@ -1,7 +1,6 @@
 package ca.ulaval.glo4002.reservation.api.report.assembler;
 
-import java.text.Normalizer;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,14 +30,8 @@ public class ChefReportDtoAssembler {
   }
 
   private List<String> getChefsName(Set<Chef> chefs) {
-    // inspired from https://stackoverflow.com/questions/26420678/ordering-an-array-with-special-characters-like-accents
-    List<String> chefNames = chefs.stream().map(Chef::getName).sorted(new Comparator<String>() {
-      @Override public int compare(String o1, String o2) {
-        o1 = Normalizer.normalize(o1, Normalizer.Form.NFD);
-        o2 = Normalizer.normalize(o2, Normalizer.Form.NFD);
-        return o1.compareTo(o2);
-      }
-    }).collect(Collectors.toList());
+    List<String> chefNames = chefs.stream().map(Chef::getName).collect(Collectors.toList());
+    Collections.sort(chefNames);
     return chefNames;
   }
 }

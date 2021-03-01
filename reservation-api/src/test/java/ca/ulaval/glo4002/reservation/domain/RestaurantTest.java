@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,9 +27,9 @@ import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationFactory;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
 @ExtendWith(MockitoExtension.class)
 public class RestaurantTest {
@@ -43,7 +42,6 @@ public class RestaurantTest {
   private static final int TWO_CUSTOMERS = 2;
   private static final int ONE_CUSTOMER = 1;
   private static final LocalDate AN_OPENING_DATE = LocalDate.of(2020, 7, 20);
-  private static final BigDecimal A_RESERVATION_FEE = BigDecimal.TEN;
 
   @Mock
   private ReservationFactory reservationFactory;
@@ -319,19 +317,6 @@ public class RestaurantTest {
 
     // then
     verify(ingredientInventory).doesReservationCauseAllergicConflict(aReservation, reservations);
-  }
-
-  @Test
-  public void givenSomeReservations_whenCalculatingTotalIncome_thenReturnSumOfAllReservationIncomes() {
-    // given
-    given(reservationBook.getAllReservations()).willReturn(List.of(aReservation, aReservation));
-    given(aReservation.getReservationFees()).willReturn(A_RESERVATION_FEE);
-
-    // when
-    BigDecimal totalFee = restaurant.calculateTotalReservationFee();
-
-    // then
-    assertThat(totalFee).isEqualTo(A_RESERVATION_FEE.add(A_RESERVATION_FEE));
   }
 
   private void givenValidReservationRequest() {

@@ -26,6 +26,14 @@ public class IngredientReportInformationDto {
     return ingredientName;
   }
 
+  public BigDecimal getQuantity() {
+    return quantity;
+  }
+
+  public BigDecimal getTotalPrice() {
+    return totalPrice;
+  }
+
   @Override
   public boolean equals(Object o) {
 

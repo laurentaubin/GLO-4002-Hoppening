@@ -12,7 +12,7 @@ import ca.ulaval.glo4002.reservation.domain.report.DailyIngredientReportInformat
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReport;
 
 public class UnitReportDtoFactory {
-  private final UnitReportDayDtoFactory unitReportDayDtoFactory;
+  private UnitReportDayDtoFactory unitReportDayDtoFactory;
 
   public UnitReportDtoFactory(UnitReportDayDtoFactory unitReportDayDtoFactory) {
     this.unitReportDayDtoFactory = unitReportDayDtoFactory;

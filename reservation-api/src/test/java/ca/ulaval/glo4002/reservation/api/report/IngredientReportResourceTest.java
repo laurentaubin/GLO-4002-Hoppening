@@ -3,8 +3,6 @@ package ca.ulaval.glo4002.reservation.api.report;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import ca.ulaval.glo4002.reservation.api.report.presenter.expense.ExpenseReportPresenter;
-import ca.ulaval.glo4002.reservation.domain.report.expense.ExpenseReport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,10 +16,12 @@ import ca.ulaval.glo4002.reservation.domain.material.MaterialReport;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReport;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportPresenter;
 import ca.ulaval.glo4002.reservation.domain.report.IngredientReportType;
+import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
+import ca.ulaval.glo4002.reservation.service.report.ChefReportService;
 import ca.ulaval.glo4002.reservation.service.report.ReportService;
 
 @ExtendWith(MockitoExtension.class)
-public class ReportResourceTest {
+public class IngredientReportResourceTest {
   public static final String START_DATE = "2150-07-23";
   public static final String END_DATE = "2150-07-27";
   public static final String REPORT_TYPE_STRING = "unit";
@@ -33,6 +33,9 @@ public class ReportResourceTest {
   private ReportService reportService;
 
   @Mock
+  private ChefReportService chefReportService;
+
+  @Mock
   private ReportDateValidator reportDateValidator;
 
   @Mock
@@ -42,7 +45,7 @@ public class ReportResourceTest {
   private MaterialReport materialReport;
 
   @Mock
-  private ExpenseReport expenseReport;
+  private ReportPeriod reportPeriod;
 
   @Mock
   private IngredientReportPresenterFactory ingredientReportPresenterFactory;
@@ -56,18 +59,16 @@ public class ReportResourceTest {
   @Mock
   private MaterialReportPresenter materialReportPresenter;
 
-  @Mock
-  private ExpenseReportPresenter expenseReportPresenter;
-
   private ReportResource reportResource;
 
   @BeforeEach
   public void setUp() {
     reportResource = new ReportResource(reportService,
+                                        chefReportService,
                                         reportDateValidator,
                                         ingredientReportPresenterFactory,
                                         chefReportDtoAssembler,
-                                        materialReportPresenter, expenseReportPresenter);
+                                        materialReportPresenter);
   }
 
   @Test
@@ -163,17 +164,5 @@ public class ReportResourceTest {
 
     // then
     verify(materialReportPresenter).presentReport(materialReport);
-  }
-
-  @Test
-  public void whenGetExpenseReport_thenExpenseReportDtoIsAssembled() {
-    // given
-    given(reportService.getExpenseReport()).willReturn(expenseReport);
-
-    // when
-    reportResource.getExpenseReport();
-
-    // then
-    verify(expenseReportPresenter).presentReport(expenseReport);
   }
 }

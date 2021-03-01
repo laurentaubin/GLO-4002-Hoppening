@@ -8,13 +8,11 @@ public class ReservationRequest {
   private final String dinnerDate;
   private final String reservationDate;
   private final List<TableDto> tables;
-  private final String vendorCode;
 
-  public ReservationRequest(String dinnerDate, String reservationDate, List<TableDto> tables, String vendorCode) {
+  public ReservationRequest(String dinnerDate, String reservationDate, List<TableDto> tables) {
     this.dinnerDate = dinnerDate;
     this.reservationDate = reservationDate;
     this.tables = tables;
-    this.vendorCode = vendorCode;
   }
 
   public String getDinnerDate() {
@@ -27,9 +25,5 @@ public class ReservationRequest {
 
   public List<TableDto> getTables() {
     return tables;
-  }
-
-  public String getVendorCode() {
-    return vendorCode;
   }
 }

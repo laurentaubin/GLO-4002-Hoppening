@@ -5,10 +5,10 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public class MaterialReportInformation {
-  private final LocalDate date;
-  private final Map<Material, BigDecimal> cleanedDishes;
-  private final Map<Material, BigDecimal> boughtDishes;
-  private final BigDecimal totalPrice;
+  private LocalDate date;
+  private Map<Material, BigDecimal> cleanedDishes;
+  private Map<Material, BigDecimal> boughtDishes;
+  private BigDecimal totalPrice;
 
   public MaterialReportInformation(LocalDate date,
                                    Map<Material, BigDecimal> cleanedDishes,

@@ -1,6 +1,5 @@
 package ca.ulaval.glo4002.reservation.domain;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +13,9 @@ import ca.ulaval.glo4002.reservation.domain.material.DailyDishesQuantity;
 import ca.ulaval.glo4002.reservation.domain.report.ReportPeriod;
 import ca.ulaval.glo4002.reservation.domain.report.chef.NoChefsAvailableException;
 import ca.ulaval.glo4002.reservation.domain.reservation.Reservation;
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
+import ca.ulaval.glo4002.reservation.domain.reservation.ReservationFactory;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
-import ca.ulaval.glo4002.reservation.domain.exception.TooManyPeopleException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.TooManyPeopleException;
 
 public class Restaurant {
   private static final int MAX_NUMBER_OF_CUSTOMERS_PER_DAY = 42;
@@ -116,14 +115,5 @@ public class Restaurant {
     List<Reservation> currentReservations = reservationBook.getReservationsByDate(reservation.getDinnerDate());
     currentReservations.add(reservation);
     chefManager.hireChefsForReservations(currentReservations);
-  }
-
-  public BigDecimal calculateTotalReservationFee() {
-    BigDecimal totalFee = BigDecimal.ZERO;
-    for (Reservation reservation : reservationBook.getAllReservations()) {
-      totalFee = totalFee.add(reservation.getReservationFees());
-    }
-
-    return totalFee;
   }
 }

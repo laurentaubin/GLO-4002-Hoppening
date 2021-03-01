@@ -4,8 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import ca.ulaval.glo4002.reservation.service.reservation.ReservationFactory;
-import ca.ulaval.glo4002.reservation.service.reservation.TableFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,16 +56,13 @@ public class ReservationFactoryTest {
   @Mock
   private Period reservationPeriod;
 
-  @Mock
-  private ReservationIdFactory reservationIdFactory;
-
   private ReservationFactory reservationFactory;
 
   @BeforeEach
   public void setUpReservationFactory() {
     reservationFactory = new ReservationFactory(dinnerDateFactory,
                                                 reservationDateFactory,
-                                                tableFactory, reservationIdFactory);
+                                                tableFactory);
   }
 
   @Test

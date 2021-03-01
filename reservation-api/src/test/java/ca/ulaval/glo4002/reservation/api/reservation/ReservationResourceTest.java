@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
-import ca.ulaval.glo4002.reservation.domain.reservation.ReservationIdFactory;
 import java.time.LocalDate;
 
 import javax.ws.rs.core.Response;
@@ -29,13 +28,13 @@ import ca.ulaval.glo4002.reservation.api.reservation.exception.InvalidFormatExce
 import ca.ulaval.glo4002.reservation.api.reservation.validator.DateFormatValidator;
 import ca.ulaval.glo4002.reservation.domain.reservation.ReservationId;
 import ca.ulaval.glo4002.reservation.service.reservation.RestaurantService;
-import ca.ulaval.glo4002.reservation.domain.exception.InvalidDinnerDateException;
-import ca.ulaval.glo4002.reservation.domain.exception.InvalidReservationDateException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidDinnerDateException;
+import ca.ulaval.glo4002.reservation.service.reservation.exception.InvalidReservationDateException;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationResourceTest {
 
-  private static final String AN_ID = "TEAM-2312421";
+  private static final long AN_ID = 32432;
   private static final String LOCATION = "Location";
   private static final String RESERVATIONS_BASE_PATH = "/reservations";
   private static final String INVALID_FORMAT_DATE = "30-21-08";
@@ -48,25 +47,22 @@ public class ReservationResourceTest {
   private RestaurantService restaurantService;
 
   @Mock
-  private ReservationId reservationId;
-
-  @Mock
   private DateFormatValidator dateFormatValidator;
 
   @Mock
-  private ReservationIdFactory reservationIdFactory;
+  private ReservationId reservationId;
 
   private ReservationResource reservationResource;
 
   @BeforeEach
   public void setUp() {
-    reservationResource = new ReservationResource(restaurantService, dateFormatValidator, reservationIdFactory);
+    reservationResource = new ReservationResource(restaurantService, dateFormatValidator);
   }
 
   @Test
   public void whenCreateNewReservation_thenReservationIsCreated() {
     // given
-    given(reservationId.getVendorCodeId()).willReturn(AN_ID);
+    given(reservationId.getLongId()).willReturn(AN_ID);
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withAnyTable()
                                                                                                       .build();
     given(restaurantService.makeReservation(createReservationRequestDto)).willReturn(reservationId);
@@ -84,7 +80,7 @@ public class ReservationResourceTest {
     CreateReservationRequestDto createReservationRequestDto = new CreateReservationRequestDtoBuilder().withAnyTable()
                                                                                                       .build();
     given(restaurantService.makeReservation(createReservationRequestDto)).willReturn(reservationId);
-    given(reservationId.getVendorCodeId()).willReturn(AN_ID);
+    given(reservationId.getLongId()).willReturn(AN_ID);
 
     // when
     Response createReservationResponse = reservationResource.createReservation(createReservationRequestDto);

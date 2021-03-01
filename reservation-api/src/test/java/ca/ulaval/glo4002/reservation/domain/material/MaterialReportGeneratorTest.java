@@ -251,6 +251,12 @@ public class MaterialReportGeneratorTest {
     return givenDishesQuantity(MORE_THAN_A_FEW_DISHES);
   }
 
+  private Map<LocalDate, DailyDishesQuantity> givenDishesQuantities() {
+    Map<Material, BigDecimal> dailyDishesQuantities = givenDishesQuantity(BigDecimal.valueOf(3));
+    given(aDailyDishesQuantity.getDishesQuantity()).willReturn(dailyDishesQuantities);
+    return Map.of(A_DATE, aDailyDishesQuantity);
+  }
+
   private Map<Material, BigDecimal> expectedBoughtDishes() {
     return givenFewDishes();
   }
